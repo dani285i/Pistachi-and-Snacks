@@ -1,0 +1,18 @@
+:root {
+    --primary: #2D5A27;
+    --accent: #C5A059;
+    --bg-cream: #F9F7F2;
+    --bg-cream-darker: #eceae5;
+    --text-main: #1A1A1A;
+    --text-muted: #666666;
+    --white: #ffffff;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+body {
+    margin: 0;
+    font-family: "Montserrat";
+    background-color: var(--bg-cream);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+}
