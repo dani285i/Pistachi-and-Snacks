@@ -11,22 +11,19 @@ interface Producto {
     destacado: boolean;
 }
 
-
 const Productos = () => {
 
     const [productos, setProductos] = useState<Producto[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
     const [huboError, setHuboError] = useState<boolean>(false);
-
     const [textoBusqueda, setTextoBusqueda] = useState<string>('');
 
     useEffect(() => {
-        
         const obtenerTodosLosProductos = async () => {
             try {
                 setCargando(true);
                 
-                const respuesta = await fetch('http://localhost:8080/api/productos');
+                const respuesta = await fetch('http://localhost:8080/productos');
                 
                 if (!respuesta.ok) {
                     throw new Error('Fallo al recuperar los productos del servidor');
@@ -49,11 +46,11 @@ const Productos = () => {
 
     const productosFiltrados = productos.filter((producto) => {
         const busquedaMinusculas = textoBusqueda.toLowerCase();
-        const nombreMinusculas = producto.nombre.toLowerCase();
-        const descripcionMinusculas = producto.descripcion.toLowerCase();
+        const nombreSeguro = producto.nombre ? producto.nombre.toLowerCase() : "";
+        const descripcionSegura = producto.descripcion ? producto.descripcion.toLowerCase() : "";
 
-        return nombreMinusculas.includes(busquedaMinusculas) || 
-            descripcionMinusculas.includes(busquedaMinusculas);
+        return nombreSeguro.includes(busquedaMinusculas) || 
+            descripcionSegura.includes(busquedaMinusculas);
     });
 
     if (cargando) {
@@ -76,7 +73,6 @@ const Productos = () => {
 
     return (
         <div className="catalogo-contenedor">
-            
             <header className="catalogo-cabecera">
                 <h1>Menú Completo</h1>
                 <p>Descubre todas nuestras creaciones artesanales.</p>
@@ -93,7 +89,6 @@ const Productos = () => {
             </header>
 
             <section className="catalogo-resultados">
-                
                 {productosFiltrados.length === 0 ? (
                     <div className="sin-resultados">
                         <h3>No encontramos nada con "{textoBusqueda}"</h3>
@@ -102,7 +97,6 @@ const Productos = () => {
                 ) : (
                     <div className="rejilla-catalogo">
                         {productosFiltrados.map((producto) => (
-                            
                             <article key={producto.id} className="tarjeta-basica">
                                 <div className="tarjeta-basica-img">
                                     <img src={producto.imagen} alt={producto.nombre} />
@@ -115,7 +109,8 @@ const Productos = () => {
                                     
                                     <div className="tarjeta-basica-pie">
                                         <span className="precio-etiqueta">
-                                            {producto.precio.toFixed(2)} €
+                                            {/* Protegemos también el precio por si llega nulo */}
+                                            {producto.precio ? producto.precio.toFixed(2) : "0.00"} €
                                         </span>
                                         <button className="boton-accion">
                                             Añadir al Carrito
@@ -123,11 +118,9 @@ const Productos = () => {
                                     </div>
                                 </div>
                             </article>
-                            
                         ))}
                     </div>
                 )}
-
             </section>
         </div>
     );

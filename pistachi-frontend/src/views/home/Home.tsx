@@ -23,12 +23,12 @@ const Home = () => {
     useEffect(() => {
         
         const obtenerProductosDestacados = async () => {
-            
+
             try {
 
                 setEstaCargando(true);
                 
-                const respuesta = await fetch('http://localhost:8080/api/productos/destacados');
+                const respuesta = await fetch('http://localhost:8080/productos/destacados');
                 
                 if (!respuesta.ok) {
                     throw new Error('El servidor respondió con error');

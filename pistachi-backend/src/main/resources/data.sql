@@ -1,0 +1,6 @@
+INSERT IGNORE INTO productos (id, nombre, descripcion, precio, imagen, categoria, destacado) VALUES
+(1, 'Croissant Supremo de Pistacho', 'Croissant de doble horneado relleno con crema de pistacho ibérico.', 4.50, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', 'Bollería', 1),
+(2, 'Cheesecake Esmeralda', 'Tarta de queso horneada al estilo Nueva York con praliné de pistacho.', 6.50, 'https://images.unsplash.com/photo-1508737027454-e6454ef45afd?auto=format&fit=crop&w=600&q=80', 'Tartas', 1),
+(3, 'Cookie Bomb Rellena', 'Galleta artesanal con corazón fundido de chocolate blanco y crema de pistacho.', 3.80, 'https://images.unsplash.com/photo-1499636138143-bd649043ea52?auto=format&fit=crop&w=600&q=80', 'Galletas', 1),
+(4, 'Latte Pistacho Helado', 'Café de especialidad con leche fresca y sirope casero de pistacho tostado.', 4.20, 'https://images.unsplash.com/photo-1517701604599-bb29b5c7dd00?auto=format&fit=crop&w=600&q=80', 'Bebidas', 0),
+(5, 'Macarons Verdes', 'Dulce francés con cáscara de almendra y ganache montada de pistacho.', 8.00, 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=600&q=80', 'Postres', 0);
