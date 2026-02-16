@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './Productos.css';
+import './Producto.css';
 
 interface Producto {
     id: number;
@@ -22,7 +22,7 @@ const Productos = () => {
         const obtenerTodosLosProductos = async () => {
             try {
                 setCargando(true);
-                
+
                 const respuesta = await fetch('http://localhost:8080/productos');
                 
                 if (!respuesta.ok) {
