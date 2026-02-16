@@ -8,6 +8,7 @@ const Navbar = () => (
         <div className="nav-content">
 
             <Link to="/" className="nav-logo">PISTACHI <span>&</span> SNACKS</Link>
+            
             <div className="nav-links">
                 <Link to="/">Inicio</Link>
                 <Link to="/productos">Catálogo</Link>

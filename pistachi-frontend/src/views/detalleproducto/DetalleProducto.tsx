@@ -18,8 +18,6 @@ interface Producto {
 const DetalleProducto = () => {
 
     const { id } = useParams();
-
-    // Estados para manejar los datos
     const [producto, setProducto] = useState<Producto | null>(null);
     const [cargando, setCargando] = useState<boolean>(true);
     const [huboError, setHuboError] = useState<boolean>(false);
@@ -31,7 +29,7 @@ const DetalleProducto = () => {
             try {
                 setCargando(true);
                 
-                const respuesta = await fetch(`http://localhost:8080/productos/${id}`);
+                const respuesta = await fetch(`http://localhost:80/productos/${id}`);
                 
                 if (!respuesta.ok) {
                     throw new Error('No se encontró el producto en el servidor');

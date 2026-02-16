@@ -15,9 +15,7 @@ interface Producto {
 const Home = () => {
 
     const [productos, setProductos] = useState<Producto[]>([]);
-    
     const [estaCargando, setEstaCargando] = useState<boolean>(true);
-    
     const [huboError, setHuboError] = useState<boolean>(false);
 
     useEffect(() => {
@@ -28,8 +26,7 @@ const Home = () => {
 
                 setEstaCargando(true);
                 
-                const respuesta = await fetch('http://localhost:8080/productos/destacados');
-                
+                const respuesta = await fetch('http://localhost:80/productos/destacados');
                 if (!respuesta.ok) {
                     throw new Error('El servidor respondió con error');
                 }
@@ -88,11 +85,9 @@ const Home = () => {
                 </div>
                 
                 <div className="rejilla-productos">
-                    
                     {productos.map((producto) => (
-                        
+                    
                         <article key={producto.id} className="tarjeta-producto">
-                            
                             <div className="tarjeta-imagen">
 
                                 <img src={producto.imagen} alt={`Foto de ${producto.nombre}`} />
@@ -101,11 +96,10 @@ const Home = () => {
                             </div>
                             
                             <div className="tarjeta-contenido">
-                                
+
                                 <h3 className="tarjeta-titulo">
                                     {producto.nombre}
                                 </h3>
-                                
                                 <p className="tarjeta-descripcion">
                                     {producto.descripcion}
                                 </p>
@@ -119,17 +113,12 @@ const Home = () => {
                                     <button className="boton-comprar">Añadir</button>
 
                                 </div>
-
                             </div>
-
                         </article>
-
                     ))}
 
                 </div>
-
             </section>
-
         </div>
     );
 };

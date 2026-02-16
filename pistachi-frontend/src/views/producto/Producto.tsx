@@ -23,7 +23,7 @@ const Productos = () => {
             try {
                 setCargando(true);
 
-                const respuesta = await fetch('http://localhost:8080/productos');
+                const respuesta = await fetch('http://localhost:80/productos');
                 
                 if (!respuesta.ok) {
                     throw new Error('Fallo al recuperar los productos del servidor');
