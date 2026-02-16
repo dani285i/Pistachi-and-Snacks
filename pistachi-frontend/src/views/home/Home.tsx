@@ -12,7 +12,6 @@ interface Producto {
     destacado: boolean;
 }
 
-
 const Home = () => {
 
     const [productos, setProductos] = useState<Producto[]>([]);
@@ -24,6 +23,7 @@ const Home = () => {
     useEffect(() => {
         
         const obtenerProductosDestacados = async () => {
+            
             try {
 
                 setEstaCargando(true);
@@ -51,17 +51,13 @@ const Home = () => {
 
     }, []);
 
-
-
-    // --- RENDERIZADOS CONDICIONALES ---
-    // Si aún estamos esperando al servidor, mostramos esto:
     if (estaCargando) {
         return (
             <div className="home-container">
                 <Hero />
                 <div className="estado-carga">
-                    <h2>Preparando las mejores delicias... 🥜</h2>
-                    <p>Dame un segundito.</p>
+                    <h2>Preparando las mejores delicias...</h2>
+                    <p>Espera...</p>
                 </div>
             </div>
         );
