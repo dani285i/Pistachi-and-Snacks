@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Hero from '../../components/hero/Hero';
+import Novedad from '../../components/novedad/Novedad';
 import './Home.css';
 
 interface Producto {
@@ -74,53 +75,43 @@ const Home = () => {
 
     return (
         <div className="home-container">
-
             <Hero />
+            <Novedad />
 
-            <section className="seccion-destacados">
+            <section className="destacados-section">
+
+                <h2 className="section-title">Nuestros Favoritos</h2>
                 
-                <div className="encabezado-seccion">
-                    <h2>Nuestros Favoritos</h2>
-                    <p>Los snacks de pistacho que más enamoran a nuestros clientes.</p>
-                </div>
-                
-                <div className="rejilla-productos">
+                <div className="productos-grid">
                     {productos.map((producto) => (
                     
-                        <article key={producto.id} className="tarjeta-producto">
-                            <div className="tarjeta-imagen">
-
+                        <article key={producto.id} className="producto-card">
+                            
+                            <div className="img-container">
                                 <img src={producto.imagen} alt={`Foto de ${producto.nombre}`} />
-                                <span className="etiqueta-destacado">Top Ventas</span>
-
+                                <span className="badge">Top Ventas</span>
                             </div>
                             
-                            <div className="tarjeta-contenido">
+                            <div className="producto-info">
+                                <h3>{producto.nombre}</h3>
 
-                                <h3 className="tarjeta-titulo">
-                                    {producto.nombre}
-                                </h3>
-                                <p className="tarjeta-descripcion">
+                                <p className="descripcion">
                                     {producto.descripcion}
                                 </p>
                                 
-                                <div className="tarjeta-pie">
-
+                                <div className="producto-footer">
                                     <span className="precio">
                                         {producto.precio.toFixed(2)} €
                                     </span>
-                                    
-                                    <button className="boton-comprar">Añadir</button>
 
+                                    <button className="add-btn">Añadir</button>
                                 </div>
                             </div>
                         </article>
                     ))}
-
                 </div>
             </section>
         </div>
     );
-};
-
+}
 export default Home;

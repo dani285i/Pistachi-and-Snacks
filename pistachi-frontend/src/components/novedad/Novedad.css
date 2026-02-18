@@ -1,0 +1,93 @@
+.novedad-fullscreen {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fcfcfc;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.novedad-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 0;
+}
+
+.novedad-hero-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+}
+
+.novedad-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+}
+
+.novedad-alert {
+    font-size: 4.5rem;
+    color: var(--accent);
+    margin: 0 0 20px 0;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse-text 2s infinite;
+}
+
+@keyframes pulse-text {
+    0% { 
+        opacity: 1; transform: scale(1); 
+    }
+
+    50% {
+        opacity: 0.8; transform: scale(1.02); 
+        }
+
+    100% { 
+        opacity: 1; transform: scale(1); 
+    }
+}
+
+.novedad-hero-title {
+    font-size: 3.5rem;
+    color: #2f3542;
+    margin: 0 0 20px 0;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.novedad-hero-price {
+    font-size: 3rem;
+    color: #8cc63f;
+    font-weight: 900;
+    margin-bottom: 40px;
+}
+
+.novedad-hero-button {
+    background-color: #2f3542;
+    color: white;
+    border: none;
+    padding: 20px 50px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.novedad-hero-button:hover {
+    background-color: #8cc63f;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(140, 198, 63, 0.3);
+}

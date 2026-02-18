@@ -1,3 +1,9 @@
+.home-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f9fbf7;
+}
+
 .destacados-section {
     max-width: 1200px;
     margin: 40px auto;
@@ -18,7 +24,7 @@
 }
 
 .producto-card {
-    background: #fff;
+    background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -67,7 +73,7 @@
 }
 
 .descripcion {
-    color: #666;
+    color: #616161;
     font-size: 0.9rem;
     flex-grow: 1;
 }

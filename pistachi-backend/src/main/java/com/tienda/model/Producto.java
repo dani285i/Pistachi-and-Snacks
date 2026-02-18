@@ -1,6 +1,11 @@
 package com.tienda.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "producto")
@@ -20,10 +25,8 @@ public class Producto {
     private String categoria;
     private Boolean destacado;
 
-    // Constructor vacío obligatorio
     public Producto() {}
 
-    // Getters y Setters (Necesarios para que Spring lea/escriba los datos)
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
