@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useCart } from '../../context/carrito/Carrito';
 import './Producto.css';
 
 interface Producto {
@@ -17,6 +18,7 @@ const Productos = () => {
     const [cargando, setCargando] = useState<boolean>(true);
     const [huboError, setHuboError] = useState<boolean>(false);
     const [textoBusqueda, setTextoBusqueda] = useState<string>('');
+    const { addToCart } = useCart();
 
     useEffect(() => {
         const obtenerTodosLosProductos = async () => {
@@ -112,9 +114,21 @@ const Productos = () => {
                                             {/* Protegemos también el precio por si llega nulo */}
                                             {producto.precio ? producto.precio.toFixed(2) : "0.00"} €
                                         </span>
-                                        <button className="boton-accion">
-                                            Añadir al Carrito
-                                        </button>
+                                        <button 
+                                        className="boton-accion"
+                                        onClick={() => {
+                                            addToCart({
+                                                id: producto.id,
+                                                nombre: producto.nombre,
+                                                precio: producto.precio,
+                                                imagen: producto.imagen,
+                                                cantidad: 1
+                                            });
+                                            alert(`¡${producto.nombre} añadido al carrito!`);
+                                        }}
+                                    >
+                                        Añadir al Carrito
+                                    </button>
                                     </div>
                                 </div>
                             </article>

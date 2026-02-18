@@ -5,18 +5,24 @@ import Home from './views/home/Home';
 import Login from './views/login/Login';
 import Productos from './views/producto/Producto'; 
 import DetalleProducto from './views/detalleproducto/DetalleProducto';
+import Carrito from './views/carrito/Carrito';
+import { CartProvider } from './context/carrito/Carrito';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/producto/:id" element={<DetalleProducto />} />
-      </Routes>
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/productos" element={<Productos />} />
+          <Route path="/producto/:id" element={<DetalleProducto />} />
+          {/* Añadimos la ruta del carrito */}
+          <Route path="/carrito" element={<Carrito />} /> 
+        </Routes>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 
