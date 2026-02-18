@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Hero from '../../components/hero/Hero';
 import Novedad from '../../components/novedad/Novedad';
+import { useCart } from '../../context/carrito/Carrito';
+import { useAuth } from '../../context/auth/Auth';
 import './Home.css';
 
 interface Producto {
@@ -18,6 +21,9 @@ const Home = () => {
     const [productos, setProductos] = useState<Producto[]>([]);
     const [estaCargando, setEstaCargando] = useState<boolean>(true);
     const [huboError, setHuboError] = useState<boolean>(false);
+    const { addToCart } = useCart();
+    const { usuario } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         
@@ -48,6 +54,17 @@ const Home = () => {
         obtenerProductosDestacados();
 
     }, []);
+
+    const añadirItem = (prod: Producto) => {
+        addToCart({
+            id: prod.id,
+            nombre: prod.nombre,
+            precio: prod.precio,
+            imagen: prod.imagen,
+            cantidad: 1
+        });
+        alert(`${prod.nombre} añadido al carrito`);
+    };
 
     if (estaCargando) {
         return (
@@ -104,7 +121,15 @@ const Home = () => {
                                         {producto.precio.toFixed(2)} €
                                     </span>
 
-                                    <button className="add-btn">Añadir</button>
+                                    {usuario ? (
+                                        <button className="add-btn" onClick={() => añadirItem(producto)}>
+                                            Añadir al Carrito
+                                        </button>
+                                    ) : (
+                                        <button className="add-btn" onClick={() => navigate('/login')}>
+                                            Inicia sesión para comprar
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </article>

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/auth/Auth';
 import './Login.css';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -22,6 +24,7 @@ const Login = () => {
 
             if (respuesta.ok) {
                 const usuario = await respuesta.json();
+                login(usuario);
                 alert(`¡Bienvenido ${usuario.nombre}!`);
                 navigate('/');
             } else {
