@@ -24,7 +24,30 @@
     letter-spacing: 1px;
 }
 
-.nav-logo span { color: var(--accent); }
+.nav-logo span { 
+    color: var(--accent); 
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.login-link {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    transition: var(--transition);
+}
+
+.login-link:hover {
+    background: var(--primary);
+    color: white;
+}
 
 .nav-links a {
     margin: 0 1.5rem;
