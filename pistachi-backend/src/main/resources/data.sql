@@ -8,8 +8,8 @@ INSERT INTO producto (id, nombre, descripcion, precio, imagen, categoria, destac
 (7, 'Donut de Pistacho', 'Esponjoso donut artesanal cubierto con glaseado crujiente y trocitos de pistacho tostado.', 2.99, '/img/donut-de-pistacho.png', 'Bollería', 1),
 (8, 'Smoothie de Pistacho', 'Batido helado y refrescante con base de leche, vainilla y crema de pistacho pura.', 3.49, '/img/smoothie-de-pistacho.png', 'Bebidas', 0),
 (9, 'Tiramisú de Pistacho', 'Versión del clásico postre italiano con bizcochos empapados en café y mascarpone al pistacho.', 3.99, '/img/tiramisu-de-pistacho.png', 'Postres', 0),
-(10, 'Churros con Relleno de Pistacho (9 uds.)', 'Deliciosos churros con relleno de crema de pistacho artesanal y chocolate blanco.', 4.99, '/img/churros-de-pistacho.png', 'Bollería', 0),
+(10, 'Churros con Relleno de Pistacho (9 uds.)', 'Deliciosos churros con relleno de crema de pistacho artesanal y chocolate blanco.', 4.99, '/img/churros-de-pistacho.png', 'Bollería', 1),
 (11, 'Magdalena de Pistacho (1 ud.)', 'Esponjosa magdalena con pistachos en su interior completamente hecha en casa y nata de pistacho por encima.', 1.49, '/img/magdalena-de-pistacho.png', 'Bollería', 0),
-(12, 'Napolitana de Pistacho', 'Napolitana clásica de toda la vida pero con un relleno cremoso con trocitos de pistacho.', 1.99, '/img/napolitana-de-pistacho.png', 'Bollería', 0),
+(12, 'Napolitana de Pistacho', 'Napolitana clásica de toda la vida pero con un relleno cremoso con trocitos de pistacho.', 1.99, '/img/napolitana-de-pistacho.png', 'Bollería', 1),
 (13, 'Palmera de Pistacho', 'Palmera con glaseado de pistacho por encima y un relleno con crema de pistacho para darle ese toque pistachi.', 1.99, '/img/palmera-de-pistacho.png', 'Bollería', 0),
-(14, 'Tostadas con Crema de Pistacho (2 uds.)', 'Crujientes y encantadoras tostadas para acompañar con el café mañanero con crema de pistacho.', 2.49, '/img/tostada-de-pistacho.png', 'Bollería', 0);
+(14, 'Tostadas con Crema de Pistacho (2 uds.)', 'Crujientes y encantadoras tostadas para acompañar con el café mañanero con crema de pistacho.', 2.49, '/img/tostada-de-pistacho.png', 'Bollería', 1);
