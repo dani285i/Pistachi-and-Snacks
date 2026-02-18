@@ -1,11 +1,29 @@
 :root {
-    --primary: #2D5A27;
-    --accent: #C5A059;
-    --bg-cream: #F9F7F2;
-    --bg-cream-darker: #eceae5;
-    --text-main: #1A1A1A;
-    --text-muted: #666666;
-    --white: #ffffff;
+    /* --- Paleta Base --- */
+    --primary: #2d5a27;
+    --accent: #d4e157;
+    --backgroud-crema: #fdfaf5;
+    
+    /* Tonos de la Cáscara de Pisacho */
+    --cascara-tostada: #d2b48c;
+    --cascara-suave: #eaddca;
+    
+    /* Tonos de Tostado / Repostería */
+    --marron-tostado: #6b4423;
+    --dorado-galleta: #c68e17;
+    
+    /* Verdes Refuerzo */
+    --verde-hoja: #4c7c32;
+    --pistacho-suave: #f1f8e9;
+
+    /* Alertas */
+    --error-rojo: #e57373;
+    --correcto-verde: #81c784; 
+    
+    /* Sombras y Profundidad */
+    --shadow-pistachio: rgba(45, 90, 39, 0.1);
+
+    /* Transición*/
     --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 

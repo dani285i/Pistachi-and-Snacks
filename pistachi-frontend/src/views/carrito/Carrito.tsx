@@ -59,23 +59,20 @@ const Carrito = () => {
                                 <button 
                                     className="btn-cantidad" 
                                     onClick={() => restarCantidad(item.id, item.cantidad)}
-                                    disabled={item.cantidad <= 1}
-                                >
+                                    disabled={item.cantidad <= 1} >
                                     -
                                 </button>
                                 <span className="cantidad-numero">{item.cantidad}</span>
                                 <button 
                                     className="btn-cantidad" 
-                                    onClick={() => sumarCantidad(item.id, item.cantidad)}
-                                >
+                                    onClick={() => sumarCantidad(item.id, item.cantidad)} >
                                     +
                                 </button>
                             </div>
                             
                             <button 
                                 onClick={() => handleEliminar(item.id, item.nombre)}
-                                className="btn-eliminar"
-                            >
+                                className="btn-eliminar">
                                 Eliminar
                             </button>
                         </div>

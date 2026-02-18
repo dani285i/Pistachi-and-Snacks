@@ -7,6 +7,7 @@ import Productos from './views/producto/Producto';
 import DetalleProducto from './views/detalleproducto/DetalleProducto';
 import Carrito from './views/carrito/Carrito';
 import { CartProvider } from './context/carrito/Carrito';
+import Registro from './views/registro/Registro';
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Registro />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/producto/:id" element={<DetalleProducto />} />
-          {/* Añadimos la ruta del carrito */}
           <Route path="/carrito" element={<Carrito />} /> 
         </Routes>
       </BrowserRouter>

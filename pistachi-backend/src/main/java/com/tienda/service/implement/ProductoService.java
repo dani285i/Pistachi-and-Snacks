@@ -1,7 +1,7 @@
 package com.tienda.service.implement;
 
 import com.tienda.model.Producto;
-import com.tienda.repository.ProductoRepository;
+import com.tienda.repository.IProductoRepository;
 import com.tienda.service.interfaces.IProductoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public class ProductoService implements IProductoService {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     @Override
     public List<Producto> obtenerTodos() {

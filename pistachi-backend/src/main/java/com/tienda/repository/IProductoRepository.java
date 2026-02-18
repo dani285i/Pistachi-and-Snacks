@@ -6,6 +6,6 @@ import com.tienda.model.Producto;
 
 import java.util.List;
 
-public interface ProductoRepository extends JpaRepository<Producto, Long> {
+public interface IProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByDestacadoTrue();
 }

@@ -1,5 +1,7 @@
 package com.tienda.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,26 +12,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "producto")
+@Table(name = "usuario")
 @NoArgsConstructor
 @Data
-public class Producto {
-    
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private String nombre;
-    
-    @Column(columnDefinition = "TEXT")
-    private String descripcion;
-    
-    private Double precio;
 
-    private String imagen;
+    @Column(nullable = false)
+    private String apellidos;
 
-    private String categoria;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    private Boolean destacado;
+    @Column(nullable = false)
+    private LocalDate fechaNacimiento;
 
 }

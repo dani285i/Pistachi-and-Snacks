@@ -1,4 +1,4 @@
-INSERT IGNORE INTO producto (id, nombre, descripcion, precio, imagen, categoria, destacado) VALUES
+INSERT INTO producto (id, nombre, descripcion, precio, imagen, categoria, destacado) VALUES
 (1, 'Croissant de Pistacho (1 ud.)', 'Croissant de doble horneado relleno con crema de pistacho ibérico.', 2.20, '/img/croissant-de-pistacho.png', 'Bollería', 1),
 (2, 'Cheesecake Esmeralda (1 ud.)', 'Tarta de queso horneada al estilo Nueva York con praliné de pistacho.', 3.50, '/img/tarta-de-queso-de-pistacho.png', 'Tartas', 0),
 (3, 'Cookie Bomb Rellena (1 ud.)', 'Galleta artesanal con corazón fundido de chocolate blanco y crema de pistacho.', 1.99, '/img/galleta-de-pistacho.png', 'Galletas', 1),

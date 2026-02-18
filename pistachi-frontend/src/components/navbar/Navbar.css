@@ -36,15 +36,31 @@
 
 .login-link {
     text-decoration: none;
-    color: var(--primary);
+    color: var(--backgroud-crema);
+    background-color: var(--primary);
     font-weight: 600;
     padding: 0.6rem 1.2rem;
     border: 2px solid var(--primary);
-    border-radius: 50px;
+    border-radius: 20px;
     transition: var(--transition);
 }
 
 .login-link:hover {
+    background: #254920;
+    color: white;
+}
+
+.signin-link {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--primary);
+    border-radius: 20px;
+    transition: var(--transition);
+}
+
+.signin-link:hover {
     background: var(--primary);
     color: white;
 }
