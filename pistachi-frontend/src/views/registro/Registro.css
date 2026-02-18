@@ -7,7 +7,7 @@
 }
 
 .registro-card {
-    background: white;
+    background: var(--white);
     padding: 2.5rem;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -27,7 +27,7 @@
 }
 
 .error-container {
-    background: #fff1f0;
+    background: var(--error-bg);
     border: 1px solid var(--error-rojo);
     padding: 0.8rem;
     border-radius: 8px;
@@ -43,7 +43,7 @@
 .registro-btn {
     width: 100%;
     background: var(--primary);
-    color: white;
+    color: var(--white);
     border: none;
     padding: 1rem;
     border-radius: 50px;
@@ -54,16 +54,16 @@
 
 .registro-card form .input-group input {
     background-color: var(--pistacho-suave);
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-input);
     padding: 0.8rem;
     border-radius: 8px;
     width: 100%;
     box-sizing: border-box;
-    color: #374151;
+    color: var(--text-input);
 }
 
 .registro-card form .input-group input:focus {
-    background-color: #ffffff;
+    background-color: var(--white);
     border-color: var(--primary);
     outline: none;
     box-shadow: 0 0 0 2px rgba(45, 90, 39, 0.1);

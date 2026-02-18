@@ -11,13 +11,13 @@
 }
 
 .catalogo-cabecera h1 {
-    color: #2c5e1a;
+    color: var(--primary);
     font-size: 2.8rem;
     margin-bottom: 10px;
 }
 
 .catalogo-cabecera p {
-    color: #666666;
+    color: var(--text-muted);
     font-size: 1.1rem;
     margin-bottom: 30px;
 }
@@ -26,15 +26,15 @@
     max-width: 600px;
     margin: 0 auto;
     display: flex;
-    background-color: #ffffff;
-    border: 2px solid #e0e0e0;
+    background-color: var(--white);
+    border: 2px solid var(--border-med);
     border-radius: 50px;
     overflow: hidden;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .contenedor-buscador:focus-within {
-    border-color: #86B049;
+    border-color: var(--verde-pistacho);
     box-shadow: 0 0 0 4px rgba(134, 176, 73, 0.1);
 }
 
@@ -45,12 +45,12 @@
     border: none; 
     outline: none;
     background: transparent;
-    color: #333;
+    color: var(--text-dark);
 }
 
 .boton-buscar {
-    background-color: #86B049;
-    color: white;
+    background-color: var(--verde-pistacho);
+    color: var(--white);
     border: none;
     padding: 0 35px;
     font-size: 1.1rem;
@@ -63,7 +63,7 @@
 }
 
 .boton-buscar:hover {
-    background-color: #6a8c3a;
+    background-color: var(--verde-pistacho-hover);
 }
 
 .rejilla-catalogo {
@@ -73,8 +73,8 @@
 }
 
 .tarjeta-basica {
-    background-color: #ffffff;
-    border: 1px solid #eeeeee;
+    background-color: var(--white);
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     overflow: hidden;
     display: flex;
@@ -107,19 +107,19 @@
 
 .tarjeta-basica-info h3 {
     margin: 0 0 5px 0;
-    color: #333333;
+    color: var(--text-dark);
 }
 
 .categoria-texto {
     font-size: 0.85rem;
-    color: #86B049;
+    color: var(--verde-pistacho);
     text-transform: uppercase;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
 .descripcion-corta {
-    color: #666666;
+    color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.5;
     flex-grow: 1;
@@ -130,19 +130,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #f5f5f5;
+    border-top: 1px solid var(--bg-grey-dark);
     padding-top: 15px;
 }
 
 .precio-etiqueta {
     font-size: 1.3rem;
     font-weight: 800;
-    color: #2c5e1a;
+    color: var(--primary);
 }
 
 .boton-accion {
-    background-color: #86B049;
-    color: white;
+    background-color: var(--verde-pistacho);
+    color: var(--white);
     border: none;
     padding: 10px 18px;
     border-radius: 6px;
@@ -152,16 +152,16 @@
 }
 
 .boton-accion:hover {
-    background-color: #6a8c3a;
+    background-color: var(--verde-pistacho-hover);
 }
 
 .catalogo-estado,
 .sin-resultados {
     text-align: center;
     padding: 80px 20px;
-    color: #666666;
+    color: var(--text-muted);
 }
 
 .catalogo-estado.error h2 {
-    color: #d32f2f;
+    color: var(--error-fuerte);
 }

@@ -2,7 +2,7 @@
     display: flex;
     width: 100%;
     min-height: 100vh;
-    background-color: #fcfcfc;
+    background-color: var(--bg-light);
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -59,7 +59,7 @@
 
 .novedad-hero-title {
     font-size: 3.5rem;
-    color: #2f3542;
+    color: var(--text-main);
     margin: 0 0 20px 0;
     font-weight: 800;
     line-height: 1.1;
@@ -67,14 +67,14 @@
 
 .novedad-hero-price {
     font-size: 3rem;
-    color: #8cc63f;
+    color: var(--verde-brillante);
     font-weight: 900;
     margin-bottom: 40px;
 }
 
 .novedad-hero-button {
-    background-color: #2f3542;
-    color: white;
+    background-color: var(--text-main);
+    color: var(--white);
     border: none;
     padding: 20px 50px;
     font-size: 1.3rem;
@@ -87,7 +87,7 @@
 }
 
 .novedad-hero-button:hover {
-    background-color: #8cc63f;
+    background-color: var(--verde-brillante);
     transform: translateY(-5px);
     box-shadow: 0 15px 25px rgba(140, 198, 63, 0.3);
 }
