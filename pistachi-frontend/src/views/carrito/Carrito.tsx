@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
 import './Carrito.css';
 
 const Carrito = () => {
-    const { cartItems, removeFromCart, updateQuantity, getTotal } = useCart();
-
+    const { cartItems, removeFromCart, updateQuantity, getTotal, clearCart } = useCart();
+    const navigate = useNavigate(); 
     const handleEliminar = (id: number, nombre: string) => {
         const confirmar = window.confirm(`¿Estás seguro de que deseas eliminar "${nombre}" del carrito?`);
         if (confirmar) {
@@ -19,9 +19,15 @@ const Carrito = () => {
     };
 
     const sumarCantidad = (id: number, cantidadActual: number) => {
-        if (cantidadActual < 20) { // Ponemos un límite razonable si quieres
+        if (cantidadActual < 20) {
             updateQuantity(id, cantidadActual + 1);
         }
+    };
+
+    const handleFinalizarCompra = () => {
+        alert("¡Compra Realizada!");
+        clearCart();
+        navigate('/productos');
     };
 
     if (cartItems.length === 0) {
@@ -83,7 +89,9 @@ const Carrito = () => {
 
             <div className="carrito-resumen">
                 <h2>Total: {getTotal().toFixed(2)} €</h2>
-                <button className="btn-comprar">Finalizar Compra</button>
+                <button className="btn-comprar" onClick={handleFinalizarCompra}>
+                    Finalizar Compra
+                </button>
             </div>
         </div>
     );
