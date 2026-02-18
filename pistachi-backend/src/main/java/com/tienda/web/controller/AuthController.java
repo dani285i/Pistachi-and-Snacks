@@ -1,10 +1,12 @@
 package com.tienda.web.controller;
 
 import com.tienda.model.Usuario;
-import com.tienda.repository.UsuarioRepository;
+import com.tienda.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private IUsuarioRepository usuarioRepository;
 
     @PostMapping("/registro")
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
@@ -23,4 +25,19 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Error al registrar el usuario");
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credenciales) {
+        String email = credenciales.get("email");
+        String password = credenciales.get("password");
+
+        Usuario usuario = usuarioRepository.findByEmail(email);
+
+        if (usuario != null && usuario.getPassword().equals(password)) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.status(401).body("Credenciales inválidas");
+        }
+    }
+
 }

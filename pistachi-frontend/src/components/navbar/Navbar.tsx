@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
+import { useAuth } from '../../context/auth/Auth';
 import './Navbar.css';
 
 const Navbar = () => {
     const { cartItems } = useCart();
+    const { usuario, logout } = useAuth();
     const totalItems = cartItems.reduce((acc, item) => acc + item.cantidad, 0);
     
     return (
@@ -17,8 +19,17 @@ const Navbar = () => {
                 </div>
                 
                 <div className="nav-actions">
-                    <Link to="/login" className="login-link">Log In</Link>
-                    <Link to="/registro" className="signin-link">Registrarse</Link>
+                    {usuario ? (
+                        <>
+                            <span className="user-welcome">Hola, {usuario.nombre}</span>
+                            <button onClick={logout} className="logout-btn">Salir</button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="login-link">Entrar</Link>
+                            <Link to="/registro" className="signin-link">Registrarse</Link>
+                        </>
+                    )}
                     
                     <Link to="/carrito" className="cart-button" style={{ position: 'relative' }}>
                         Carrito

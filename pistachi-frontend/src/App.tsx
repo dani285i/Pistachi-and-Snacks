@@ -7,23 +7,27 @@ import Productos from './views/producto/Producto';
 import DetalleProducto from './views/detalleproducto/DetalleProducto';
 import Carrito from './views/carrito/Carrito';
 import { CartProvider } from './context/carrito/Carrito';
+import { AuthProvider } from './context/auth/Auth';
 import Registro from './views/registro/Registro';
+import ProtectedRoute from './components/protectedroute/ProtectedRoute';
 
 function App() {
   return (
-    <CartProvider>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Registro />} />
-          <Route path="/productos" element={<Productos />} />
-          <Route path="/producto/:id" element={<DetalleProducto />} />
-          <Route path="/carrito" element={<Carrito />} /> 
-        </Routes>
-      </BrowserRouter>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/productos" element={<Productos />} />
+            <Route path="/producto/:id" element={<DetalleProducto />} />
+            <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} /> 
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

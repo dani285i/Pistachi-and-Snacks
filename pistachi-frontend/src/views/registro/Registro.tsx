@@ -6,7 +6,7 @@ import './Registro.css';
 const Registro = () => {
     const navigate = useNavigate();
     const [errores, setErrores] = useState<string[]>([]);
-    
+
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -36,7 +36,7 @@ const Registro = () => {
             setErrores(["Todos los campos son obligatorios."]);
             return;
         }
-        
+
         if (!validarEdad(formData.fechaNacimiento)) {
             setErrores(["Debes ser mayor de edad para registrarte."]);
             return;

@@ -38,7 +38,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             return [...prev, item];
         });
     };
-
+    
     const removeFromCart = (id: number) => {
         setCartItems(prev => prev.filter(i => i.id !== id));
     };
