@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/auth/Auth';
@@ -6,10 +6,16 @@ import './Login.css';
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, usuario } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (usuario) {
+            navigate('/');
+        }
+    }, [usuario, navigate]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();

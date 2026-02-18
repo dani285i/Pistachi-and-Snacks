@@ -51,23 +51,22 @@ Antes de proceder, es necesario contar con el siguiente software instalado en el
 
 ---
 
-## Instrucciones de Instalación y Ejecución
+## Instalación y Configuración
 
-Siga estos pasos de forma secuencial para levantar el proyecto en un entorno local. [cite_start]Estas instrucciones están diseñadas para ser lo suficientemente detalladas para garantizar una ejecución exitosa[cite: 32].
+### 1. Base de Datos
+1. Abre tu cliente de MySQL (ej. MySQL Workbench).
+2. Ejecuta el script SQL que se encuentra en `pistachi-backend/src/main/resources/data.sql`. Esto creará la base de datos `pistachi_and_snacks`, las tablas necesarias y añadirá los datos de prueba.
+3. Asegúrate de revisar el archivo `application.properties` en el backend para confirmar que tu usuario y contraseña de MySQL (por defecto root) coinciden con los de tu máquina local.
 
-### Paso 1: Configuración de la Base de Datos
+### 2. Backend (Spring Boot)
+1. Navega a la carpeta del backend: `cd pistachi-backend`
+2. Compila y ejecuta el proyecto usando Maven:
+   - En Windows: `mvnw.cmd spring-boot:run`
+   - En Linux/Mac: `./mvnw spring-boot:run`
+3. El servidor backend se iniciará en el puerto 80 (http://localhost:80).
 
-1. Abra su cliente de base de datos preferido (MySQL Workbench, DBeaver, o la consola de línea de comandos de MySQL).
-2. Conéctese a su servidor local de MySQL.
-3. Localice el archivo `data.sql` que se encuentra en la ruta `pistachi-backend/src/main/resources/`.
-4. Ejecute el contenido de este script en su servidor. Este script se encargará de:
-   * Crear la base de datos `pistachidb`.
-   * Crear las tablas necesarias (`producto` y `usuario`).
-   * Insertar los datos de prueba iniciales del catálogo.
-
-### Paso 2: Configuración y Ejecución del Backend
-
-1. Abra un terminal o línea de comandos.
-2. Navegue hasta el directorio raíz del backend:
-   ```bash
-   cd ruta/al/proyecto/pistachi-backend
+### 3. Frontend (React)
+1. Abre una nueva terminal y navega a la carpeta del frontend: `cd pistachi-frontend`
+2. Instala las dependencias del proyecto ejecutando: `npm install`
+3. Inicia el servidor de desarrollo ejecutando: `npm run dev`
+4. Accede a la aplicación desde tu navegador a través del enlace local que proporcionará Vite (generalmente http://localhost:5173).

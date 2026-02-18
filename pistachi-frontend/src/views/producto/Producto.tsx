@@ -91,7 +91,7 @@ const Productos = () => {
                         onChange={(evento) => setTextoBusqueda(evento.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && buscarProductos()}
                     />
-                    <button onClick={buscarProductos} className="boton-accion">Buscar</button>
+                    <button onClick={buscarProductos} className="boton-buscar">Buscar</button>
                 </div>
             </header>
 

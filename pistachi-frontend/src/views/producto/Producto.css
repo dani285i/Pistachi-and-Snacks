@@ -25,20 +25,45 @@
 .contenedor-buscador {
     max-width: 600px;
     margin: 0 auto;
+    display: flex;
+    background-color: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contenedor-buscador:focus-within {
+    border-color: #86B049;
+    box-shadow: 0 0 0 4px rgba(134, 176, 73, 0.1);
 }
 
 .input-buscador {
-    width: 100%;
+    flex-grow: 1;
     padding: 15px 25px;
     font-size: 1.1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 50px;
+    border: none; 
     outline: none;
-    transition: border-color 0.3s ease;
+    background: transparent;
+    color: #333;
 }
 
-.input-buscador:focus {
-    border-color: #86B049;
+.boton-buscar {
+    background-color: #86B049;
+    color: white;
+    border: none;
+    padding: 0 35px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.boton-buscar:hover {
+    background-color: #6a8c3a;
 }
 
 .rejilla-catalogo {

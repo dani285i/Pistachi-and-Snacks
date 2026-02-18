@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/auth/Auth';
 import './Registro.css';
 
 const Registro = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [errores, setErrores] = useState<string[]>([]);
 
     const [formData, setFormData] = useState({
@@ -50,10 +52,13 @@ const Registro = () => {
             });
 
             if (respuesta.ok) {
-                alert("¡Registro exitoso!");
+                const usuario = await respuesta.json(); 
+                login(usuario); // Iniciamos sesión automáticamente
+                
+                alert("Registro exitoso. Sesion iniciada.");
                 navigate('/');
             } else {
-                setErrores(["Error al registrar el usuario. Inténtalo de nuevo."]);
+                setErrores(["Error al registrar el usuario. Intentalo de nuevo."]);
             }
         } catch (error) {
             setErrores(["No se pudo conectar con el servidor."]);

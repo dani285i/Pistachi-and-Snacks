@@ -54,9 +54,9 @@ const Home = () => {
         return (
             <div className="home-container">
                 <Hero />
-                <div className="estado-error">
-                    <h2>Ups Algo salió mal</h2>
-                    <p>No pudimos cargar los productos.</p>
+                <div className="estado-error" style={{ textAlign: 'center', padding: '2rem' }}>
+                    <h2>Ups. Algo salió mal</h2>
+                    <p>No pudimos cargar los productos destacados.</p>
                 </div>
             </div>
         );
@@ -65,6 +65,15 @@ const Home = () => {
     return (
         <div className="home-container">
             <Hero />
+            
+            <section className="descripcion-tienda">
+                <h2>Bienvenidos a Pistachi & Snacks</h2>
+                <p className="descripcion-texto">
+                    Somos tu rincón favorito para disfrutar de las mejores delicias artesanales. 
+                    Nuestra especialidad es fusionar la repostería clásica con el inconfundible sabor del pistacho ibérico.
+                </p>
+            </section>
+
             <Novedad />
 
             <section className="destacados-section">
@@ -99,4 +108,5 @@ const Home = () => {
         </div>
     );
 }
+
 export default Home;
