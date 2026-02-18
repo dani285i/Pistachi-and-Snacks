@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
+import { useAuth } from '../../context/auth/Auth';
 import './DetalleProducto.css';
-
 
 interface Producto {
     id: number;
@@ -14,139 +14,66 @@ interface Producto {
     destacado: boolean;
 }
 
-
 const DetalleProducto = () => {
-
     const { id } = useParams();
-    const [producto, setProducto] = useState<Producto | null>(null);
-    const [cargando, setCargando] = useState<boolean>(true);
-    const [huboError, setHuboError] = useState<boolean>(false);
+    const navigate = useNavigate();
     const { addToCart } = useCart();
-    const [cantidadLocal, setCantidadLocal] = useState<number>(1);
-
+    const { usuario } = useAuth();
+    
+    const [producto, setProducto] = useState<Producto | null>(null);
+    const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
-        
-        const obtenerDetalleProducto = async () => {
+        const obtenerProducto = async () => {
             try {
-                setCargando(true);
-                
                 const respuesta = await fetch(`http://localhost:80/productos/${id}`);
-                
-                if (!respuesta.ok) {
-                    throw new Error('No se encontró el producto en el servidor');
-                }
-
-                const datosGuardados = await respuesta.json();
-                setProducto(datosGuardados);
-
+                if (!respuesta.ok) throw new Error('Producto no encontrado');
+                const data = await respuesta.json();
+                setProducto(data);
             } catch (error) {
-                console.error("Error al cargar el detalle:", error);
-                setHuboError(true);
+                console.error(error);
             } finally {
                 setCargando(false);
             }
         };
-
-        if (id) {
-            obtenerDetalleProducto();
-        }
-
+        obtenerProducto();
     }, [id]);
 
-    if (cargando) {
-        return (
-            <div className="detalle-estado">
-                <h2>Cargando información del producto...</h2>
-            </div>
-        );
-    }
+    const añadirItem = () => {
+        if (producto) {
+            addToCart({
+                id: producto.id,
+                nombre: producto.nombre,
+                precio: producto.precio,
+                imagen: producto.imagen,
+                cantidad: 1
+            });
+            alert(`${producto.nombre} añadido al carrito`);
+        }
+    };
 
-    if (huboError || !producto) {
-        return (
-            <div className="detalle-estado error">
-                <h2>No hemos encontrado este producto</h2>
-                <p>Es posible que haya sido retirado de nuestro menú.</p>
-                <Link to="/productos" className="boton-volver">Volver al catálogo</Link>
-            </div>
-        );
-    }
+    if (cargando) return <div>Cargando detalle...</div>;
+    if (!producto) return <div>Producto no encontrado</div>;
 
     return (
-        <div className="detalle-contenedor">
-            
-            <div className="botonera-superior">
-                <Link to="/productos" className="enlace-volver">
-                    Volver al menú
-                </Link>
+        <div className="detalle-container">
+            <div className="detalle-imagen">
+                <img src={producto.imagen} alt={producto.nombre} />
             </div>
-
-            <article className="detalle-tarjeta">
+            <div className="detalle-info">
+                <h2>{producto.nombre}</h2>
+                <p className="categoria">Categoría: {producto.categoria}</p>
+                <p className="descripcion">{producto.descripcion}</p>
+                <p className="precio">{producto.precio.toFixed(2)} €</p>
                 
-                <div className="detalle-galeria">
-                    <img 
-                        src={producto.imagen} 
-                        alt={`Fotografía de ${producto.nombre}`} 
-                        className="detalle-imagen"
-                    />
+                <div className="acciones">
+                    {usuario ? (
+                        <button className="btn-añadir" onClick={añadirItem}>Añadir al Carrito</button>
+                    ) : (
+                        <button className="btn-login" onClick={() => navigate('/login')}>Inicia sesión para comprar</button>
+                    )}
                 </div>
-
-                <div className="detalle-info">
-                    
-                    <span className="detalle-categoria">
-                        {producto.categoria}
-                    </span>
-                    
-                    <h1 className="detalle-titulo">
-                        {producto.nombre}
-                    </h1>
-                    
-                    <p className="detalle-precio">
-                        {producto.precio.toFixed(2)} €
-                    </p>
-                    
-                    <div className="detalle-descripcion">
-                        <h3>Acerca de esta delicia</h3>
-                        <p>{producto.descripcion}</p>
-                    </div>
-
-                    <div className="detalle-acciones">
-                        
-                        <div className="selector-cantidad">
-                            <label htmlFor="cantidad">Cantidad:</label>
-                            <input 
-                                type="number" 
-                                id="cantidad" 
-                                value={cantidadLocal} 
-                                min="1" 
-                                max="10" 
-                                onChange={(e) => setCantidadLocal(parseInt(e.target.value) || 1)}
-                            />
-                        </div>
-
-                        <button 
-                            className="boton-añadir-carrito"
-                            onClick={() => {
-                                if (producto) {
-                                    addToCart({
-                                        id: producto.id,
-                                        nombre: producto.nombre,
-                                        precio: producto.precio,
-                                        imagen: producto.imagen,
-                                        cantidad: cantidadLocal
-                                    });
-                                    alert(`${cantidadLocal} x ${producto.nombre} añadido al carrito`);
-                                }
-                            }} >
-                            Añadir al Carrito
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
+            </div>
         </div>
     );
 };

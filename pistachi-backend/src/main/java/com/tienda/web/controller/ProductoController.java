@@ -41,4 +41,10 @@ public class ProductoController {
         }
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Producto>> buscarPorTexto(@RequestParam String texto) {
+        List<Producto> productos = productoService.buscarPorTexto(texto);
+        return ResponseEntity.ok(productos);
+    }
+
 }
