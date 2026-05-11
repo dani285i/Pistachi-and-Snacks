@@ -1,4 +1,4 @@
-# Pistachitos Y Snacks - Tienda Online
+# Pistachi & Snacks - Tienda Online
 
 ## Descripción del Proyecto
 Esta aplicación web es una plataforma de comercio electrónico orientada a la venta de productos de repostería y snacks basados en pistacho. El proyecto cumple con los requisitos de un sistema de ventas completo, dividiendo su arquitectura en un frontend interactivo y un backend robusto que gestiona la lógica de negocio y la persistencia de datos. 
