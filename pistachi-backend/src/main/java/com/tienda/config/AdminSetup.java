@@ -25,7 +25,7 @@ public class AdminSetup implements CommandLineRunner {
             Usuario admin = new Usuario();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123")); // La contraseña de admin
-            admin.setNombre("Super");
+            admin.setNombre("Admin");
             admin.setApellidos("Administrador");
             admin.setEmail("admin@pistachi.com");
             admin.setFechaNacimiento(LocalDate.of(2006, 7, 27));

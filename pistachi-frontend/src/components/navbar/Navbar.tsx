@@ -6,6 +6,8 @@ import './Navbar.css';
 const Navbar = () => {
     const { cartItems } = useCart();
     const { usuario, logout } = useAuth();
+    
+    // calculo cuantos articulos hay metidos en el carrito sumando las cantidades para pintar la bolita arriba
     const totalItems = cartItems.reduce((acc, item) => acc + item.cantidad, 0);
     
     return (
@@ -21,6 +23,10 @@ const Navbar = () => {
                 <div className="nav-actions">
                     {usuario ? (
                         <>
+                            {/* reviso si el que ha entrado tiene el nombre de admin para enseñarle el acceso al panel de control */}
+                            {usuario.username === 'admin' && (
+                                <Link to="/admin" style={{ marginRight: '15px', color: 'var(--primary)', fontWeight: 'bold' }}>Panel Admin</Link>
+                            )}
                             <span className="user-welcome">Hola, {usuario.nombre}</span>
                             <button onClick={logout} className="logout-btn">Salir</button>
                         </>
