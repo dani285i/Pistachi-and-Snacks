@@ -11,6 +11,8 @@ import { AuthProvider } from './context/auth/Auth';
 import Registro from './views/registro/Registro';
 import ProtectedRoute from './components/protectedroute/ProtectedRoute';
 import Footer from './components/footer/Footer';
+import { AdminDashboard } from './views/admindashboard/admindashboard';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
                 <Route path="/productos" element={<Productos />} />
                 <Route path="/producto/:id" element={<DetalleProducto />} />
                 <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} /> 
+                <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
               </Routes>
             </div>
 
