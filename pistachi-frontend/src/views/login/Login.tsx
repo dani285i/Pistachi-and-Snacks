@@ -22,7 +22,7 @@ const Login = () => {
         setError('');
 
         try {
-            const respuesta = await fetch('http://localhost:80/auth/login', {
+            const respuesta = await fetch('http://localhost:9090/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })

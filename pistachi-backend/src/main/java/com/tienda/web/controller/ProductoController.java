@@ -1,6 +1,7 @@
 package com.tienda.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,31 @@ public class ProductoController {
     public ResponseEntity<List<Producto>> buscarPorTexto(@RequestParam String texto) {
         List<Producto> productos = productoService.buscarPorTexto(texto);
         return ResponseEntity.ok(productos);
+    }
+
+    @PostMapping
+    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
+        Producto nuevoProducto = productoService.guardar(producto);
+        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        Producto productoActualizado = productoService.actualizar(id, producto);
+        if (productoActualizado != null) {
+            return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
+        Optional<Producto> producto = productoService.buscarPorId(id);
+        if (producto.isPresent()) {
+            productoService.eliminar(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }

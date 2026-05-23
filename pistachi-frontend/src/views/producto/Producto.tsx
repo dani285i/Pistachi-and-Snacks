@@ -25,7 +25,7 @@ const Productos = () => {
     const obtenerTodosLosProductos = async () => {
         try {
             setCargando(true);
-            const respuesta = await fetch('http://localhost:80/productos');
+            const respuesta = await fetch('http://localhost:9090/productos');
             if (!respuesta.ok) throw new Error('Fallo al recuperar los productos');
             const datosGuardados = await respuesta.json();
             setProductos(datosGuardados);
@@ -49,7 +49,7 @@ const Productos = () => {
         }
         try {
             setCargando(true);
-            const respuesta = await fetch(`http://localhost:80/productos/buscar?texto=${encodeURIComponent(textoBusqueda)}`);
+            const respuesta = await fetch(`http://localhost:9090/productos/buscar?texto=${encodeURIComponent(textoBusqueda)}`);
             if (!respuesta.ok) throw new Error('Fallo al buscar productos');
             const datos = await respuesta.json();
             setProductos(datos);

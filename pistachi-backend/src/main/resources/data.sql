@@ -1,29 +1,3 @@
-CREATE DATABASE IF NOT EXISTS pistachi_and_snacks;
-USE pistachi_and_snacks;
-
-CREATE TABLE IF NOT EXISTS producto (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    descripcion TEXT,
-    precio DECIMAL(10,2) NOT NULL,
-    imagen VARCHAR(255),
-    categoria VARCHAR(100),
-    destacado BOOLEAN
-);
-
-CREATE TABLE IF NOT EXISTS usuario (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    nombre VARCHAR(100) NOT NULL,
-    apellidos VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    fecha_nacimiento DATE NOT NULL
-);
-
-TRUNCATE TABLE producto;
-TRUNCATE TABLE usuario;
-
 INSERT INTO producto (nombre, descripcion, precio, imagen, categoria, destacado) VALUES
 ('Croissant de Pistacho (1 ud.)', 'Croissant de doble horneado relleno con crema de pistacho ibérico.', 2.20, '/img/croissant-de-pistacho.png', 'Bollería', 1),
 ('Cheesecake Esmeralda (1 ud.)', 'Tarta de queso horneada al estilo Nueva York con praliné de pistacho.', 3.50, '/img/tarta-de-queso-de-pistacho.png', 'Tartas', 0),

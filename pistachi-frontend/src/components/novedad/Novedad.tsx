@@ -19,7 +19,7 @@ const Novedad: React.FC = () => {
         const obtenerProductoNovedad = async () => {
             try {
                 setCargando(true);
-                const respuesta = await fetch(`http://localhost:80/productos/${idProductoTarget}`);
+                const respuesta = await fetch(`http://localhost:9090/productos/${idProductoTarget}`);
                 
                 if (!respuesta.ok) {
                     throw new Error('No se pudo recuperar la novedad');

@@ -45,7 +45,7 @@ const Registro = () => {
         }
 
         try {
-            const respuesta = await fetch('http://localhost:80/auth/registro', {
+            const respuesta = await fetch('http://localhost:9090/auth/registro', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

@@ -27,7 +27,7 @@ const DetalleProducto = () => {
     useEffect(() => {
         const obtenerProducto = async () => {
             try {
-                const respuesta = await fetch(`http://localhost:80/productos/${id}`);
+                const respuesta = await fetch(`http://localhost:9090/productos/${id}`);
                 if (!respuesta.ok) throw new Error('Producto no encontrado');
                 const data = await respuesta.json();
                 setProducto(data);

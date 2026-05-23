@@ -33,5 +33,33 @@ public class ProductoService implements IProductoService {
     public List<Producto> buscarPorTexto(String texto) {
         return productoRepository.findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(texto, texto);
     }
+
+    @Override
+    public Producto guardar(Producto producto) {
+        return productoRepository.save(producto);
+    }
+
+    @Override
+    public Producto actualizar(Long id, Producto productoDetalles) {
+        Optional<Producto> productoExistente = productoRepository.findById(id);
+        
+        if (productoExistente.isPresent()) {
+            Producto producto = productoExistente.get();
+            producto.setNombre(productoDetalles.getNombre());
+            producto.setDescripcion(productoDetalles.getDescripcion());
+            producto.setPrecio(productoDetalles.getPrecio());
+            producto.setImagen(productoDetalles.getImagen());
+            producto.setCategoria(productoDetalles.getCategoria());
+            producto.setDestacado(productoDetalles.getDestacado());
+            
+            return productoRepository.save(producto);
+        }
+        return null; // O podrías lanzar una excepción personalizada aquí
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        productoRepository.deleteById(id);
+    }
     
 }

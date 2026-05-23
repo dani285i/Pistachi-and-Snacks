@@ -24,7 +24,7 @@ const Home = () => {
         const obtenerProductosDestacados = async () => {
             try {
                 setEstaCargando(true);
-                const respuesta = await fetch('http://localhost:80/productos/destacados');
+                const respuesta = await fetch('http://localhost:9090/productos/destacados');
                 if (!respuesta.ok) throw new Error('El servidor respondió con error');
                 const datosGuardados = await respuesta.json();
                 setProductos(datosGuardados);
