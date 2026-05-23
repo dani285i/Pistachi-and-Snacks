@@ -1,4 +1,4 @@
-# Pistachitos Y Snacks - Tienda Online
+# Pistachi & Snacks - Tienda Online
 
 ## Descripción del Proyecto
 Esta aplicación web es una plataforma de comercio electrónico orientada a la venta de productos de repostería y snacks basados en pistacho. El proyecto cumple con los requisitos de un sistema de ventas completo, dividiendo su arquitectura en un frontend interactivo y un backend robusto que gestiona la lógica de negocio y la persistencia de datos. 
@@ -38,6 +38,14 @@ El proyecto sigue una arquitectura cliente-servidor (Frontend/Backend) separada,
     * Protección de rutas privadas (el carrito de la compra solo es accesible para usuarios autenticados).
 5.  **Carrito de Compras:** Sistema que permite añadir productos, visualizar el total y gestionar los artículos seleccionados.
 6.  **Página Principal (Home):** Sección de bienvenida con exposición de productos "Destacados" o "Favoritos" filtrados desde el servidor.
+
+## Novedades (WIP)
+El diseño arquitectónico y de base de datos se ha planteado con la escalabilidad en mente. A continuación, se detallan las futuras funcionalidades y líneas de negocio innovadoras que se irán implementando en las próximas versiones para expandir la plataforma:
+
+* **Club de Suscripción ("Pistachi Box"):** Implementación de un modelo de ingresos recurrentes donde los usuarios podrán suscribirse para recibir una caja mensual sorpresa con degustaciones, nuevos lanzamientos y ediciones limitadas.
+* **Programa de Fidelización (Pistachi Puntos):** Un sistema de gamificación para premiar la lealtad del cliente. Los usuarios acumularán puntos por sus compras o acciones específicas (como registrarse o invitar a amigos), que podrán canjear por descuentos directos en futuros pedidos.
+* **Sistema de Reseñas Verificadas:** Integración de un sistema de valoraciones (de 1 a 5 estrellas) y comentarios en la ficha de cada producto. Estará restringido a usuarios que hayan completado la compra previamente, aumentando la prueba social y la confianza en la plataforma.
+* **Motor de Promociones y Cupones:** Desarrollo de la lógica necesaria para lanzar campañas de marketing estacionales, permitiendo a los usuarios aplicar códigos de descuento (fijos o porcentuales) en el carrito, con control estricto de caducidad y límite de usos.
 
 ---
 
