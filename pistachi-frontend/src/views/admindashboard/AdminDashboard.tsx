@@ -39,30 +39,88 @@ export const AdminDashboard = () => {
     }, [usuario, navigate]);
 
     const cargarProductos = async () => {
+        // recupero la sesion del usuario desde el almacenamiento local para extraer su token de seguridad si lo tiene
+        const sesionString = localStorage.getItem('user_session')
+        const token = sesionString ? JSON.parse(sesionString).token : ''
+
+        // lanzo la peticion al servidor adjuntando el token en la cabecera para que spring security me reconozca como administrador y me devuelva los datos
         try {
-            const response = await fetch('http://localhost:80/productos');
+            const response = await fetch('http://localhost:9090/productos', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            
             if (response.ok) {
-                const data = await response.json();
-                setProductos(data);
+                const data = await response.json()
+                setProductos(data)
+            } else {
+                console.error("el servidor ha rechazado la conexion revisa los permisos o el cors")
             }
         } catch (error) {
-            console.error("Error al cargar el inventario:", error);
+            console.error("error de red al intentar conectar con el backend", error)
         }
-    };
+    }
 
     const handleEliminar = async (id: number | undefined) => {
-        if (!id) return;
-        if (window.confirm("¿Estás seguro de eliminar este producto?")) {
+        // compruebo que el id exista antes de hacer nada para no enviar peticiones vacias que rompan el servidor
+        if (!id) return
+        
+        if (window.confirm("¿estás seguro de eliminar este producto?")) {
+            // saco el token de la caja fuerte del navegador por si el servidor me pide identificacion al borrar
+            const sesionString = localStorage.getItem('user_session')
+            const token = sesionString ? JSON.parse(sesionString).token : ''
+
             try {
-                const response = await fetch(`http://localhost:80/productos/${id}`, {
+                const response = await fetch(`http://localhost:9090/productos/${id}`, {
                     method: 'DELETE',
-                });
-                if (response.ok) cargarProductos();
+                    headers: {
+                        // le meto mi carnet de administrador en la cabecera para que spring security me deje eliminar el registro
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                
+                if (response.ok) cargarProductos()
             } catch (error) {
-                console.error("Error al eliminar:", error);
+                console.error("error al eliminar", error)
             }
         }
-    };
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        // freno el envio por defecto del formulario para que no me recargue la pagina y pueda gestionar yo el envio
+        e.preventDefault()
+
+        // recupero la sesion para extraer la llave de acceso y poder escribir en la base de datos
+        const sesionString = localStorage.getItem('user_session')
+        const token = sesionString ? JSON.parse(sesionString).token : ''
+
+        const url = formData.id ? `http://localhost:9090/productos/${formData.id}` : 'http://localhost:9090/productos'
+        const method = formData.id ? 'PUT' : 'POST'
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    // adjunto mi token de seguridad en la carta para que el servidor confie en los datos nuevos
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            })
+
+            if (response.ok) {
+                setMostrarModal(false)
+                cargarProductos()
+            } else {
+                console.error("el servidor ha rechazado los cambios revisa los permisos o el cors")
+            }
+        } catch (error) {
+            console.error("error en la peticion", error)
+        }
+    }
 
     const abrirModalCrear = () => {
         setFormData(estadoInicial);
@@ -80,32 +138,6 @@ export const AdminDashboard = () => {
         setFormData({ ...formData, [name]: valorFinal });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        
-        // Si formData tiene un ID, es una edición (PUT). Si no, es una creación (POST).
-        const url = formData.id 
-            ? `http://localhost:80/productos/${formData.id}` 
-            : 'http://localhost:80/productos';
-        const method = formData.id ? 'PUT' : 'POST';
-
-        try {
-            const response = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                setMostrarModal(false);
-                cargarProductos();
-            } else {
-                alert("Error al guardar el producto.");
-            }
-        } catch (error) {
-            console.error("Error en la petición:", error);
-        }
-    };
 
     return (
         <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: '100vh', padding: '40px', position: 'relative' }}>

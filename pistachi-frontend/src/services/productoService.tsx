@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-// Ajusta el puerto al de tu backend, según tu config era el 80
 const API_URL = 'http://localhost:80/productos'; 
 
-// Función auxiliar para obtener el token del localStorage
+// obtener el token del localStorage
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
     return {
