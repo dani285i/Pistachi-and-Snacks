@@ -9,6 +9,8 @@ interface Producto {
     precio: number;
     imagen: string;
     categoria: string;
+    unidades: number;
+    stock: number;
 }
 
 const Productos = () => {

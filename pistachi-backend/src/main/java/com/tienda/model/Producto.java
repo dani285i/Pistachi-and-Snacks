@@ -32,4 +32,10 @@ public class Producto {
 
     private Boolean destacado;
 
+    @Column(name = "unidades")
+    private Integer unidades = 1;
+
+    @Column(name = "stock")
+    private Integer stock = 0;
+
 }

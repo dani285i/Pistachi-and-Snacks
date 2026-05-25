@@ -29,7 +29,14 @@ const DetalleProducto = () => {
                     <img src={producto.imagen} alt={producto.nombre} />
                 </div>
                 <div className="detalle-info">
-                    <h1 className="detalle-titulo">{producto.nombre}</h1>
+                    <h1 className="detalle-titulo">
+                        {producto.nombre}
+                        {producto.unidades > 1 && (
+                            <span style={{ fontSize: '1.2rem', color: 'var(--color-texto-light)', marginLeft: '15px', fontWeight: 'normal' }}>
+                                ({producto.unidades} Uds)
+                            </span>
+                        )}
+                    </h1>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '30px', paddingBottom: '30px', borderBottom: '1px solid var(--border-light)' }}>
                         <span className="detalle-precio" style={{ margin: 0, padding: 0, border: 'none' }}>

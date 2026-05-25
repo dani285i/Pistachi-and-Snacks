@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import CustomSelect from '../../components/customselect/CustomSelect'
+// import { useNavigate } from 'react-router-dom'
 import './AdminDashboard.css'
 
 interface Producto {
@@ -10,16 +11,28 @@ interface Producto {
     imagen: string
     categoria: string
     destacado: boolean
+    unidades: number
+    stock: number
 }
 
 const estadoInicial: Producto = {
+    id: 0,
     nombre: '',
     descripcion: '',
     precio: 0,
     imagen: '',
     categoria: 'Snacks',
-    destacado: false
+    destacado: false,
+    unidades: 1,
+    stock: 0
 }
+
+const getStockStyle = (stock: number) => {
+    if (stock === 0) return { background: 'rgba(231, 76, 60, 0.15)', color: '#E74C3C' }; // Rojo
+    if (stock <= 5) return { background: 'rgba(255, 152, 0, 0.15)', color: '#E65100' }; // Naranja
+    if (stock < 20) return { background: 'rgba(139, 195, 74, 0.15)', color: '#4A6741' }; // Verde
+    return { background: 'rgba(33, 150, 243, 0.15)', color: '#1565C0' }; // Azul
+};
 
 export const AdminDashboard = () => {
     // defino los estados para controlar la navegacion y la carga de datos del panel, separando la logica para que no se mezcle todo
@@ -29,7 +42,6 @@ export const AdminDashboard = () => {
     const [usuarios, setUsuarios] = useState<any[]>([])
     const [mostrarModal, setMostrarModal] = useState(false)
     const [formData, setFormData] = useState<Producto>(estadoInicial)
-    const navigate = useNavigate()
 
     useEffect(() => {
         // vigilo los cambios en el menu lateral para pedirle al servidor solo los datos que el usuario quiere ver en ese momento
@@ -124,9 +136,13 @@ export const AdminDashboard = () => {
             if (response.ok) {
                 setMostrarModal(false)
                 cargarProductos()
+                alert("Producto guardado correctamente");
+            } else {
+                alert("Error al guardar el producto. El servidor devolvió código: " + response.status);
             }
         } catch (error) {
             console.error("error al guardar", error)
+            alert("Fallo de conexión al guardar el producto");
         }
     }
 
@@ -179,6 +195,8 @@ export const AdminDashboard = () => {
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
+                                    <th>Stock</th>
+                                    <th>Uds/Pack</th>
                                     <th>Precio</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -188,9 +206,30 @@ export const AdminDashboard = () => {
                                     <tr key={p.id}>
                                         <td>#{p.id}</td>
                                         <td className="p-name">{p.nombre}</td>
+                                        <td>
+                                            <span style={{ 
+                                                padding: '4px 8px', 
+                                                borderRadius: '6px', 
+                                                background: getStockStyle(p.stock).background,
+                                                color: getStockStyle(p.stock).color,
+                                                fontWeight: 'bold',
+                                                fontSize: '0.85rem'
+                                            }}>
+                                                {p.stock}
+                                            </span>
+                                        </td>
+                                        <td>{p.unidades || 1} uds.</td>
                                         <td>{p.precio.toFixed(2)}€</td>
                                         <td className="actions-cell">
-                                            <button onClick={() => { setFormData(p); setMostrarModal(true); }} className="icon-btn edit">
+                                            <button onClick={() => { 
+                                                // Aseguramos que unidades y stock no sean undefined si la DB los devuelve nulos
+                                                setFormData({
+                                                    ...p,
+                                                    unidades: p.unidades ?? 1,
+                                                    stock: p.stock ?? 0
+                                                }); 
+                                                setMostrarModal(true); 
+                                            }} className="icon-btn edit">
                                                 <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"></path></svg>
                                             </button>
                                             <button onClick={() => handleEliminarProducto(p.id)} className="icon-btn delete">
@@ -201,6 +240,16 @@ export const AdminDashboard = () => {
                                 ))}
                             </tbody>
                         </table>
+                    )}
+                    {seccionActiva === 'pedidos' && (
+                        <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+                            <p>Sección en construcción. Hay {pedidos.length} pedidos registrados.</p>
+                        </div>
+                    )}
+                    {seccionActiva === 'usuarios' && (
+                        <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+                            <p>Sección en construcción. Hay {usuarios.length} usuarios registrados.</p>
+                        </div>
                     )}
                 </div>
             </main>
@@ -226,15 +275,63 @@ export const AdminDashboard = () => {
                             <div className="form-row">
                                 <div className="form-group flex-1">
                                     <label>Precio (€)</label>
-                                    <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value)})} placeholder="0.00" />
+                                    <div className="number-input-wrapper">
+                                        <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value) || 0})} placeholder="0.00" />
+                                        <div className="spinner-controls">
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat((formData.precio + 0.10).toFixed(2))})}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                            </button>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: Math.max(0, parseFloat((formData.precio - 0.10).toFixed(2)))})}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="form-group flex-1">
                                     <label>Categoría</label>
-                                    <select value={formData.categoria} onChange={e => setFormData({...formData, categoria: e.target.value})}>
-                                        <option value="Snacks">Snacks</option>
-                                        <option value="Bollería">Bollería</option>
-                                        <option value="Bebidas">Bebidas</option>
-                                    </select>
+                                    <CustomSelect 
+                                        options={[
+                                            { value: 'Snacks', label: 'Snacks' },
+                                            { value: 'Bollería', label: 'Bollería' },
+                                            { value: 'Repostería', label: 'Repostería' },
+                                            { value: 'Tartas', label: 'Tartas' },
+                                            { value: 'Bebidas', label: 'Bebidas' },
+                                            { value: 'Café', label: 'Café' }
+                                        ]}
+                                        value={formData.categoria}
+                                        onChange={(val) => setFormData({...formData, categoria: val})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group flex-1">
+                                    <label>Unidades por Pack</label>
+                                    <div className="number-input-wrapper">
+                                        <input required type="number" min="1" step="1" value={formData.unidades} onChange={e => setFormData({...formData, unidades: parseInt(e.target.value) || 1})} placeholder="Ej: 5" />
+                                        <div className="spinner-controls">
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: formData.unidades + 1})}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                            </button>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: Math.max(1, formData.unidades - 1)})}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group flex-1">
+                                    <label>Stock Disponible</label>
+                                    <div className="number-input-wrapper">
+                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" />
+                                        <div className="spinner-controls">
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: formData.stock + 1})}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                            </button>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

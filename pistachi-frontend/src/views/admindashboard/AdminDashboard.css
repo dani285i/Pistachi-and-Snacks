@@ -308,6 +308,86 @@
     box-shadow: 0 0 0 4px rgba(139, 195, 74, 0.15);
 }
 
+/* --- DISEÑO INNOVADOR: Select Personalizado --- */
+.admin-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238BC34A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 18px;
+    padding-right: 50px;
+    cursor: pointer;
+}
+
+.admin-form select:hover {
+    background-color: #F4F7F2;
+    border-color: var(--admin-accent);
+}
+
+/* --- DISEÑO INNOVADOR: Inputs Numéricos --- */
+.admin-form input[type="number"]::-webkit-inner-spin-button,
+.admin-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.admin-form input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.number-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.number-input-wrapper input {
+    padding-right: 52px; /* Espacio para las flechitas más grandes */
+}
+
+.spinner-controls {
+    position: absolute;
+    right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 42px;
+    justify-content: center;
+}
+
+.spinner-btn {
+    background: #E5E7EB;
+    border: none;
+    width: 34px;
+    height: 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--admin-text);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+}
+
+.spinner-btn:hover {
+    background: var(--admin-accent);
+    color: var(--admin-dark);
+    transform: scale(1.05);
+}
+
+.spinner-btn:active {
+    transform: scale(0.95);
+}
+
+.spinner-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 3;
+}
+
 .help-box {
     display: flex;
     align-items: flex-start;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { scroller, Element } from 'react-scroll';
 import Hero from '../../components/hero/Hero';
 import Novedad from '../../components/novedad/Novedad';
@@ -14,6 +14,8 @@ interface Producto {
     imagen: string;
     categoria: string;
     destacado: boolean;
+    unidades: number;
+    stock: number;
 }
 
 const Home = () => {
@@ -21,7 +23,6 @@ const Home = () => {
     const [estaCargando, setEstaCargando] = useState<boolean>(true);
     const [huboError, setHuboError] = useState<boolean>(false);
     
-    const navigate = useNavigate();
     const location = useLocation();
 
     // Detecta si venimos de otra pestaña con la orden de bajar a novedades
