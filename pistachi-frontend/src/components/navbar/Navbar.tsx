@@ -1,35 +1,48 @@
-
 import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
+import iconoAdmin from '../../assets/favicon/web-app-manifest-512x512.png';
 import './Navbar.css';
 
 const Navbar = () => {
     const { cartItems } = useCart();
     const { usuario, logout } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation(); // Sabe en qué URL estamos
+    const location = useLocation(); // Sabe en qué URL estamos exactamentente
 
+    // CONTROL DEL LOGO: Te redirige a inicio y asegura que suba arriba del todo
+    const handleLogoClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigate('/');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // CONTROL DEL BOTÓN INICIO: Si ya estás en Inicio, te sube arriba con suavidad
+    const handleInicioClick = (e: React.MouseEvent) => {
+        if (location.pathname === '/') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    // CONTROL DE NOVEDADES: Scroll suave en Inicio o redirección inteligente desde otra vista
     const handleNovedadesClick = () => {
         if (location.pathname === '/') {
-            // Si ya estamos en inicio, hacemos el scroll suave directamente
             scroller.scrollTo('seccion-novedad', {
                 smooth: true,
                 duration: 800,
                 offset: -70
             });
         } else {
-            // Si estamos en otra página, volvemos a inicio pasándole un "aviso" por el estado
             navigate('/', { state: { hacerScrollANovedades: true } });
         }
     };
     
-    // calculo el total de productos sumando las cantidades del carrito para mostrarlo en el indicador visual, asi el cliente siempre sabe cuanto lleva
+    // Calculo el total de productos sumando las cantidades del carrito
     const totalItems = cartItems.reduce((acc, item) => acc + item.cantidad, 0);
 
     const handleLogout = () => {
-        // limpio la sesion actual y mando al usuario al inicio de golpe, cortando el acceso de raiz
         logout();
         navigate('/');
     };
@@ -39,9 +52,9 @@ const Navbar = () => {
             <nav className="navbar-glass">
                 
                 <div className="navbar-brand">
-                    <Link to="/" className="brand-logo">
+                    {/* Añadido el evento onClick para el Logo */}
+                    <Link to="/" className="brand-logo" onClick={handleLogoClick}>
                         PISTACHI 
-                        {/* creo un contenedor relativo para meter los dos simbolos y alternarlos con css puro al hacer hover */}
                         <span className="logo-anim-wrapper">
                             <span className="logo-dot">•</span>
                             <span className="logo-amp">&</span>
@@ -51,7 +64,8 @@ const Navbar = () => {
                 </div>
                 
                 <div className="navbar-menu">
-                    <Link to="/" className="menu-link">Inicio</Link>
+                    {/* Añadido el evento onClick para el botón Inicio */}
+                    <Link to="/" className="menu-link" onClick={handleInicioClick}>Inicio</Link>
                     <span onClick={handleNovedadesClick} className="menu-link" style={{ cursor: 'pointer' }}>Novedades</span>
                     <Link to="/productos" className="menu-link">Catálogo</Link>
                     <Link to="/favoritos" className="menu-link">Favoritos</Link>
@@ -60,9 +74,11 @@ const Navbar = () => {
                 <div className="navbar-actions">
                     {usuario ? (
                         <div className="user-section">
-                            {/* verifico si es el jefe para mostrarle el pase vip al panel de control, de lo contrario le oculto este boton */}
                             {usuario?.username === 'admin' && (
-                                <Link to="/admin" className="admin-badge">Admin</Link>
+                                <Link to="/admin" className="admin-badge">
+                                    <img src={iconoAdmin} alt="Panel Admin" className="admin-badge-icon" />
+                                    Admin
+                                </Link>
                             )}
                             <span className="user-greeting">Hola, <strong>{usuario.nombre}</strong></span>
                             <button onClick={handleLogout} className="action-btn logout-btn">

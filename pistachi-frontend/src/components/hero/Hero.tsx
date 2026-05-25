@@ -1,17 +1,19 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stage, Center, OrbitControls, useGLTF } from '@react-three/drei'
+import { useNavigate } from 'react-router-dom' // 1. IMPORTAMOS EL HOOK
 import './Hero.css'
 
 useGLTF.preload('/3D/DonutPistacho.glb')
 
 const DonutModel = () => {
-    // cargo el modelo tridimensional del donut con la libreria de fiber, asi le doy un toque interactivo a la portada sin perder la esencia artesanal
     const { scene } = useGLTF('/3D/DonutPistacho.glb')
     return <primitive object={scene} />
 }
 
 const Hero = () => {
+    const navigate = useNavigate() // 2. INICIALIZAMOS EL NAVEGADOR
+
     return (
         <header className="hero-section">
             <div className="hero-content">
@@ -21,15 +23,17 @@ const Hero = () => {
                 </div>
                 
                 <h1>El sabor del <br/><span className="text-highlight">Pistacho Auténtico</span></h1>
-                <p>Descubre nuestra selección de bollería y snacks, elaborados cada mañana en nuestro obrador con pistacho nacional seleccionado a mano.</p>
+                <p>Descubre nuestra selection de bollería y snacks, elaborados cada mañana en nuestro obrador con pistacho nacional seleccionado a mano.</p>
                 
                 <div className="hero-action-group">
-                    {/* rediseño por completo el boton principal para que tenga la forma y el color verde intenso de un pistacho abierto y apetecible */}
-                    <button className="pistachio-button pistachio-filled">
+                    {/* 3. AÑADIMOS EL ONCLICK PARA REDIRIGIR AL CATÁLOGO */}
+                    <button 
+                        className="pistachio-button pistachio-filled" 
+                        onClick={() => navigate('/productos')}
+                    >
                         <span>Ver el Catálogo</span>
                     </button>
                     
-                    {/* el boton secundario ahora representa la cáscara del pistacho, con un diseño hueco y elegante en tono tostado */}
                     <button className="pistachio-button pistachio-outline">
                         <span>Nuestra Historia</span>
                     </button>

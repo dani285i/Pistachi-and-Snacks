@@ -150,21 +150,29 @@
 }
 
 .admin-badge {
-    background: linear-gradient(135deg, #121619, #2A333A);
-    color: white;
-    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: #121619;
+    color: #FFFFFF;
+    padding: 6px 10px;
     border-radius: 8px;
-    font-size: 0.8rem;
     font-weight: 700;
     text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 10px rgba(18, 22, 25, 0.15);
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .admin-badge:hover {
-    transform: translateY(-2px);
+    background: #4A6741;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.admin-badge-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
 }
 
 .action-btn {
