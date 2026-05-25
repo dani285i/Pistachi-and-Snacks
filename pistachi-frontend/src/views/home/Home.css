@@ -1,131 +1,212 @@
-.home-container {
+.home-wrapper {
     width: 100%;
     min-height: 100vh;
-    background-color: var(--bg-app);
+    background-color: #FDFBF7; /* Fondo crema global */
 }
 
-.destacados-section {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
+/* Sección de bienvenida artesanal */
+.craft-welcome {
+    padding: 6rem 2rem;
+    display: flex;
+    justify-content: center;
+    background-color: #FFFFFF;
+    border-top: 1px solid #EAE7E0;
+    border-bottom: 1px solid #EAE7E0;
 }
 
-.section-title {
+.welcome-content {
+    max-width: 700px;
     text-align: center;
-    color: var(--primary);
-    margin-bottom: 30px;
-    font-size: 2rem;
-}
-
-.productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.producto-card {
-    background: var(--white);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.producto-card:hover {
-    transform: translateY(-5px);
+.decorative-leaf {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
 }
 
-.img-container {
+.welcome-content h2 {
+    font-size: 2.5rem;
+    color: #2C2C2C;
+    margin: 0 0 1.5rem 0;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.welcome-content p {
+    font-size: 1.15rem;
+    color: #666666;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Escaparate de Favoritos */
+.craft-showcase {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+}
+
+.showcase-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.showcase-header h2 {
+    font-size: 2.5rem;
+    color: #2C2C2C;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+}
+
+.showcase-header p {
+    color: #7A7A7A;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.showcase-status {
+    text-align: center;
+    padding: 3rem;
+    color: #7A7A7A;
+    font-weight: 600;
+}
+
+.showcase-status.error {
+    color: #FF4D4F;
+}
+
+/* Ajustamos el grid para tarjetas más grandes */
+.craft-grid {
+    display: grid;
+    /* Aumentamos el tamaño mínimo de la tarjeta para que sean más anchas */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+    gap: 3rem;
+    padding: 1rem;
+}
+
+.craft-card {
+    background: #FFFFFF;
+    border: 1px solid #EAE7E0;
+    border-radius: 20px; /* Bordes más redondeados para suavidad */
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
     position: relative;
-    height: 200px;
 }
 
-.img-container img {
+.craft-card:hover {
+    border-color: #DCE6D3;
+    /* Elevamos la tarjeta con una sombra más profunda al hacer hover */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    transform: translateY(-10px);
+}
+
+.card-image-box {
+    position: relative;
+    height: 280px; /* Damos más altura para que la foto destaque */
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAFAFA; /* Un gris muy sutil para limpiar la vista */
+}
+
+.card-image-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s ease;
 }
 
-.badge {
+.craft-card:hover .card-image-box img {
+    transform: scale(1.1); /* Zoom más elegante */
+}
+
+.craft-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--verde-pistacho);
-    color: var(--white);
+    top: 15px;
+    right: 15px;
+    background: #4A6741;
+    color: #FFFFFF;
     padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.producto-info {
-    padding: 20px;
+.card-body {
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
-.producto-info h3 {
+.card-category {
+    font-size: 0.75rem;
+    color: #8BC34A;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.card-body h3 {
     margin: 0 0 10px 0;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    color: #2C2C2C;
+    font-weight: 700;
 }
 
-.descripcion {
-    color: var(--text-gray);
+.card-desc {
+    color: #7A7A7A;
     font-size: 0.9rem;
+    line-height: 1.5;
     flex-grow: 1;
+    margin: 0 0 1.5rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.producto-footer {
+.card-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
+    border-top: 1px solid #EAE7E0;
+    padding-top: 1.5rem;
 }
 
-.precio {
+.card-price {
     font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--primary);
+    font-weight: 800;
+    color: #2C2C2C;
 }
 
-.add-btn {
-    background: var(--verde-pistacho);
-    color: var(--white);
+.craft-btn-icon {
+    background: #F0F4EC;
+    color: #4A6741;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-weight: bold;
+    transition: all 0.2s ease;
 }
 
-.add-btn:hover {
-    background: var(--verde-pistacho-hover);
-}
-
-.descripcion-tienda {
-    max-width: 100%;
-    height: 200px;
-    margin: 40px auto;
-    padding: 40px;
-    text-align: center;
-    background-color: var(--white);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    border-top: 8px solid var(--verde-pistacho);
-}
-
-.descripcion-tienda h2 {
-    color: var(--primary);
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
-
-.descripcion-texto {
-    color: var(--text-gray);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 30px;
+.craft-card:hover .craft-btn-icon {
+    background: #4A6741;
+    color: #FFFFFF;
 }

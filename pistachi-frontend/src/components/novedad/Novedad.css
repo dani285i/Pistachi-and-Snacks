@@ -1,93 +1,139 @@
-.novedad-fullscreen {
+.novedad-premium {
+    position: relative;
     display: flex;
     width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-light);
-    margin: 0;
-    padding: 0;
+    min-height: 550px;
+    background-color: #ffffff;
     overflow: hidden;
+    perspective: 1000px; 
 }
 
-.novedad-left {
-    flex: 1;
+/* Columna de la imagen (Z-INDEX 1: Siempre al fondo) */
+.novedad-image-column {
+    width: 55%;
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-left: 0;
+    justify-content: center;
+    z-index: 1;
 }
 
-.novedad-hero-image {
-    max-width: 100%;
-    height: auto;
-    max-height: 80vh;
-    object-fit: contain;
-    transition: transform 0.4s ease;
+.novedad-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: center;
+    /* le doy una transicion elastica para el efecto de ofrenda */
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.novedad-right {
-    flex: 1;
+/* ANIMACION 1: Al pasar el raton por la columna, solo crece la imagen, sin alterar las capas */
+.novedad-image-column:hover .novedad-img {
+    transform: scale(1.04);
+}
+
+/* ANIMACION 2: Magia pura. Al hacer hover en la imagen, modificamos el bloque verde que tiene al lado */
+.novedad-image-column:hover + .novedad-text-column {
+    /* Desplazamos los dos puntos izquierdos un 8% hacia la derecha para abrir la imagen */
+    clip-path: polygon(23% 0, 100% 0, 100% 100%, 8% 100%);
+}
+
+/* Columna de texto (Z-INDEX 2: Siempre por encima marcando el corte) */
+.novedad-text-column {
+    width: 55%;
+    background-color: #2A3B24;
+    margin-left: -10%; 
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+    z-index: 2; 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-    padding: 0;
+    padding: 4rem 4rem 4rem 15%; 
+    /* aplico la transicion al clip-path para que la diagonal se mueva fluidamente como una puerta corredera */
+    transition: transform 0.4s ease-out, clip-path 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; 
+    transform-origin: center right; 
 }
 
-.novedad-alert {
-    font-size: 4.5rem;
-    color: var(--accent);
-    margin: 0 0 20px 0;
-    font-weight: 900;
+/* ANIMACION 3: El hover del propio contenedor verde */
+.novedad-text-column:hover {
+    transform: scale(1.03) translateZ(10px);
+    box-shadow: -15px 0 50px rgba(0,0,0,0.3); 
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); 
+}
+
+/* Estilos internos del contenido */
+.novedad-content-inner {
+    max-width: 500px;
+}
+
+.novedad-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #D4E157;
+    font-size: 0.9rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
-    animation: pulse-text 2s infinite;
+    margin-bottom: 1.5rem;
 }
 
-@keyframes pulse-text {
-    0% { 
-        opacity: 1; transform: scale(1); 
-    }
-
-    50% {
-        opacity: 0.8; transform: scale(1.02); 
-        }
-
-    100% { 
-        opacity: 1; transform: scale(1); 
-    }
-}
-
-.novedad-hero-title {
-    font-size: 3.5rem;
-    color: var(--text-main);
-    margin: 0 0 20px 0;
-    font-weight: 800;
+.novedad-title {
+    font-size: 4rem;
+    color: #FDFBF7;
     line-height: 1.1;
+    margin: 0 0 1.5rem 0;
+    font-weight: 800;
 }
 
-.novedad-hero-price {
+.novedad-description {
+    font-size: 1.15rem;
+    color: #C2D1B8;
+    line-height: 1.6;
+    margin: 0 0 2.5rem 0;
+    max-width: 90%;
+}
+
+.novedad-price-row {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.novedad-price {
     font-size: 3rem;
-    color: var(--verde-brillante);
+    color: #D4E157;
     font-weight: 900;
-    margin-bottom: 40px;
 }
 
-.novedad-hero-button {
-    background-color: var(--text-main);
-    color: var(--white);
+.novedad-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #FDFBF7;
+    color: #2A3B24;
     border: none;
-    padding: 20px 50px;
-    font-size: 1.3rem;
-    font-weight: bold;
-    border-radius: 50px;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
-.novedad-hero-button:hover {
-    background-color: var(--verde-brillante);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(140, 198, 63, 0.3);
+.novedad-action-btn:hover {
+    background-color: #D4E157;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(212, 225, 87, 0.2);
+}
+
+.skeleton-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    color: #C2D1B8;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-color: #2A3B24;
 }

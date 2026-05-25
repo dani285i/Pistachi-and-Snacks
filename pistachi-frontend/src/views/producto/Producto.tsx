@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BotonFavorito from '../../components/favorito/BotonFavorito';
 import './Producto.css';
 
 interface Producto {
@@ -9,141 +10,119 @@ interface Producto {
     precio: number;
     imagen: string;
     categoria: string;
-    destacado: boolean;
 }
 
 const Productos = () => {
-    const [productos, setProductos] = useState<Producto[]>([]);
+    const [totalProductos, setTotalProductos] = useState<Producto[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
-    const [huboError, setHuboError] = useState<boolean>(false);
-    const [textoBusqueda, setTextoBusqueda] = useState<string>('');
+    
     const [paginaActual, setPaginaActual] = useState<number>(1);
     const productosPorPagina = 6;
-
     const navigate = useNavigate();
 
-    const obtenerTodosLosProductos = async () => {
-        try {
-            setCargando(true);
-            const respuesta = await fetch('http://localhost:9090/productos');
-            if (!respuesta.ok) throw new Error('Fallo al recuperar los productos');
-            const datosGuardados = await respuesta.json();
-            setProductos(datosGuardados);
-            setPaginaActual(1);
-        } catch (error) {
-            console.error("Error:", error);
-            setHuboError(true);
-        } finally {
-            setCargando(false);
-        }
-    };
-
     useEffect(() => {
-        obtenerTodosLosProductos();
+        const obtenerProductos = async () => {
+            try {
+                const respuesta = await fetch('http://localhost:9090/productos');
+                if (!respuesta.ok) throw new Error('Error al conectar con la base de datos');
+                const datos = await respuesta.json();
+                setTotalProductos(datos);
+            } catch (error) {
+                console.error("Error al cargar el catálogo", error);
+            } finally {
+                setCargando(false);
+            }
+        };
+        obtenerProductos();
     }, []);
 
-    const buscarProductos = async () => {
-        if (!textoBusqueda.trim()) {
-            obtenerTodosLosProductos();
-            return;
-        }
-        try {
-            setCargando(true);
-            const respuesta = await fetch(`http://localhost:9090/productos/buscar?texto=${encodeURIComponent(textoBusqueda)}`);
-            if (!respuesta.ok) throw new Error('Fallo al buscar productos');
-            const datos = await respuesta.json();
-            setProductos(datos);
-            setPaginaActual(1);
-        } catch (error) {
-            console.error("Error en la búsqueda:", error);
-            setHuboError(true);
-        } finally {
-            setCargando(false);
-        }
-    };
-
-    const indiceUltimoProducto = paginaActual * productosPorPagina;
-    const indicePrimerProducto = indiceUltimoProducto - productosPorPagina;
-    const productosPaginados = productos.slice(indicePrimerProducto, indiceUltimoProducto);
-    const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-
-    const irAPaginaAnterior = () => {
-        if (paginaActual > 1) setPaginaActual(paginaActual - 1);
-    };
-
-    const irAPaginaSiguiente = () => {
-        if (paginaActual < totalPaginas) setPaginaActual(paginaActual + 1);
-    };
-
-    if (cargando) return <div className="catalogo-estado"><h2>Cargando...</h2></div>;
-    if (huboError) return <div className="catalogo-estado error"><h2>Error de conexión</h2></div>;
+    const indiceUltimoItem = paginaActual * productosPorPagina;
+    const indicePrimerItem = indiceUltimoItem - productosPorPagina;
+    const productosAMostrar = totalProductos.slice(indicePrimerItem, indiceUltimoItem);
+    const totalPaginas = Math.ceil(totalProductos.length / productosPorPagina);
 
     return (
-        <div className="catalogo-contenedor">
+        <div className="catalogo-wrapper">
             <header className="catalogo-cabecera">
-                <h1>Menú Completo</h1>
-                <div className="contenedor-buscador">
-                    <input 
-                        type="text" 
-                        className="input-buscador"
-                        placeholder="Buscar productos..." 
-                        value={textoBusqueda}
-                        onChange={(evento) => setTextoBusqueda(evento.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && buscarProductos()}
-                    />
-                    <button onClick={buscarProductos} className="boton-buscar">Buscar</button>
-                </div>
+                <span className="subtitulo-obrador">Nuestra Vitrina</span>
+                <h1>El Obrador de Pistacho</h1>
+                <p>Repostería artesanal y snacks premium, horneados a diario.</p>
             </header>
 
-            <section className="catalogo-resultados">
-                <div className="rejilla-catalogo">
-                    {productosPaginados.map((producto) => (
-                        <article 
-                            key={producto.id} 
-                            className="tarjeta-basica"
-                            onClick={() => navigate(`/producto/${producto.id}`)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <div className="tarjeta-basica-img">
-                                <img src={producto.imagen} alt={producto.nombre} />
-                            </div>
-                            <div className="tarjeta-basica-info">
-                                <h3>{producto.nombre}</h3>
-                                <p className="descripcion-corta">{producto.descripcion}</p>
-                                <div className="tarjeta-basica-pie">
-                                    <span className="precio-etiqueta">
-                                        {producto.precio.toFixed(2)} €
-                                    </span>
-                                    <button className="boton-accion">Ver detalles</button>
+            {cargando ? (
+                <div className="status-container">Preparando las delicias...</div>
+            ) : productosAMostrar.length === 0 ? (
+                <div className="status-container">Vaya, parece que la vitrina está vacía hoy.</div>
+            ) : (
+                <>
+                    <div className="rejilla-catalogo">
+                        {productosAMostrar.map((p) => (
+                            <article key={p.id} className="tarjeta-obrador">
+                                <div className="tarjeta-img-box">
+                                    <img src={p.imagen} alt={p.nombre} className="tarjeta-img" />
                                 </div>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-                {totalPaginas > 1 && (
-                    <div className="paginacion-controles" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
-                        <button 
-                            onClick={irAPaginaAnterior} 
-                            disabled={paginaActual === 1}
-                            className="boton-accion"
-                            style={{ opacity: paginaActual === 1 ? 0.5 : 1 }}
-                        >
-                            Anterior
-                        </button>
-                        <span style={{ display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
-                            Página {paginaActual} de {totalPaginas}
-                        </span>
-                        <button 
-                            onClick={irAPaginaSiguiente} 
-                            disabled={paginaActual === totalPaginas}
-                            className="boton-accion"
-                            style={{ opacity: paginaActual === totalPaginas ? 0.5 : 1 }}
-                        >
-                            Siguiente
-                        </button>
+                                <div className="tarjeta-body">
+                                    <div className="tarjeta-header-info">
+                                        <span className="categoria-badge">{p.categoria}</span>
+                                        <h3>{p.nombre}</h3>
+                                    </div>
+                                    <p className="tarjeta-desc">{p.descripcion}</p>
+                                    <div className="tarjeta-footer">
+                                        <span className="tarjeta-precio">{p.precio.toFixed(2)} €</span>
+                                        
+                                        {/* Agrupamos el corazón y el botón de detalles */}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <BotonFavorito producto={p} />
+                                            
+                                            <button 
+                                                className="boton-detalles-premium"
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevenimos doble navegación
+                                                    navigate(`/producto/${p.id}`);
+                                                }}
+                                            >
+                                                Ver detalles
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
                     </div>
-                )}
-            </section>
+
+                    {totalPaginas > 1 && (
+                        <div className="paginacion-sticky-wrapper">
+                            <nav className="paginacion-flotante">
+                                <button 
+                                    className="pag-btn-nav" 
+                                    onClick={() => setPaginaActual(p => p - 1)} 
+                                    disabled={paginaActual === 1}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                </button>
+                                
+                                {[...Array(totalPaginas)].map((_, i) => (
+                                    <button 
+                                        key={i + 1} 
+                                        onClick={() => setPaginaActual(i + 1)} 
+                                        className={paginaActual === i + 1 ? 'pag-btn active' : 'pag-btn'}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+                                
+                                <button 
+                                    className="pag-btn-nav" 
+                                    onClick={() => setPaginaActual(p => p + 1)} 
+                                    disabled={paginaActual === totalPaginas}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </button>
+                            </nav>
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 };

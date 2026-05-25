@@ -1,139 +1,260 @@
-.nav-container {
-    background: var(--bg-cream);
-    backdrop-filter: blur(10px);
+/* Envuelve la navegacion para separarla del borde superior y hacerla flotante */
+.navbar-wrapper {
     position: sticky;
-    top: 0;
+    top: 20px;
     z-index: 1000;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0 4%;
+    margin-bottom: 40px;
 }
 
-.nav-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1.2rem 2rem;
+/* El efecto cristal translúcido que le da ese toque tan moderno */
+.navbar-glass {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 100px;
+    padding: 10px 24px 10px 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
 }
 
-.nav-logo {
-    font-size: 1.4rem;
+.navbar-glass:hover {
+    box-shadow: 0 15px 50px rgba(139, 195, 74, 0.08);
+}
+
+/* Diseño tipográfico del logotipo */
+.brand-logo {
+    font-size: 1.15rem;
     font-weight: 800;
-    color: var(--primary);
+    color: #121619;
     text-decoration: none;
-    letter-spacing: 1px;
-}
-
-.nav-logo span { 
-    color: var(--accent); 
-}
-
-.nav-actions {
+    letter-spacing: -0.5px;
     display: flex;
     align-items: center;
-    gap: 1.5rem;
 }
 
-.login-link {
-    text-decoration: none;
-    color: var(--bg-cream);
-    background-color: var(--primary);
-    font-weight: 600;
-    padding: 0.6rem 1.2rem;
-    border: 2px solid var(--primary);
-    border-radius: 20px;
-    transition: var(--transition);
-}
-
-.login-link:hover {
-    background: var(--primary-dark);
-    color: var(--white);
-}
-
-.signin-link {
-    text-decoration: none;
-    color: var(--primary);
-    font-weight: 600;
-    padding: 0.6rem 1.2rem;
-    border: 2px solid var(--primary);
-    border-radius: 20px;
-    transition: var(--transition);
-}
-
-.signin-link:hover {
-    background: var(--primary);
-    color: var(--white);
-}
-
-.nav-links a {
-    margin: 0 1.5rem;
-    text-decoration: none;
-    color: var(--text-muted);
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-.nav-links a:hover {
-    color: var(--primary);
-}
-
-.cart-button {
-    background: var(--primary);
-    color: var(--white);
-    padding: 0.7rem 1.4rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    box-shadow: 0 4px 15px var(--shadow-pistachio);
-}
-
-.btn-carrito-nav {
+/* Contenedor relativo para la magia de la animacion */
+.logo-anim-wrapper {
     position: relative;
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-}
-
-.carrito-contador {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background-color: var(--error-rojo);
-    color: var(--white);
-    font-size: 0.75rem;
-    font-weight: bold;
-    min-width: 22px;
-    height: 28px;
-    border-radius: 100%;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 0 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 16px; /* Ancho fijo clave para que el texto 'SNACKS' no de tirones hacia los lados al hacer el cambio */
+    height: 24px;
+    margin: 0 5px;
+    color: #8BC34A; /* El verde pistacho de la marca */
 }
 
-.user-welcome {
+.logo-dot, .logo-amp {
+    position: absolute;
+    /* la curva cubic-bezier es la que crea el efecto de rebote elastico premium */
+    transition: all 0.45s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.logo-dot {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.logo-amp {
+    opacity: 0;
+    font-size: 1.15rem;
+    /* preparo la ampersand pequeña y girada hacia atras para que coja carrerilla */
+    transform: scale(0) rotate(180deg);
+}
+
+/* LA ANIMACION: Al pasar el raton por cualquier parte del logo entero se activa */
+.brand-logo:hover .logo-dot {
+    opacity: 0;
+    /* el punto se hace diminuto y gira en direccion contraria desapareciendo */
+    transform: scale(0) rotate(-180deg);
+}
+
+.brand-logo:hover .logo-amp {
+    opacity: 1;
+    /* la ampersand salta a tamaño real poniendose recta de golpe con el rebote */
+    transform: scale(1) rotate(0deg);
+}
+
+/* La pastilla central donde viven los enlaces principales */
+.navbar-menu {
+    display: flex;
+    gap: 35px;
+    background: #F4F7F2;
+    padding: 10px 28px;
+    border-radius: 100px;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.menu-link {
+    text-decoration: none;
+    color: #666666;
     font-weight: 600;
-    color: var(--primary);
-    font-size: 1rem;
-    margin-right: 0.5rem;
+    font-size: 0.95rem;
+    position: relative;
+    padding: 2px 0;
+    transition: color 0.3s ease;
+}
+
+.menu-link:hover {
+    color: #121619;
+}
+
+/* Animacion del subrayado verde al pasar el ratón */
+.menu-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #8BC34A;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateX(-50%);
+    border-radius: 3px;
+}
+
+.menu-link:hover::after {
+    width: 100%;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-section, .auth-section, .tools-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.tools-section {
+    padding-left: 20px;
+    border-left: 1px solid rgba(0,0,0,0.08);
+}
+
+.user-greeting {
+    font-size: 0.95rem;
+    color: #666666;
+}
+
+.user-greeting strong {
+    color: #121619;
+}
+
+.admin-badge {
+    background: linear-gradient(135deg, #121619, #2A333A);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(18, 22, 25, 0.15);
+    transition: transform 0.2s ease;
+}
+
+.admin-badge:hover {
+    transform: translateY(-2px);
+}
+
+.action-btn {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    padding: 10px 22px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.login-btn {
+    background: transparent;
+    color: #121619;
+}
+
+.login-btn:hover {
+    background: #F0F0F0;
+}
+
+.register-btn {
+    background: #121619;
+    color: white;
+}
+
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(18, 22, 25, 0.2);
 }
 
 .logout-btn {
-    background-color: transparent;
-    color: var(--error-rojo);
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.6rem 1.2rem;
-    border: 2px solid var(--error-rojo);
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: var(--transition);
+    background: transparent;
+    color: #FF4D4F;
+    padding: 8px 14px;
 }
 
 .logout-btn:hover {
-    background-color: var(--error-rojo);
-    color: var(--white);
+    background: #FFF1F0;
+}
+
+/* Indicador de fidelidad elegante */
+.points-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(139, 195, 74, 0.15);
+    color: #558B2F;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Boton de carrito circular e interactivo */
+.cart-badge-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: #8BC34A;
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+    box-shadow: 0 6px 20px rgba(139, 195, 74, 0.35);
+}
+
+.cart-badge-btn:hover {
+    transform: scale(1.1);
+    background: #7CB342;
+}
+
+.cart-count {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    background: #121619;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid white;
 }

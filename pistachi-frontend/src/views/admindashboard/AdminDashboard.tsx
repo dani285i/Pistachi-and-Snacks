@@ -1,16 +1,15 @@
-import { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../../context/auth/Auth';
-import { useNavigate } from 'react-router-dom';
-import '../../index.css';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './AdminDashboard.css'
 
 interface Producto {
-    id?: number;
-    nombre: string;
-    descripcion: string;
-    precio: number;
-    imagen: string;
-    categoria: string;
-    destacado: boolean;
+    id?: number
+    nombre: string
+    descripcion: string
+    precio: number
+    imagen: string
+    categoria: string
+    destacado: boolean
 }
 
 const estadoInicial: Producto = {
@@ -20,68 +19,89 @@ const estadoInicial: Producto = {
     imagen: '',
     categoria: 'Snacks',
     destacado: false
-};
+}
 
 export const AdminDashboard = () => {
-    const [productos, setProductos] = useState<Producto[]>([]);
-    const [mostrarModal, setMostrarModal] = useState(false);
-    const [formData, setFormData] = useState<Producto>(estadoInicial);
-    
-    const { usuario } = useContext(AuthContext) as any;
-    const navigate = useNavigate();
+    // defino los estados para controlar la navegacion y la carga de datos del panel, separando la logica para que no se mezcle todo
+    const [seccionActiva, setSeccionActiva] = useState('productos')
+    const [productos, setProductos] = useState<Producto[]>([])
+    const [pedidos, setPedidos] = useState<any[]>([])
+    const [usuarios, setUsuarios] = useState<any[]>([])
+    const [mostrarModal, setMostrarModal] = useState(false)
+    const [formData, setFormData] = useState<Producto>(estadoInicial)
+    const navigate = useNavigate()
 
     useEffect(() => {
-        if (!usuario) {
-            navigate('/login');
-            return;
-        }
-        cargarProductos();
-    }, [usuario, navigate]);
+        // vigilo los cambios en el menu lateral para pedirle al servidor solo los datos que el usuario quiere ver en ese momento
+        if (seccionActiva === 'productos') cargarProductos()
+        if (seccionActiva === 'pedidos') cargarPedidos()
+        if (seccionActiva === 'usuarios') cargarUsuarios()
+    }, [seccionActiva])
 
-    const cargarProductos = async () => {
-        // recupero la sesion del usuario desde el almacenamiento local para extraer su token de seguridad si lo tiene
+    const getAuthHeaders = () => {
+        // preparo las cabeceras con el token de seguridad que tengo guardado para demostrarle al backend que soy el administrador
         const sesionString = localStorage.getItem('user_session')
         const token = sesionString ? JSON.parse(sesionString).token : ''
-
-        // lanzo la peticion al servidor adjuntando el token en la cabecera para que spring security me reconozca como administrador y me devuelva los datos
-        try {
-            const response = await fetch('http://localhost:9090/productos', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            
-            if (response.ok) {
-                const data = await response.json()
-                setProductos(data)
-            } else {
-                console.error("el servidor ha rechazado la conexion revisa los permisos o el cors")
-            }
-        } catch (error) {
-            console.error("error de red al intentar conectar con el backend", error)
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     }
 
-    const handleEliminar = async (id: number | undefined) => {
-        // compruebo que el id exista antes de hacer nada para no enviar peticiones vacias que rompan el servidor
-        if (!id) return
-        
-        if (window.confirm("¿estás seguro de eliminar este producto?")) {
-            // saco el token de la caja fuerte del navegador por si el servidor me pide identificacion al borrar
-            const sesionString = localStorage.getItem('user_session')
-            const token = sesionString ? JSON.parse(sesionString).token : ''
+    const cargarProductos = async () => {
+        try {
+            const response = await fetch('http://localhost:9090/productos', {
+                method: 'GET',
+                headers: getAuthHeaders()
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setProductos(data)
+            }
+        } catch (error) {
+            console.error("error al cargar productos", error)
+        }
+    }
 
+    const cargarPedidos = async () => {
+        try {
+            const response = await fetch('http://localhost:9090/pedidos', {
+                method: 'GET',
+                headers: getAuthHeaders()
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setPedidos(data)
+            }
+        } catch (error) {
+            console.error("error al cargar pedidos", error)
+        }
+    }
+
+    const cargarUsuarios = async () => {
+        try {
+            const response = await fetch('http://localhost:9090/auth/usuarios', {
+                method: 'GET',
+                headers: getAuthHeaders()
+            })
+            if (response.ok) {
+                const data = await response.json()
+                setUsuarios(data)
+            }
+        } catch (error) {
+            console.error("error al cargar usuarios", error)
+        }
+    }
+
+    const handleEliminarProducto = async (id: number | undefined) => {
+        // lanzo una alerta de confirmacion antes de mandar la peticion de borrado para evitar desastres si hago un clic accidental
+        if (!id) return
+        if (window.confirm("¿Estás seguro de que quieres eliminar este producto de la base de datos?")) {
             try {
                 const response = await fetch(`http://localhost:9090/productos/${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        // le meto mi carnet de administrador en la cabecera para que spring security me deje eliminar el registro
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: getAuthHeaders()
                 })
-                
                 if (response.ok) cargarProductos()
             } catch (error) {
                 console.error("error al eliminar", error)
@@ -89,130 +109,128 @@ export const AdminDashboard = () => {
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        // freno el envio por defecto del formulario para que no me recargue la pagina y pueda gestionar yo el envio
+    const handleSubmitProducto = async (e: React.FormEvent) => {
+        // intercepto el formulario para enviar los datos con fetch y saber si tengo que actualizar un id existente o crear uno nuevo
         e.preventDefault()
-
-        // recupero la sesion para extraer la llave de acceso y poder escribir en la base de datos
-        const sesionString = localStorage.getItem('user_session')
-        const token = sesionString ? JSON.parse(sesionString).token : ''
-
         const url = formData.id ? `http://localhost:9090/productos/${formData.id}` : 'http://localhost:9090/productos'
         const method = formData.id ? 'PUT' : 'POST'
 
         try {
             const response = await fetch(url, {
                 method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    // adjunto mi token de seguridad en la carta para que el servidor confie en los datos nuevos
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(formData)
             })
-
             if (response.ok) {
                 setMostrarModal(false)
                 cargarProductos()
-            } else {
-                console.error("el servidor ha rechazado los cambios revisa los permisos o el cors")
             }
         } catch (error) {
-            console.error("error en la peticion", error)
+            console.error("error al guardar", error)
         }
     }
 
-    const abrirModalCrear = () => {
-        setFormData(estadoInicial);
-        setMostrarModal(true);
-    };
-
-    const abrirModalEditar = (producto: Producto) => {
-        setFormData(producto);
-        setMostrarModal(true);
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
-        const valorFinal = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-        setFormData({ ...formData, [name]: valorFinal });
-    };
-
-
     return (
-        <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: '100vh', padding: '40px', position: 'relative' }}>
-            <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '32px' }}>
-                <h1 style={{ color: 'var(--primary)', fontFamily: 'Montserrat, sans-serif' }}>Gestión de Inventario</h1>
-                <button 
-                    onClick={abrirModalCrear}
-                    style={{ backgroundColor: 'var(--primary)', color: 'white', padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer' }}
-                >
-                    Añadir Nuevo Producto
-                </button>
-            </header>
+        <div className="admin-dashboard-layout">
+            
+            <aside className="admin-sidebar">
+                <div className="sidebar-header">
+                    <div className="brand-circle">P</div>
+                    <div className="brand-text">
+                        <h3>Panel Admin</h3>
+                        <span>Pistachi & Snacks</span>
+                    </div>
+                </div>
 
-            <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <thead>
-                        <tr style={{ borderBottom: '2px solid var(--bg-app)' }}>
-                            <th style={{ padding: '16px' }}>ID</th>
-                            <th style={{ padding: '16px' }}>Nombre</th>
-                            <th style={{ padding: '16px' }}>Precio</th>
-                            <th style={{ padding: '16px' }}>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {productos.map((p) => (
-                            <tr key={p.id} style={{ borderBottom: '1px solid var(--bg-app)' }}>
-                                <td style={{ padding: '16px' }}>{p.id}</td>
-                                <td style={{ padding: '16px' }}>{p.nombre}</td>
-                                <td style={{ padding: '16px' }}>{p.precio}€</td>
-                                <td style={{ padding: '16px' }}>
-                                    <button 
-                                        onClick={() => abrirModalEditar(p)}
-                                        style={{ marginRight: '10px', padding: '6px 12px', cursor: 'pointer' }}
-                                    >
-                                        Editar
-                                    </button>
-                                    <button 
-                                        style={{ backgroundColor: 'var(--rojo-eliminar)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
-                                        onClick={() => handleEliminar(p.id)}
-                                    >
-                                        Borrar
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                <nav className="sidebar-nav">
+                    <button onClick={() => setSeccionActiva('productos')} className={seccionActiva === 'productos' ? 'nav-item active' : 'nav-item'}>
+                        <svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V120a8,8,0,0,1,16,0v88H208V120a8,8,0,0,1,16,0ZM88,160a8,8,0,0,0,8-8V112a8,8,0,0,0-16,0v40A8,8,0,0,0,88,160Zm40,0a8,8,0,0,0,8-8V112a8,8,0,0,0-16,0v40A8,8,0,0,0,128,160Zm40,0a8,8,0,0,0,8-8V112a8,8,0,0,0-16,0v40A8,8,0,0,0,168,160ZM232,80H24A8,8,0,0,1,24,64H232a8,8,0,0,1,0,16Z"></path></svg>
+                        Productos
+                    </button>
+                    <button onClick={() => setSeccionActiva('pedidos')} className={seccionActiva === 'pedidos' ? 'nav-item active' : 'nav-item'}>
+                        <svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M200,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H56V48H200V208ZM168,88a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,88Zm0,40a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,128Zm0,40a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,168Z"></path></svg>
+                        Pedidos
+                    </button>
+                    <button onClick={() => setSeccionActiva('usuarios')} className={seccionActiva === 'usuarios' ? 'nav-item active' : 'nav-item'}>
+                        <svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,202.76a8,8,0,1,0,13.94,8.48,80,80,0,0,1,133.06,0,8,8,0,1,0,13.94-8.48A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.71a8,8,0,0,1-11.07,2.45,80,80,0,0,0-97.14-12.15,8,8,0,0,1-9.17-13.13,95.78,95.78,0,0,1,114.93,11.76A8,8,0,0,1,250.14,206.71ZM172,152a44,44,0,1,1,44-44A44.05,44.05,0,0,1,172,152Zm0-72a28,28,0,1,0,28,28A28,28,0,0,0,172,80Z"></path></svg>
+                        Usuarios
+                    </button>
+                </nav>
+            </aside>
+
+            <main className="admin-main">
+                <header className="main-header">
+                    <div className="header-info">
+                        <h1>{seccionActiva.charAt(0).toUpperCase() + seccionActiva.slice(1)}</h1>
+                        <p>Gestiona los datos de tu plataforma en tiempo real</p>
+                    </div>
+                    {seccionActiva === 'productos' && (
+                        <button onClick={() => { setFormData(estadoInicial); setMostrarModal(true); }} className="add-btn pistachio-accent">
+                            <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                            Nuevo Producto
+                        </button>
+                    )}
+                </header>
+
+                <div className="content-card">
+                    {seccionActiva === 'productos' && (
+                        <table className="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {productos.map(p => (
+                                    <tr key={p.id}>
+                                        <td>#{p.id}</td>
+                                        <td className="p-name">{p.nombre}</td>
+                                        <td>{p.precio.toFixed(2)}€</td>
+                                        <td className="actions-cell">
+                                            <button onClick={() => { setFormData(p); setMostrarModal(true); }} className="icon-btn edit">
+                                                <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"></path></svg>
+                                            </button>
+                                            <button onClick={() => handleEliminarProducto(p.id)} className="icon-btn delete">
+                                                <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            </main>
 
             {mostrarModal && (
-                <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div style={{ backgroundColor: 'white', padding: '32px', borderRadius: '12px', width: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
-                        <h2 style={{ marginBottom: '24px', color: 'var(--primary)' }}>
-                            {formData.id ? 'Editar Producto' : 'Nuevo Producto'}
-                        </h2>
+                <div className="modal-overlay">
+                    <div className="glass-modal">
+                        <div className="modal-header">
+                            <h2>{formData.id ? 'Editar Producto' : 'Añadir al Stock'}</h2>
+                            <button onClick={() => setMostrarModal(false)} className="close-x">
+                                <svg viewBox="0 0 256 256" width="24" height="24" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+                            </button>
+                        </div>
                         
-                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '8px' }}>Nombre</label>
-                                <input required type="text" name="nombre" value={formData.nombre} onChange={handleInputChange} style={{ width: '100%', padding: '8px' }} />
+                        <form onSubmit={handleSubmitProducto} className="admin-form">
+                            
+                            <div className="form-group">
+                                <label>Nombre del Producto</label>
+                                <input required type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} placeholder="Ej: Croissant de Pistacho" />
                             </div>
                             
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '8px' }}>Descripción</label>
-                                <textarea required name="descripcion" value={formData.descripcion} onChange={handleInputChange} style={{ width: '100%', padding: '8px', minHeight: '80px' }} />
-                            </div>
-
-                            <div style={{ display: 'flex', gap: '16px' }}>
-                                <div style={{ flex: 1 }}>
-                                    <label style={{ display: 'block', marginBottom: '8px' }}>Precio (€)</label>
-                                    <input required type="number" step="0.01" name="precio" value={formData.precio} onChange={handleInputChange} style={{ width: '100%', padding: '8px' }} />
+                            {/* este contenedor flex row garantiza que precio y categoria se dividan el espacio de forma limpia */}
+                            <div className="form-row">
+                                <div className="form-group flex-1">
+                                    <label>Precio (€)</label>
+                                    <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value)})} placeholder="0.00" />
                                 </div>
-                                <div style={{ flex: 1 }}>
-                                    <label style={{ display: 'block', marginBottom: '8px' }}>Categoría</label>
-                                    <select name="categoria" value={formData.categoria} onChange={handleInputChange} style={{ width: '100%', padding: '8px' }}>
+                                <div className="form-group flex-1">
+                                    <label>Categoría</label>
+                                    <select value={formData.categoria} onChange={e => setFormData({...formData, categoria: e.target.value})}>
                                         <option value="Snacks">Snacks</option>
                                         <option value="Bollería">Bollería</option>
                                         <option value="Bebidas">Bebidas</option>
@@ -220,28 +238,29 @@ export const AdminDashboard = () => {
                                 </div>
                             </div>
 
-                            <div>
-                                <label style={{ display: 'block', marginBottom: '8px' }}>URL de la Imagen</label>
-                                <input type="text" name="imagen" value={formData.imagen} onChange={handleInputChange} style={{ width: '100%', padding: '8px' }} />
+                            <div className="form-group">
+                                <label>Descripción</label>
+                                <textarea required value={formData.descripcion} onChange={e => setFormData({...formData, descripcion: e.target.value})} placeholder="Cuenta qué hace especial a este producto..." rows={3} />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label>Imagen del Producto</label>
+                                <input type="text" value={formData.imagen} onChange={e => setFormData({...formData, imagen: e.target.value})} placeholder="Ruta local (/img/foto.jpg) o URL externa" />
+                                <div className="help-box">
+                                    <span className="help-icon">💡</span>
+                                    <p>Guarda tus fotos generadas por IA en la carpeta <strong>public/img</strong> de tu proyecto React y escribe la ruta aquí.</p>
+                                </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <input type="checkbox" name="destacado" checked={formData.destacado} onChange={handleInputChange} />
-                                <label>Producto Destacado (Aparecerá en Novedades)</label>
+                            <div className="form-actions">
+                                <button type="button" onClick={() => setMostrarModal(false)} className="btn-cancel">Descartar</button>
+                                <button type="submit" className="btn-save">Guardar Cambios</button>
                             </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', marginTop: '16px' }}>
-                                <button type="button" onClick={() => setMostrarModal(false)} style={{ padding: '10px 20px', cursor: 'pointer', border: '1px solid #ccc', backgroundColor: 'transparent' }}>
-                                    Cancelar
-                                </button>
-                                <button type="submit" style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: 'var(--primary)', color: 'white', border: 'none' }}>
-                                    Guardar Producto
-                                </button>
-                            </div>
                         </form>
                     </div>
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
