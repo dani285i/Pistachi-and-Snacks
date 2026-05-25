@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import BotonFavorito from '../../components/favorito/BotonFavorito';
+import ProductCard from '../../components/productcard/ProductCard';
 import './Producto.css';
 
 interface Producto {
@@ -18,7 +17,6 @@ const Productos = () => {
     
     const [paginaActual, setPaginaActual] = useState<number>(1);
     const productosPorPagina = 6;
-    const navigate = useNavigate();
 
     useEffect(() => {
         const obtenerProductos = async () => {
@@ -57,36 +55,7 @@ const Productos = () => {
                 <>
                     <div className="rejilla-catalogo">
                         {productosAMostrar.map((p) => (
-                            <article key={p.id} className="tarjeta-obrador">
-                                <div className="tarjeta-img-box">
-                                    <img src={p.imagen} alt={p.nombre} className="tarjeta-img" />
-                                </div>
-                                <div className="tarjeta-body">
-                                    <div className="tarjeta-header-info">
-                                        <span className="categoria-badge">{p.categoria}</span>
-                                        <h3>{p.nombre}</h3>
-                                    </div>
-                                    <p className="tarjeta-desc">{p.descripcion}</p>
-                                    <div className="tarjeta-footer">
-                                        <span className="tarjeta-precio">{p.precio.toFixed(2)} €</span>
-                                        
-                                        {/* Agrupamos el corazón y el botón de detalles */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <BotonFavorito producto={p} />
-                                            
-                                            <button 
-                                                className="boton-detalles-premium"
-                                                onClick={(e) => {
-                                                    e.stopPropagation(); // Prevenimos doble navegación
-                                                    navigate(`/producto/${p.id}`);
-                                                }}
-                                            >
-                                                Ver detalles
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
+                            <ProductCard key={p.id} producto={p} />
                         ))}
                     </div>
 

@@ -1,13 +1,14 @@
-package com.tienda.repository;
+package com.tienda.repository; // Usa tu paquete correcto
 
 import com.tienda.model.Pedido;
-import com.tienda.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
 public interface IPedidoRepository extends JpaRepository<Pedido, Long> {
-    // Consulta personalizada para obtener todos los pedidos de un cliente específico
-    List<Pedido> findByUsuario(Usuario usuario);
+    
+    List<Pedido> findByUsuarioId(Long usuarioId);
+    
 }

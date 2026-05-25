@@ -1,0 +1,90 @@
+.toast-container {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 20000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+/* Item individual de notificacion */
+.toast-item {
+    pointer-events: auto;
+    background: #FFFFFF;
+    border: 1px solid #EAE7E0;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 18px 20px 22px;
+    position: relative;
+    overflow: hidden;
+    animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Animacion de entrada desde la derecha */
+@keyframes toastIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.check-icon {
+    margin-top: 2px;
+}
+
+.toast-content p {
+    color: #4A4A4A;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Boton cerrar (X) */
+.btn-close-toast {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    padding: 2px;
+    transition: color 0.2s;
+    margin-left: 10px;
+}
+
+.btn-close-toast:hover {
+    color: #E74C3C;
+}
+
+/* La barra regresiva ultra fina */
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #EAE7E0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4A6741;
+    width: 100%;
+    animation: shrinkBar 3s linear forwards;
+    transform-origin: left;
+}
+
+/* Animación que reduce la barra de 100% a 0% */
+@keyframes shrinkBar {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}

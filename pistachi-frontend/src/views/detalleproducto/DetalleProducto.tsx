@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
+import { useToast } from '../../context/toast/Toast';
 import BotonFavorito from '../../components/favorito/BotonFavorito';
 import './DetalleProducto.css';
 
@@ -10,6 +11,7 @@ const DetalleProducto = () => {
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { usuario } = useAuth();
+    const { addToast } = useToast();
     const [producto, setProducto] = useState<any>(null);
 
     useEffect(() => {
@@ -39,7 +41,17 @@ const DetalleProducto = () => {
                     <p>{producto.descripcion}</p>
                     <div className="detalle-acciones">
                         {usuario ? (
-                            <button className="boton-añadir-carrito" onClick={() => addToCart(producto)}>
+                            <button 
+                                className="boton-añadir-carrito" 
+                                onClick={() => {
+                                    addToCart({
+                                        ...producto,
+                                        precio: Number(producto.precio),
+                                        cantidad: 1
+                                    });
+                                    addToast(`'${producto.nombre}' añadido al carrito`);
+                                }}
+                            >
                                 Añadir al Carrito
                             </button>
                         ) : (

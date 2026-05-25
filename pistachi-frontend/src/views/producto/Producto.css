@@ -168,6 +168,63 @@
     box-shadow: 0 8px 15px rgba(74, 103, 65, 0.2);
 }
 
+.btn-carrito-animado {
+    background: #121619; /* Fondo oscuro por defecto */
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Crítico para elwrapper */
+    overflow: hidden; /* Oculta lo que se sale del círculo */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-carrito-animado:hover {
+    background: #4A6741; /* Cambia a verde en hover */
+    transform: scale(1.1);
+}
+
+/* Envoltorio para la animación de deslizamiento */
+.icon-wrapper {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-wrapper svg {
+    position: absolute;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Estado por defecto: Carrito en su sitio, Plus escondido arriba */
+.icon-cart {
+    top: 0;
+    opacity: 1;
+}
+
+.icon-plus {
+    top: -30px;
+    opacity: 0;
+}
+
+/* Estado Hover: Carrito desliza hacia abajo y Plus entra */
+.btn-carrito-animado:hover .icon-cart {
+    top: 30px;
+    opacity: 0;
+}
+
+.btn-carrito-animado:hover .icon-plus {
+    top: 0;
+    opacity: 1;
+}
+
 .status-container {
     text-align: center;
     padding: 4rem;

@@ -22,7 +22,7 @@ public class PedidoService implements IPedidoService {
 
     @Override
     public List<Pedido> obtenerPedidosPorUsuario(Usuario usuario) {
-        return pedidoRepository.findByUsuario(usuario);
+        return pedidoRepository.findByUsuarioId(usuario.getId());
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.tienda.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,26 +24,21 @@ public class LineaPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Integer cantidad;
-
-    @Column(nullable = false)
-    private Double precioUnitario;
-
-    // Relación N:1 con Pedido
-    @ManyToOne
+    // Relación hacia el pedido principal. Usamos JsonIgnore para evitar bucles infinitos al enviar los datos a React.
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
+    @JsonIgnore
     private Pedido pedido;
 
-    // Relación N:1 con Producto
+    // Relacionamos con la tabla de productos que ya tienes creada
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    public Double calcularSubtotal() {
-        if (cantidad != null && precioUnitario != null) {
-            return this.cantidad * this.precioUnitario;
-        }
-        return 0.0;
-    }
+    @Column(nullable = false)
+    private Integer cantidad;
+
+    @Column(nullable = false)
+    private Double precioUnitario; // Guardamos el precio en ese momento por si en el futuro cambia
+    
 }

@@ -8,43 +8,45 @@ import DetalleProducto from './views/detalleproducto/DetalleProducto';
 import Carrito from './views/carrito/Carrito';
 import { CartProvider } from './context/carrito/Carrito';
 import { AuthProvider } from './context/auth/Auth';
-// IMPORTAMOS EL PROVIDER Y LA VISTA DE FAVORITOS
 import { FavoritosProvider } from './context/favoritos/Favoritos';
 import Favoritos from './views/favoritos/Favoritos';
 import Registro from './views/registro/Registro';
 import ProtectedRoute from './components/protectedroute/ProtectedRoute';
 import Footer from './components/footer/Footer';
 import { AdminDashboard } from './views/admindashboard/AdminDashboard';
+import { ToastProvider } from './context/toast/Toast';
+import ToastContainer from './components/toast/ToastContainer';
 
 
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        {/* ENVOLVEMOS LA APP CON EL PROVIDER DE FAVORITOS */}
-        <FavoritosProvider>
-          <BrowserRouter>
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-              <Navbar />
-              
-              <div style={{ flex: 1 }}> 
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/registro" element={<Registro />} />
-                  <Route path="/productos" element={<Productos />} />
-                  <Route path="/producto/:id" element={<DetalleProducto />} />
-                  {/* AÑADIMOS LA RUTA DE FAVORITOS */}
-                  <Route path="/favoritos" element={<Favoritos />} />
-                  <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} /> 
-                  <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-                </Routes>
-              </div>
+        <ToastProvider>
+          <FavoritosProvider>
+            <BrowserRouter>
+              <ToastContainer />
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                  <Navbar />
+                  
+                  <div style={{ flex: 1 }}> 
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/registro" element={<Registro />} />
+                      <Route path="/productos" element={<Productos />} />
+                      <Route path="/producto/:id" element={<DetalleProducto />} />
+                      <Route path="/favoritos" element={<Favoritos />} />
+                      <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} /> 
+                      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+                    </Routes>
+                  </div>
 
-              <Footer />
-            </div>
-          </BrowserRouter>
-        </FavoritosProvider>
+                  <Footer />
+                </div>
+            </BrowserRouter>
+          </FavoritosProvider>
+        </ToastProvider>
       </CartProvider>
     </AuthProvider>
   );

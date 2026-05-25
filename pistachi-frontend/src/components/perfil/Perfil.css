@@ -1,0 +1,271 @@
+/* Overlay oscuro detrás de la bandeja */
+.perfil-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(18, 22, 25, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.perfil-overlay.activo {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* La Bandeja (Panel Lateral) */
+.perfil-bandeja {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Escondida fuera de la pantalla por defecto */
+    width: 100%;
+    max-width: 850px; /* Ancha como tu wireframe */
+    height: 100vh;
+    background: #FDFBF7;
+    z-index: 10001;
+    box-shadow: -20px 0 50px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.perfil-bandeja.abierta {
+    right: 0; /* Entra en pantalla */
+}
+
+/* Cabecera */
+.perfil-header {
+    padding: 40px 50px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.perfil-header h2 {
+    font-size: 2.5rem;
+    color: #121619;
+    margin-bottom: 5px;
+}
+
+.perfil-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.btn-cerrar-bandeja {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #121619;
+    padding: 10px;
+    transition: transform 0.3s;
+}
+
+.btn-cerrar-bandeja:hover {
+    transform: rotate(90deg);
+}
+
+/* Área de contenido */
+.perfil-scroll-area {
+    padding: 0 50px 40px;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Tarjetas Generales */
+.tarjeta-premium {
+    border-radius: 20px;
+    padding: 30px;
+}
+
+/* Tarjeta Oscura (Tachis) */
+.tarjeta-premium.oscura {
+    background: #4A4A4A;
+    color: white;
+}
+
+.tarjeta-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.tarjeta-label.oscuro {
+    color: #121619;
+    font-weight: 700;
+}
+
+.tarjeta-premium.oscura h3 {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+/* Tarjeta Clara (Suscripción) */
+.tarjeta-premium.clara {
+    background: #AAB3A6; /* Gris verdoso del wireframe */
+    color: #121619;
+}
+
+.suscripcion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.suscripcion-header p {
+    color: #FEFEFE;
+    margin-top: 5px;
+}
+
+.suscripcion-acciones {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.badge-activo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #E8EBE6;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.btn-gestionar {
+    background: transparent;
+    border: 1px solid #121619;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-gestionar:hover {
+    background: #121619;
+    color: white;
+}
+
+.suscripcion-footer {
+    border-top: 1px solid rgba(255,255,255,0.3);
+    padding-top: 20px;
+    color: #FEFEFE;
+}
+
+/* Tabla de Pedidos */
+.tabla-pedidos-container {
+    background: #E8EBE6;
+}
+
+.tabla-pedidos-container h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #121619;
+}
+
+.tabla-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-pedidos th {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    color: #121619;
+    font-weight: 700;
+}
+
+.tabla-pedidos td {
+    padding: 20px 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #4A4A4A;
+}
+
+/* Badges de Estado del Wireframe */
+.estado-badge {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.estado-cancelado { background: #FADBD8; color: #E74C3C; }
+.estado-proceso { background: #FAE5D3; color: #E67E22; }
+.estado-transito { background: #D6EAF8; color: #3498DB; }
+.estado-entregado { background: #D5F5E3; color: #2ECC71; }
+
+/* Pie del panel */
+.perfil-footer {
+    padding: 20px 50px;
+    border-top: 1px solid #EAE7E0;
+    background: #FFFFFF;
+}
+
+.btn-salir-cuenta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    color: #E74C3C;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-salir-cuenta:hover {
+    text-decoration: underline;
+}
+
+/* Estado Vacío de Pedidos */
+.pedidos-vacios {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    border: 1px dashed #AAB3A6;
+}
+
+.icono-hambre {
+    margin-bottom: 15px;
+}
+
+.pedidos-vacios h4 {
+    font-size: 1.5rem;
+    color: #121619;
+    margin-bottom: 8px;
+}
+
+.pedidos-vacios p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.btn-ir-catalogo {
+    background: #121619;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-ir-catalogo:hover {
+    background: #4A6741;
+}

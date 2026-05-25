@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { scroller, Element } from 'react-scroll';
 import Hero from '../../components/hero/Hero';
 import Novedad from '../../components/novedad/Novedad';
-import BotonFavorito from '../../components/favorito/BotonFavorito';
+import ProductCard from '../../components/productcard/ProductCard';
 import './Home.css';
 
 interface Producto {
@@ -97,46 +97,7 @@ const Home = () => {
                 ) : (
                     <div className="craft-grid">
                         {productos.map((producto) => (
-                            <article 
-                                key={producto.id} 
-                                className="craft-card" 
-                                onClick={() => navigate(`/producto/${producto.id}`)}
-                            >
-                                <div className="card-image-box">
-                                    <img src={producto.imagen} alt={`Foto de ${producto.nombre}`} />
-                                    <span className="craft-badge">Top Ventas</span>
-                                </div>
-                                
-                                <div className="card-body">
-                                    <div className="card-header-info">
-                                        <span className="card-category">{producto.categoria}</span>
-                                        <h3>{producto.nombre}</h3>
-                                    </div>
-                                    <p className="card-desc">{producto.descripcion}</p>
-                                    
-                                    <div className="card-bottom">
-                                        <span className="card-price">{producto.precio.toFixed(2)} €</span>
-                                        
-                                        {/* Agrupamos el corazón y el botón de detalle */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <BotonFavorito producto={producto} />
-                                            
-                                            <button 
-                                                className="craft-btn-icon"
-                                                onClick={(e) => {
-                                                    e.stopPropagation(); // Evitamos que el click afecte a la tarjeta padre
-                                                    navigate(`/producto/${producto.id}`);
-                                                }}
-                                            >
-                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
+                            <ProductCard key={producto.id} producto={producto} />
                         ))}
                     </div>
                 )}
