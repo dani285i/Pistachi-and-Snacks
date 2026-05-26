@@ -1,20 +1,16 @@
 import { useCart } from '../../context/carrito/Carrito';
-import { useAuth } from '../../context/auth/Auth';
-import { useToast } from '../../context/toast/Toast';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Basket, Trash, ArrowRight, Lock } from '@phosphor-icons/react';
 import './Carrito.css';
 
-const Carrito = () => {
-    const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
-    const { usuario } = useAuth();
-    const { addToast } = useToast();
-    const navigate = useNavigate();
+interface CartItemExtra {
+    unidades?: number;
+    categoria?: string;
+}
 
-    const [mostrarPasarela, setMostrarPasarela] = useState(false);
-    const [procesando, setProcesando] = useState(false);
+const Carrito = () => {
+    const { cartItems, removeFromCart, updateQuantity } = useCart();
+    const navigate = useNavigate();
 
     // Cálculos a prueba de fallos para evitar el NaN
     const subtotal = cartItems.reduce((acc, item) => {
@@ -26,40 +22,7 @@ const Carrito = () => {
     const costeEnvio = subtotal >= 30 || subtotal === 0 ? 0 : 4.99;
     const totalSeguro = subtotal + costeEnvio;
 
-    // Función principal para registrar la venta en la Base de Datos
-    const confirmarPedidoBackend = async () => {
-        setProcesando(true);
-        try {
-            const pedidoPayload = {
-                usuarioId: usuario?.id || 1, // Fallback al admin si por algún motivo no hay id
-                total: totalSeguro,
-                lineas: cartItems.map(item => ({
-                    productoId: item.id,
-                    cantidad: item.cantidad,
-                    precioUnitario: item.precio
-                }))
-            };
-
-            const respuesta = await fetch('http://localhost:9090/pedidos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pedidoPayload)
-            });
-
-            if (respuesta.ok) {
-                addToast("🎉 ¡Pago recibido! Hemos empezado a hornear tu pedido.");
-                clearCart();
-                navigate('/productos');
-            } else {
-                addToast("❌ Hubo un error al registrar el pedido en el sistema.");
-            }
-        } catch (error) {
-            console.error(error);
-            addToast("❌ Error de conexión al procesar el pedido.");
-        } finally {
-            setProcesando(false);
-        }
-    };
+    // Función de pedido movida a Checkout.tsx
 
     if (cartItems.length === 0) {
         return (
@@ -99,20 +62,20 @@ const Carrito = () => {
                                 <div className="item-info">
                                     <h3>
                                         {item.nombre}
-                                        {(item as any).unidades > 1 && (
+                                        {(item as CartItemExtra).unidades && (item as CartItemExtra).unidades! > 1 && (
                                             <span style={{ fontSize: '0.85rem', color: '#888', marginLeft: '8px', fontWeight: 'normal' }}>
-                                                ({(item as any).unidades} Uds)
+                                                ({(item as CartItemExtra).unidades} Uds)
                                             </span>
                                         )}
                                     </h3>
-                                    <span className="item-categoria">{(item as any).categoria || 'Artesanal'}</span>
+                                    <span className="item-categoria">{(item as CartItemExtra).categoria || 'Artesanal'}</span>
                                     <div className="item-controles">
                                         <div className="selector-cantidad">
-                                            <button onClick={() => updateQuantity(item.id, cantidadItem - 1)} disabled={mostrarPasarela}>-</button>
+                                            <button onClick={() => updateQuantity(item.id, cantidadItem - 1)}>-</button>
                                             <span className="cantidad-numero">{cantidadItem}</span>
-                                            <button onClick={() => updateQuantity(item.id, cantidadItem + 1)} disabled={mostrarPasarela}>+</button>
+                                            <button onClick={() => updateQuantity(item.id, cantidadItem + 1)}>+</button>
                                         </div>
-                                        <button className="btn-eliminar-item" onClick={() => removeFromCart(item.id)} disabled={mostrarPasarela}>
+                                        <button className="btn-eliminar-item" onClick={() => removeFromCart(item.id)}>
                                             <Trash size={18} weight="bold" />
                                         </button>
                                     </div>

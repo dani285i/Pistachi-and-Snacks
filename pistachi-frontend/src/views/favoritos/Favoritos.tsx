@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavoritos } from '../../context/favoritos/Favoritos';
+import type { ProductoFav } from '../../context/favoritos/Favoritos';
 import BotonFavorito from '../../components/favorito/BotonFavorito';
 import { SmileySad } from '@phosphor-icons/react';
 import './Favoritos.css';
@@ -10,11 +11,11 @@ const Favoritos = () => {
     const navigate = useNavigate();
     
     // Estados para controlar el modal
-    const [productoSeleccionado, setProductoSeleccionado] = useState<any>(null);
+    const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFav | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
     // Esta función se la pasamos al botón para que no borre directo, sino que avise
-    const intentarRemover = (producto: any) => {
+    const intentarRemover = (producto: ProductoFav) => {
         setProductoSeleccionado(producto);
         setModalVisible(true);
     };
@@ -38,7 +39,7 @@ const Favoritos = () => {
                 <div className="status-container">Aún no has guardado ninguna delicia. ¡Ve al catálogo a explorar!</div>
             ) : (
                 <div className="rejilla-catalogo">
-                    {favoritos.map((p: any) => (
+                    {favoritos.map((p: ProductoFav) => (
                         <article key={p.id} className="tarjeta-obrador" onClick={() => navigate(`/producto/${p.id}`)}>
                             <div className="tarjeta-img-box">
                                 <img src={p.imagen} alt={p.nombre} className="tarjeta-img" />
@@ -50,7 +51,7 @@ const Favoritos = () => {
                                 </div>
                                 <p className="tarjeta-desc">{p.descripcion}</p>
                                 <div className="tarjeta-footer">
-                                    <span className="tarjeta-precio">{p.precio.toFixed(2)} €</span>
+                                    <span className="tarjeta-precio">{Number(p.precio).toFixed(2)} €</span>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                         {/* Aquí pasamos el onIntentoRemover para activar el modal */}
                                         <BotonFavorito producto={p} onIntentoRemover={intentarRemover} />

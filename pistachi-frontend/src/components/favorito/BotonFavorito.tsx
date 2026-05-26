@@ -1,16 +1,17 @@
 import React from 'react';
 import { useFavoritos } from '../../context/favoritos/Favoritos';
+import type { ProductoFav } from '../../context/favoritos/Favoritos';
 import { Heart } from '@phosphor-icons/react';
 import './BotonFavorito.css';
 
 interface Props {
-    producto: any;
-    onIntentoRemover?: (producto: any) => void;
+    producto: ProductoFav;
+    onIntentoRemover?: (producto: ProductoFav) => void;
 }
 
 const BotonFavorito: React.FC<Props> = ({ producto, onIntentoRemover }) => {
     const { favoritos, toggleFavorito } = useFavoritos();
-    const esFavorito = favoritos.some((fav: any) => fav.id === producto.id);
+    const esFavorito = favoritos.some((fav: ProductoFav) => fav.id === producto.id);
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // Evita que al dar like entres sin querer al detalle del producto

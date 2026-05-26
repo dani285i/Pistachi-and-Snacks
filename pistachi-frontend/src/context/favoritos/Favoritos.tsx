@@ -1,10 +1,25 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const FavoritosContext = createContext<any>(null);
+export interface ProductoFav {
+    id: number;
+    nombre?: string;
+    descripcion?: string;
+    precio?: number;
+    imagen?: string;
+    categoria?: string;
+}
+
+interface FavoritosContextType {
+    favoritos: ProductoFav[];
+    toggleFavorito: (producto: ProductoFav) => void;
+    removerFavorito: (id: number) => void;
+}
+
+const FavoritosContext = createContext<FavoritosContextType | null>(null);
 
 export const FavoritosProvider = ({ children }: { children: React.ReactNode }) => {
     // Inicializamos leyendo del almacenamiento local por si el usuario ya tenía likes guardados
-    const [favoritos, setFavoritos] = useState<any[]>(() => {
+    const [favoritos, setFavoritos] = useState<ProductoFav[]>(() => {
         const guardados = localStorage.getItem('pistachi_favoritos');
         return guardados ? JSON.parse(guardados) : [];
     });
@@ -15,7 +30,7 @@ export const FavoritosProvider = ({ children }: { children: React.ReactNode }) =
     }, [favoritos]);
 
     // Función que da o quita el like dependiendo de si ya existe
-    const toggleFavorito = (producto: any) => {
+    const toggleFavorito = (producto: ProductoFav) => {
         setFavoritos(prev => {
             const existe = prev.find(p => p.id === producto.id);
             if (existe) {
@@ -38,4 +53,8 @@ export const FavoritosProvider = ({ children }: { children: React.ReactNode }) =
     );
 };
 
-export const useFavoritos = () => useContext(FavoritosContext);
+export const useFavoritos = () => {
+    const context = useContext(FavoritosContext);
+    if (!context) throw new Error("useFavoritos debe usarse dentro de FavoritosProvider");
+    return context;
+};

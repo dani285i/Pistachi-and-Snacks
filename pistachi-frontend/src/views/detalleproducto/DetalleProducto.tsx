@@ -13,7 +13,18 @@ const DetalleProducto = () => {
     const { addToCart } = useCart();
     const { usuario } = useAuth();
     const { addToast } = useToast();
-    const [producto, setProducto] = useState<any>(null);
+    interface Producto {
+        id: number;
+        nombre: string;
+        descripcion: string;
+        precio: number;
+        imagen: string;
+        categoria: string;
+        stock: number;
+        unidades?: number;
+    }
+
+    const [producto, setProducto] = useState<Producto | null>(null);
 
     useEffect(() => {
         fetch(`http://localhost:9090/productos/${id}`)
@@ -32,8 +43,8 @@ const DetalleProducto = () => {
                 <div className="detalle-info">
                     <h1 className="detalle-titulo">
                         {producto.nombre}
-                        {producto.unidades > 1 && (
-                            <span style={{ fontSize: '1.2rem', color: 'var(--color-texto-light)', marginLeft: '15px', fontWeight: 'normal' }}>
+                        {producto.unidades && producto.unidades > 1 && (
+                            <span style={{ fontSize: '0.85rem', color: '#888', marginLeft: '8px', fontWeight: 'normal' }}>
                                 ({producto.unidades} Uds)
                             </span>
                         )}

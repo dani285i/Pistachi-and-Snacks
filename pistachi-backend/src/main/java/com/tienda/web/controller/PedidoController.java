@@ -58,6 +58,23 @@ public class PedidoController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<Pedido>> obtenerTodosPedidos() {
+        return ResponseEntity.ok(pedidoRepository.findAll());
+    }
+
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<?> actualizarEstadoPedido(@PathVariable Long id, @RequestBody java.util.Map<String, String> payload) {
+        java.util.Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+        if (pedidoOpt.isPresent()) {
+            Pedido pedido = pedidoOpt.get();
+            pedido.setEstado(payload.get("estado"));
+            pedidoRepository.save(pedido);
+            return ResponseEntity.ok(pedido);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     // Clases DTO internas para recibir el JSON
     public static class PedidoRequest {
         private Long usuarioId;

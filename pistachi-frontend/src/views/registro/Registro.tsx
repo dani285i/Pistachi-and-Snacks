@@ -60,7 +60,7 @@ const Registro = () => {
             } else {
                 setErrores(["Error al registrar el usuario. Intentalo de nuevo."]);
             }
-        } catch (error) {
+        } catch {
             setErrores(["No se pudo conectar con el servidor."]);
         }
     };

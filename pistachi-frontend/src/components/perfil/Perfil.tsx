@@ -16,7 +16,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
     const [modalSuscripcionAbierto, setModalSuscripcionAbierto] = React.useState(false);
 
     // Dejamos solo este array vacío para forzar a que salga el estado del "hambre de pistacho"
-    const pedidos: any[] = [];
+    const pedidos: { id: string, fecha: string, total: number, estado: string }[] = [];
 
     const getEstadoClass = (estado: string) => {
         switch (estado) {

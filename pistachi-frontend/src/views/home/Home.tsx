@@ -29,7 +29,7 @@ const Home = () => {
 
     // Detecta si venimos de otra pestaña con la orden de bajar a novedades
     useEffect(() => {
-        if (location.state && (location.state as any).hacerScrollANovedades) {
+        if (location.state && (location.state as { hacerScrollANovedades?: boolean }).hacerScrollANovedades) {
             // Esperamos un instante corto para que el usuario asimile que volvió al inicio
             const timer = setTimeout(() => {
                 scroller.scrollTo('seccion-novedad', {

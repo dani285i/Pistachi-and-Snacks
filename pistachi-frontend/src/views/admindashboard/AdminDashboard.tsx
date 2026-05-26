@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import CustomSelect from '../../components/customselect/CustomSelect'
-import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown } from '@phosphor-icons/react'
+import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle } from '@phosphor-icons/react'
+import { useToast } from '../../context/toast/Toast'
 import './AdminDashboard.css'
 
 interface Producto {
@@ -13,6 +14,24 @@ interface Producto {
     destacado: boolean
     unidades: number
     stock: number
+}
+
+interface Pedido {
+    id: number;
+    fecha: string;
+    total: number;
+    estado: string;
+}
+
+interface Usuario {
+    id: number;
+    nombre: string;
+    apellidos: string;
+    email: string;
+    rol: string;
+    username: string;
+    tachis: number;
+    fechaNacimiento: string;
 }
 
 const estadoInicial: Producto = {
@@ -38,17 +57,19 @@ export const AdminDashboard = () => {
     // defino los estados para controlar la navegacion y la carga de datos del panel, separando la logica para que no se mezcle todo
     const [seccionActiva, setSeccionActiva] = useState('productos')
     const [productos, setProductos] = useState<Producto[]>([])
-    const [pedidos, setPedidos] = useState<any[]>([])
-    const [usuarios, setUsuarios] = useState<any[]>([])
+    const [pedidos, setPedidos] = useState<Pedido[]>([])
+    const [usuarios, setUsuarios] = useState<Usuario[]>([])
     const [mostrarModal, setMostrarModal] = useState(false)
     const [formData, setFormData] = useState<Producto>(estadoInicial)
 
-    useEffect(() => {
-        // vigilo los cambios en el menu lateral para pedirle al servidor solo los datos que el usuario quiere ver en ese momento
-        if (seccionActiva === 'productos') cargarProductos()
-        if (seccionActiva === 'pedidos') cargarPedidos()
-        if (seccionActiva === 'usuarios') cargarUsuarios()
-    }, [seccionActiva])
+    const { addToast } = useToast();
+    const [mostrarModalUsuario, setMostrarModalUsuario] = useState(false);
+    const [usuarioData, setUsuarioData] = useState<Partial<Usuario>>({});
+    
+    const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+    const [cuentaRegresiva, setCuentaRegresiva] = useState(5);
+    const [usuarioAEliminar, setUsuarioAEliminar] = useState<Usuario | null>(null);
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const getAuthHeaders = () => {
         // preparo las cabeceras con el token de seguridad que tengo guardado para demostrarle al backend que soy el administrador
@@ -105,6 +126,14 @@ export const AdminDashboard = () => {
         }
     }
 
+    useEffect(() => {
+        // vigilo los cambios en el menu lateral para pedirle al servidor solo los datos que el usuario quiere ver en ese momento
+        if (seccionActiva === 'productos') cargarProductos()
+        if (seccionActiva === 'pedidos') cargarPedidos()
+        if (seccionActiva === 'usuarios') cargarUsuarios()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [seccionActiva])
+
     const handleEliminarProducto = async (id: number | undefined) => {
         // lanzo una alerta de confirmacion antes de mandar la peticion de borrado para evitar desastres si hago un clic accidental
         if (!id) return
@@ -120,6 +149,94 @@ export const AdminDashboard = () => {
             }
         }
     }
+
+    const handleCambiarEstadoPedido = async (id: number, nuevoEstado: string) => {
+        try {
+            const response = await fetch(`http://localhost:9090/pedidos/${id}/estado`, {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ estado: nuevoEstado })
+            })
+            if (response.ok) {
+                cargarPedidos();
+            } else {
+                alert("Error al actualizar el pedido");
+            }
+        } catch (error) {
+            console.error("error al actualizar estado", error)
+        }
+    }
+
+    const handleEliminarUsuarioInicio = (usuario: Usuario) => {
+        if (window.confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+            if (window.confirm("¿Seguro que quieres eliminarlo? Esta acción es irreversible.")) {
+                if (window.confirm("¿Última oportunidad, de verdad quieres eliminarlo?")) {
+                    setUsuarioAEliminar(usuario);
+                    setCuentaRegresiva(5);
+                    setMostrarModalEliminar(true);
+                    
+                    timerRef.current = setInterval(() => {
+                        setCuentaRegresiva((prev) => {
+                            if (prev <= 1) {
+                                clearInterval(timerRef.current as number);
+                                return 0;
+                            }
+                            return prev - 1;
+                        });
+                    }, 1000);
+                }
+            }
+        }
+    };
+
+    const handleEliminarUsuarioFinal = async () => {
+        if (!usuarioAEliminar) return;
+        try {
+            const response = await fetch(`http://localhost:9090/auth/usuarios/${usuarioAEliminar.id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            });
+            if (response.ok) {
+                setMostrarModalEliminar(false);
+                cargarUsuarios();
+                addToast(`el usuario "${usuarioAEliminar.username || usuarioAEliminar.nombre}" ha sido eliminado de la base de datos...`);
+            }
+        } catch (error) {
+            console.error("error al eliminar usuario", error);
+        }
+    };
+
+    const cancelarEliminacion = () => {
+        clearInterval(timerRef.current as number);
+        setMostrarModalEliminar(false);
+        setUsuarioAEliminar(null);
+    };
+
+    const handleEditarUsuarioClick = (usuario: Usuario) => {
+        setUsuarioData(usuario);
+        setMostrarModalUsuario(true);
+    };
+
+    const handleSubmitUsuario = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (window.confirm("¿Estás seguro de que quieres editar los datos de este usuario?")) {
+            try {
+                const response = await fetch(`http://localhost:9090/auth/usuarios/${usuarioData.id}`, {
+                    method: 'PUT',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(usuarioData)
+                });
+                if (response.ok) {
+                    setMostrarModalUsuario(false);
+                    cargarUsuarios();
+                } else {
+                    alert("Error al actualizar el usuario");
+                }
+            } catch (error) {
+                console.error("error al editar usuario", error);
+            }
+        }
+    };
 
     const handleSubmitProducto = async (e: React.FormEvent) => {
         // intercepto el formulario para enviar los datos con fetch y saber si tengo que actualizar un id existente o crear uno nuevo
@@ -242,14 +359,82 @@ export const AdminDashboard = () => {
                         </table>
                     )}
                     {seccionActiva === 'pedidos' && (
-                        <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-                            <p>Sección en construcción. Hay {pedidos.length} pedidos registrados.</p>
-                        </div>
+                        <table className="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado Actual</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {pedidos.map(p => (
+                                    <tr key={p.id}>
+                                        <td>#{p.id}</td>
+                                        <td>{new Date(p.fecha).toLocaleDateString()}</td>
+                                        <td>{p.total?.toFixed(2)}€</td>
+                                        <td>
+                                            <select 
+                                                value={p.estado} 
+                                                onChange={(e) => handleCambiarEstadoPedido(p.id, e.target.value)}
+                                                style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                                            >
+                                                <option value="Pagado y En Proceso">En Proceso</option>
+                                                <option value="Enviado">Enviado</option>
+                                                <option value="Entregado">Entregado</option>
+                                                <option value="Cancelado">Cancelado</option>
+                                            </select>
+                                        </td>
+                                        <td className="actions-cell">
+                                            <span style={{ fontSize: '0.8rem', color: '#888' }}>Auto-guardado</span>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {pedidos.length === 0 && (
+                                    <tr><td colSpan={5} style={{textAlign: 'center', padding: '2rem', color: '#888'}}>Aún no hay pedidos registrados.</td></tr>
+                                )}
+                            </tbody>
+                        </table>
                     )}
                     {seccionActiva === 'usuarios' && (
-                        <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-                            <p>Sección en construcción. Hay {usuarios.length} usuarios registrados.</p>
-                        </div>
+                        <table className="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Email</th>
+                                    <th>Tachis</th>
+                                    <th>F. Nacimiento</th>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {usuarios.map(u => (
+                                    <tr key={u.id}>
+                                        <td>#{u.id}</td>
+                                        <td>{u.nombre} {u.apellidos}</td>
+                                        <td>{u.email}</td>
+                                        <td>{u.tachis || 0}</td>
+                                        <td>{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
+                                        <td><span className="categoria-badge">{u.rol}</span></td>
+                                        <td className="actions-cell">
+                                            <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
+                                                <Pencil size={18} weight="bold" />
+                                            </button>
+                                            <button onClick={() => handleEliminarUsuarioInicio(u)} className="icon-btn delete" title="Eliminar Usuario">
+                                                <Trash size={18} weight="bold" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {usuarios.length === 0 && (
+                                    <tr><td colSpan={7} style={{textAlign: 'center', padding: '2rem', color: '#888'}}>No hay usuarios registrados.</td></tr>
+                                )}
+                            </tbody>
+                        </table>
                     )}
                 </div>
             </main>
@@ -356,6 +541,102 @@ export const AdminDashboard = () => {
                             </div>
 
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {mostrarModalUsuario && (
+                <div className="modal-overlay">
+                    <div className="glass-modal" style={{ maxWidth: '500px' }}>
+                        <div className="modal-header">
+                            <h2>Editar Usuario</h2>
+                            <button onClick={() => setMostrarModalUsuario(false)} className="close-x">
+                                <X size={24} weight="bold" />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSubmitUsuario} className="admin-form">
+                            <div className="form-row">
+                                <div className="form-group flex-1">
+                                    <label>Nombre</label>
+                                    <input required type="text" value={usuarioData.nombre || ''} onChange={e => setUsuarioData({...usuarioData, nombre: e.target.value})} />
+                                </div>
+                                <div className="form-group flex-1">
+                                    <label>Apellidos</label>
+                                    <input required type="text" value={usuarioData.apellidos || ''} onChange={e => setUsuarioData({...usuarioData, apellidos: e.target.value})} />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label>Email</label>
+                                <input required type="email" value={usuarioData.email || ''} onChange={e => setUsuarioData({...usuarioData, email: e.target.value})} />
+                            </div>
+                            <div className="form-group">
+                                <label>Username</label>
+                                <input required type="text" value={usuarioData.username || ''} onChange={e => setUsuarioData({...usuarioData, username: e.target.value})} />
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group flex-1">
+                                    <label>Tachis (Puntos)</label>
+                                    <input required type="number" min="0" value={usuarioData.tachis || 0} onChange={e => setUsuarioData({...usuarioData, tachis: parseInt(e.target.value) || 0})} />
+                                </div>
+                                <div className="form-group flex-1">
+                                    <label>Fecha de Nacimiento</label>
+                                    <input required type="date" value={usuarioData.fechaNacimiento || ''} onChange={e => setUsuarioData({...usuarioData, fechaNacimiento: e.target.value})} />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label>Rol (No modificable por seguridad)</label>
+                                <input type="text" value={usuarioData.rol || ''} disabled style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }} />
+                            </div>
+                            <div className="form-actions">
+                                <button type="button" onClick={() => setMostrarModalUsuario(false)} className="btn-cancel">Descartar</button>
+                                <button type="submit" className="btn-save">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {mostrarModalEliminar && (
+                <div className="modal-overlay">
+                    <div className="glass-modal" style={{ maxWidth: '400px', textAlign: 'center' }}>
+                        <WarningCircle size={80} weight="fill" color="#E74C3C" style={{ margin: '0 auto 20px auto' }} />
+                        <h2 style={{ color: '#E74C3C', marginBottom: '15px' }}>¡CUIDADO!</h2>
+                        <p style={{ marginBottom: '20px', lineHeight: '1.5' }}>
+                            Estás a punto de eliminar permanentemente al usuario <strong>{usuarioAEliminar?.username}</strong>.
+                            Esta acción destruirá sus datos y no podrá ser deshecha.
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <button 
+                                onClick={handleEliminarUsuarioFinal} 
+                                disabled={cuentaRegresiva > 0}
+                                style={{
+                                    backgroundColor: cuentaRegresiva > 0 ? '#ccc' : '#E74C3C',
+                                    color: 'white',
+                                    padding: '12px',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    fontWeight: 'bold',
+                                    cursor: cuentaRegresiva > 0 ? 'not-allowed' : 'pointer',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                {cuentaRegresiva > 0 ? `Esperando... (${cuentaRegresiva}s)` : 'Eliminar Definitivamente'}
+                            </button>
+                            <button 
+                                onClick={cancelarEliminacion}
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    color: '#666',
+                                    padding: '12px',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '8px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Cancelar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
