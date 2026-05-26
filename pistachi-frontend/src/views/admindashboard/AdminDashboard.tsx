@@ -296,7 +296,8 @@ export const AdminDashboard = () => {
                                             { value: 'Repostería', label: 'Repostería' },
                                             { value: 'Tartas', label: 'Tartas' },
                                             { value: 'Bebidas', label: 'Bebidas' },
-                                            { value: 'Café', label: 'Café' }
+                                            { value: 'Café', label: 'Café' },
+                                            { value: 'Helados', label: 'Helados' }
                                         ]}
                                         value={formData.categoria}
                                         onChange={(val) => setFormData({...formData, categoria: val})}

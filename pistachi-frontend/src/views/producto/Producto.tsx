@@ -15,7 +15,7 @@ interface Producto {
     stock: number;
 }
 
-const CATEGORIAS = ['Todas', 'Snacks', 'Bollería', 'Repostería', 'Tartas', 'Bebidas', 'Café'];
+const CATEGORIAS = ['Todas', 'Snacks', 'Bollería', 'Repostería', 'Tartas', 'Bebidas', 'Café', 'Helados'];
 
 const Productos = () => {
     const [totalProductos, setTotalProductos] = useState<Producto[]>([]);
@@ -104,10 +104,10 @@ const Productos = () => {
             {cargando ? (
                 <div className="status-container">Preparando las delicias...</div>
             ) : productosAMostrar.length === 0 ? (
-                <div className="status-container">
-                    Vaya, parece que la vitrina de "{categoriaSeleccionada}" está vacía hoy.
-                    <br/><br/>
-                    <button className="btn-carrito-animado" onClick={() => setCategoriaURL('Todas')}>Ver todo el catálogo</button>
+                <div className="status-container empty-state">
+                    <h3>Vaya, parece que la vitrina de "{categoriaSeleccionada}" está vacía hoy.</h3>
+                    <p>Nuestros pasteleros están trabajando en nuevas delicias.</p>
+                    <button className="btn-volver-catalogo" onClick={() => setCategoriaURL('Todas')}>Descubrir todo el catálogo</button>
                 </div>
             ) : (
                 <>
