@@ -21,7 +21,7 @@ public class AdminSetup implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Comprobamos si el admin ya existe para no duplicarlo cada vez que reinicias
-        if (usuarioRepository.findByEmail("admin@pistachi.com") == null) {
+        if (usuarioRepository.findByUsername("admin") == null) {
             Usuario admin = new Usuario();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123")); // La contraseña de admin
