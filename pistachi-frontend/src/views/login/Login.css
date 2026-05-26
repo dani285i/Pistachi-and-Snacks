@@ -373,7 +373,7 @@
 
 .login-footer {
     text-align: center;
-    margin-top: 10px;
+    margin-top: -15px; /* Pull it closer to the submit button */
 }
 
 .login-footer p {

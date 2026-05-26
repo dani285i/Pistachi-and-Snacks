@@ -1,13 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/auth/Auth';
+import { User, EnvelopeSimple, LockKey, Eye, EyeSlash } from '@phosphor-icons/react';
+import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker';
 import './Registro.css';
+
+interface Slide {
+    id: number;
+    url: string;
+    title: string;
+}
+
+const slides: Slide[] = [
+    { id: 1, url: '/img/tarta-de-queso-de-pistacho.png', title: 'Tarta de Queso con Pistacho' },
+    { id: 2, url: '/img/tostada-de-pistacho.png', title: 'Tostadas con Crema' },
+    { id: 3, url: '/img/napolitana-de-pistacho.png', title: 'Napolitana de Pistacho' },
+    { id: 4, url: '/img/donut-de-pistacho.png', title: 'Donut de Pistacho' }
+];
+
+type Direction = 'left' | 'up' | 'right' | 'down';
 
 const Registro = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, usuario } = useAuth();
     const [errores, setErrores] = useState<string[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [mostrarPassword, setMostrarPassword] = useState(false);
 
     const [formData, setFormData] = useState({
         username: '',
@@ -17,6 +36,30 @@ const Registro = () => {
         email: '',
         fechaNacimiento: ''
     });
+
+    // Carousel states
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [direction, setDirection] = useState<Direction>('left');
+
+    useEffect(() => {
+        if (usuario) {
+            navigate('/');
+        }
+    }, [usuario, navigate]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => {
+                const next = (prev + 1) % slides.length;
+                if (prev === 0) setDirection('left');
+                else if (prev === 1) setDirection('up');
+                else if (prev === 2) setDirection('right');
+                else if (prev === 3) setDirection('down');
+                return next;
+            });
+        }, 8000);
+        return () => clearInterval(interval);
+    }, []);
 
     const validarEdad = (fecha: string) => {
         const hoy = new Date();
@@ -44,6 +87,8 @@ const Registro = () => {
             return;
         }
 
+        setIsSubmitting(true);
+
         try {
             const respuesta = await fetch('http://localhost:9090/auth/registro', {
                 method: 'POST',
@@ -52,66 +97,179 @@ const Registro = () => {
             });
 
             if (respuesta.ok) {
-                const usuario = await respuesta.json(); 
-                login(usuario); // Iniciamos sesión automáticamente
-                
-                alert("Registro exitoso. Sesion iniciada.");
+                const dataUsuario = await respuesta.json(); 
+                login(dataUsuario);
+                alert("Registro exitoso. ¡Bienvenido al obrador!");
                 navigate('/');
             } else {
-                setErrores(["Error al registrar el usuario. Intentalo de nuevo."]);
+                setErrores(["Error al registrar el usuario. Es posible que el correo o usuario ya existan."]);
             }
         } catch {
             setErrores(["No se pudo conectar con el servidor."]);
+        } finally {
+            setIsSubmitting(false);
         }
     };
-    
+
     return (
-        <div className="registro-page">
-            <div className="registro-card">
-                <h2>Crea tu cuenta</h2>
-                <p>Únete para disfrutar de nuestras delicias de pistacho.</p>
+        <div className="login-split-wrapper">
+            <div className="login-image-section">
+                {slides.map((slide, index) => {
+                    let statusClass = 'slide-hidden';
+                    if (index === currentIndex) {
+                        statusClass = `slide-active slide-enter-${direction}`;
+                    } else if (
+                        (currentIndex === 0 && index === 3) || 
+                        (index === currentIndex - 1)
+                    ) {
+                        statusClass = 'slide-exit';
+                    }
+                    
+                    return (
+                        <div 
+                            key={slide.id} 
+                            className={`carousel-slide ${statusClass}`}
+                            style={{ backgroundImage: `url(${slide.url})` }}
+                        />
+                    );
+                })}
 
-                {errores.length > 0 && (
-                    <div className="error-container">
-                        {errores.map((err, i) => <p key={i} className="error-msg">{err}</p>)}
+                <div className="image-overlay">
+                    <div className="brand-watermark">
+                        <h2 className="fade-title" key={slides[currentIndex].id}>
+                            {slides[currentIndex].title}
+                        </h2>
+                        <p>OBRADOR ARTESANAL</p>
                     </div>
-                )}
+                </div>
+            </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label>Nombre de Usuario</label>
-                        <input type="text" value={formData.username} 
-                            onChange={e => setFormData({...formData, username: e.target.value})} />
+            <div className="login-form-section">
+                <div className="login-form-container">
+                    <div className="login-header">
+                        <h1>Crea tu Cuenta</h1>
+                        <p>Únete para disfrutar de nuestras delicias de pistacho.</p>
                     </div>
-                    <div className="input-row">
-                        <div className="input-group">
-                            <label>Nombre</label>
-                            <input type="text" value={formData.nombre} 
-                                onChange={e => setFormData({...formData, nombre: e.target.value})} />
+
+                    {errores.length > 0 && (
+                        <div className="error-toast">
+                            {errores.map((err, i) => <span key={i}>{err}<br/></span>)}
                         </div>
-                        <div className="input-group">
-                            <label>Apellidos</label>
-                            <input type="text" value={formData.apellidos} 
-                                onChange={e => setFormData({...formData, apellidos: e.target.value})} />
+                    )}
+
+                    <form onSubmit={handleSubmit} className="premium-form">
+                        <div className="floating-input-group">
+                            <User size={22} weight="bold" className="input-icon left-icon" />
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username"
+                                autoComplete="username"
+                                className={`floating-input ${formData.username.length > 0 ? 'filled' : ''}`}
+                                value={formData.username}
+                                onChange={e => setFormData({...formData, username: e.target.value})}
+                                placeholder="Alias"
+                                required
+                            />
+                            <label htmlFor="username" className="floating-label">Nombre de Usuario</label>
                         </div>
+
+                        <div className="input-row-split">
+                            <div className="floating-input-group">
+                                <User size={22} weight="bold" className="input-icon left-icon" />
+                                <input 
+                                    type="text" 
+                                    id="nombre" 
+                                    name="nombre"
+                                    autoComplete="given-name"
+                                    className={`floating-input ${formData.nombre.length > 0 ? 'filled' : ''}`}
+                                    value={formData.nombre}
+                                    onChange={e => setFormData({...formData, nombre: e.target.value})}
+                                    placeholder=" "
+                                    required
+                                />
+                                <label htmlFor="nombre" className="floating-label">Nombre</label>
+                            </div>
+
+                            <div className="floating-input-group">
+                                <User size={22} weight="bold" className="input-icon left-icon" />
+                                <input 
+                                    type="text" 
+                                    id="apellidos" 
+                                    name="apellidos"
+                                    autoComplete="family-name"
+                                    className={`floating-input ${formData.apellidos.length > 0 ? 'filled' : ''}`}
+                                    value={formData.apellidos}
+                                    onChange={e => setFormData({...formData, apellidos: e.target.value})}
+                                    placeholder=" "
+                                    required
+                                />
+                                <label htmlFor="apellidos" className="floating-label">Apellidos</label>
+                            </div>
+                        </div>
+
+                        <div className="floating-input-group">
+                            <EnvelopeSimple size={22} weight="bold" className="input-icon left-icon" />
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                autoComplete="email"
+                                className={`floating-input ${formData.email.length > 0 ? 'filled' : ''}`}
+                                value={formData.email}
+                                onChange={e => setFormData({...formData, email: e.target.value})}
+                                placeholder=" "
+                                required
+                            />
+                            <label htmlFor="email" className="floating-label">Correo Electrónico</label>
+                        </div>
+
+                        <div className="floating-input-group">
+                            <LockKey size={22} weight="bold" className="input-icon left-icon" />
+                            <input 
+                                type={mostrarPassword ? "text" : "password"} 
+                                id="password"
+                                name="password"
+                                autoComplete="new-password"
+                                className={`floating-input ${formData.password.length > 0 ? 'filled' : ''}`}
+                                value={formData.password}
+                                onChange={e => setFormData({...formData, password: e.target.value})}
+                                placeholder=" "
+                                required
+                            />
+                            <label htmlFor="password" className="floating-label">Contraseña</label>
+                            
+                            <button 
+                                type="button" 
+                                className="toggle-pwd-btn"
+                                onClick={() => setMostrarPassword(!mostrarPassword)}
+                                aria-label="Mostrar contraseña"
+                            >
+                                {mostrarPassword ? <EyeSlash size={22} weight="bold" /> : <Eye size={22} weight="bold" />}
+                            </button>
+                        </div>
+
+                        <CustomDatePicker 
+                            value={formData.fechaNacimiento}
+                            onChange={(val) => setFormData({...formData, fechaNacimiento: val})}
+                            mode="birthdate"
+                            label="Fecha de Nacimiento"
+                            required={true}
+                        />
+
+                        <button 
+                            type="submit" 
+                            className={`premium-submit-btn ${isSubmitting ? 'loading' : ''}`}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Creando llave...' : 'Registrarse'}
+                        </button>
+                    </form>
+
+                    <div className="login-footer">
+                        <p>¿Ya tienes las llaves del obrador? <Link to="/login" className="subtle-link bold-link">Entra aquí</Link></p>
                     </div>
-                    <div className="input-group">
-                        <label>Email</label>
-                        <input type="email" value={formData.email} 
-                            onChange={e => setFormData({...formData, email: e.target.value})} />
-                    </div>
-                    <div className="input-group">
-                        <label>Contraseña</label>
-                        <input type="password" value={formData.password} 
-                            onChange={e => setFormData({...formData, password: e.target.value})} />
-                    </div>
-                    <div className="input-group">
-                        <label>Fecha de Nacimiento</label>
-                        <input type="date" value={formData.fechaNacimiento} 
-                            onChange={e => setFormData({...formData, fechaNacimiento: e.target.value})} />
-                    </div>
-                    <button type="submit" className="registro-btn">Registrarse</button>
-                </form>
+                </div>
             </div>
         </div>
     );
