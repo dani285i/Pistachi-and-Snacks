@@ -171,6 +171,15 @@
     padding: 20px 15px;
     color: var(--admin-dark);
     border-bottom: 1px solid var(--admin-bg);
+    transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr:hover td {
+    background-color: #F4F7F2;
 }
 
 .p-name {

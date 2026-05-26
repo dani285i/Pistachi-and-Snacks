@@ -56,7 +56,14 @@ const Carrito = () => {
                                 </div>
 
                                 <div className="item-info">
-                                    <h3>{item.nombre}</h3>
+                                    <h3>
+                                        {item.nombre}
+                                        {(item as any).unidades > 1 && (
+                                            <span style={{ fontSize: '0.85rem', color: '#888', marginLeft: '8px', fontWeight: 'normal' }}>
+                                                ({(item as any).unidades} Uds)
+                                            </span>
+                                        )}
+                                    </h3>
                                     <span className="item-categoria">{(item as any).categoria || 'Artesanal'}</span>
                                     <div className="item-controles">
                                         <div className="selector-cantidad">
