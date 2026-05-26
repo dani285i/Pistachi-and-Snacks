@@ -159,7 +159,7 @@
 
 .admin-table th {
     text-align: left;
-    padding: 15px;
+    padding: 15px 20px;
     color: var(--admin-text-light);
     font-size: 13px;
     text-transform: uppercase;
@@ -168,7 +168,8 @@
 }
 
 .admin-table td {
-    padding: 20px 15px;
+    text-align: left;
+    padding: 20px;
     color: var(--admin-dark);
     border-bottom: 1px solid var(--admin-bg);
     transition: background-color 0.2s ease;

@@ -415,9 +415,9 @@ export const AdminDashboard = () => {
                                 {usuarios.map(u => (
                                     <tr key={u.id}>
                                         <td>#{u.id}</td>
-                                        <td>{u.nombre} {u.apellidos}</td>
+                                        <td><strong>{u.nombre} {u.apellidos}</strong></td>
                                         <td>{u.email}</td>
-                                        <td>{u.tachis || 0}</td>
+                                        <td><strong>{u.tachis || 0}</strong></td>
                                         <td>{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
                                         <td><span className="categoria-badge">{u.rol}</span></td>
                                         <td className="actions-cell">

@@ -7,7 +7,7 @@ VALUES (
     '$2a$10$fK8UYXg5rZM30JANZMcmBe3mzulJdFnCdUjwG3rdEAoLaWR7uEaoy', 
     'Administrador', 
     'Sistema', 
-    'admin@pistachi.com', 
+    'pistachiandsnacks@gmail.com', 
     '2024-01-01', 
     'ADMIN',
     2450,
