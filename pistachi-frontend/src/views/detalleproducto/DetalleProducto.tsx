@@ -47,7 +47,14 @@ const DetalleProducto = () => {
 
                     <p>{producto.descripcion}</p>
                     <div className="detalle-acciones">
-                        {usuario ? (
+                        {producto.stock === 0 ? (
+                            <button 
+                                className="boton-agotado"
+                                onClick={() => addToast(`🔔 Te enviaremos un email cuando repongamos stock de '${producto.nombre}'.`)}
+                            >
+                                Agotado - Avisadme
+                            </button>
+                        ) : usuario ? (
                             <button 
                                 className="boton-añadir-carrito" 
                                 onClick={() => {

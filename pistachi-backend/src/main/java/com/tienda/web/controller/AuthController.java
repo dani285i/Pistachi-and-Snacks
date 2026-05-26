@@ -2,6 +2,7 @@ package com.tienda.web.controller;
 
 import com.tienda.model.Usuario;
 import com.tienda.repository.IUsuarioRepository;
+import com.tienda.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,9 +18,11 @@ public class AuthController {
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
-    // Inyectar herramienta de encriptación
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/registro")
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
@@ -32,6 +35,10 @@ public class AuthController {
             usuario.setPassword(hashPassword);
             
             Usuario nuevoUsuario = usuarioRepository.save(usuario);
+            
+            // Enviar email de confirmación
+            emailService.enviarEmailBienvenida(nuevoUsuario.getEmail(), nuevoUsuario.getNombre());
+            
             return ResponseEntity.ok(nuevoUsuario);
         } catch (Exception error) {
             return ResponseEntity.badRequest().body("Error al registrar el usuario");
