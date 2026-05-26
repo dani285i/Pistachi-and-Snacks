@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Toast.css';
-import { Toast } from '../../context/toast/ToastContext';
+import type { Toast } from '../../context/toast/ToastContext';
 import { CheckCircle, Info, XCircle, X } from '@phosphor-icons/react';
 
 interface ToastContainerProps {
