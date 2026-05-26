@@ -3,6 +3,7 @@ import { useAuth } from '../../context/auth/Auth';
 import { useNavigate } from 'react-router-dom';
 import { X, Clock, Cookie, SignOut, WarningCircle } from '@phosphor-icons/react';
 import SuscripcionModal from './SuscripcionModal';
+import iconoAdmin from '../../assets/favicon/web-app-manifest-512x512.png';
 import './Perfil.css';
 
 interface PerfilProps {
@@ -15,8 +16,14 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
     const navigate = useNavigate();
     const [modalSuscripcionAbierto, setModalSuscripcionAbierto] = React.useState(false);
 
-    // Dejamos solo este array vacío para forzar a que salga el estado del "hambre de pistacho"
     const pedidos: { id: string, fecha: string, total: number, estado: string }[] = [];
+
+    const getClaseSuscripcion = (tipo: string | undefined) => {
+        if (!tipo || tipo.toLowerCase() === 'ninguna') return 'ninguna';
+        if (tipo === 'Degustación') return 'degustacion';
+        if (tipo === 'Premium') return 'premium';
+        return 'ninguna';
+    };
 
     const getEstadoClass = (estado: string) => {
         switch (estado) {
@@ -52,9 +59,12 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
 
                 <div className="perfil-scroll-area">
                     {/* Tarjeta de Tachi Points */}
-                    <section className="tarjeta-premium oscura">
+                    <section className="tarjeta-premium tachis-card">
                         <span className="tarjeta-label">Tus Tachi Points</span>
-                        <h3>{usuario?.tachis || 0} Tachis</h3>
+                        <h3>
+                            <img src={iconoAdmin} alt="Tachis" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
+                            {usuario?.tachis || 0} Tachis
+                        </h3>
                         <p>¡Obtén más comprando nuestros productos!</p>
                     </section>
 
@@ -62,14 +72,17 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                     <section className="tarjeta-premium clara">
                         <div className="suscripcion-header">
                             <div>
-                                <span className="tarjeta-label oscuro">Pistachi Box Subscription</span>
+                                <span className="tarjeta-label oscuro" style={{ display: 'block' }}>Pistachi Box Subscription</span>
+                                <span className={`badge-suscripcion ${getClaseSuscripcion(usuario?.tipoSuscripcion)}`}>
+                                    {usuario?.tipoSuscripcion && usuario.tipoSuscripcion !== 'Ninguna' ? usuario.tipoSuscripcion : 'NINGUNA'}
+                                </span>
                                 <p>Tu subscripción mensual de snacks a domicilio</p>
                             </div>
                             <div className="suscripcion-acciones">
                                 {usuario?.tipoSuscripcion ? (
                                     <span className="badge-activo">
                                         <Clock size={14} weight="bold" />
-                                        Activo ({usuario.tipoSuscripcion})
+                                        Activo
                                     </span>
                                 ) : (
                                     <span className="badge-inactivo" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#7a7a7a', background: '#eae7e0', padding: '5px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
@@ -143,10 +156,11 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                 </div>
             </aside>
 
-            {/* Modal de Suscripción */}
+            {/* Modal de Suscripción flotante */}
             <SuscripcionModal 
                 abierto={modalSuscripcionAbierto} 
                 cerrarModal={() => setModalSuscripcionAbierto(false)} 
+                perfilAbierto={abierto}
             />
         </>
     );

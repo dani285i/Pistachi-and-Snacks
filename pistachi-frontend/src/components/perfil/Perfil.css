@@ -84,10 +84,10 @@
     padding: 30px;
 }
 
-/* Tarjeta Oscura (Tachis) */
-.tarjeta-premium.oscura {
-    background: #4A4A4A;
-    color: white;
+/* Tarjeta de Tachis */
+.tarjeta-premium.tachis-card {
+    background: rgba(139, 195, 74, 0.15);
+    color: #558B2F;
 }
 
 .tarjeta-label {
@@ -102,16 +102,20 @@
     font-weight: 700;
 }
 
-.tarjeta-premium.oscura h3 {
+.tarjeta-premium.tachis-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 2.5rem;
     margin: 10px 0;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 /* Tarjeta Clara (Suscripción) */
 .tarjeta-premium.clara {
-    background: #AAB3A6; /* Gris verdoso del wireframe */
+    background: #FFFFFF;
     color: #121619;
+    border: 1px solid #EAE7E0;
 }
 
 .suscripcion-header {
@@ -122,7 +126,7 @@
 }
 
 .suscripcion-header p {
-    color: #FEFEFE;
+    color: #4A4A4A;
     margin-top: 5px;
 }
 
@@ -143,6 +147,32 @@
     font-size: 0.9rem;
 }
 
+/* Badges de Nivel de Suscripción */
+.badge-suscripcion {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 6px 14px;
+    display: inline-block;
+    margin-top: 8px;
+    border-radius: 8px;
+}
+
+.badge-suscripcion.ninguna {
+    background: #F4F4F4;
+    color: #666666;
+}
+
+.badge-suscripcion.degustacion {
+    background: #EAF2E4;
+    color: #4A6741;
+}
+
+.badge-suscripcion.premium {
+    background: #F3E8FF;
+    color: #8E44AD;
+}
+
 .btn-gestionar {
     background: transparent;
     border: 1px solid #121619;
@@ -159,9 +189,9 @@
 }
 
 .suscripcion-footer {
-    border-top: 1px solid rgba(255,255,255,0.3);
+    border-top: 1px solid #EAE7E0;
     padding-top: 20px;
-    color: #FEFEFE;
+    color: #4A4A4A;
 }
 
 /* Tabla de Pedidos */

@@ -74,9 +74,20 @@ public class AuthController {
             map.put("username", u.getUsername());
             map.put("tachis", u.getTachis());
             map.put("fechaNacimiento", u.getFechaNacimiento());
+            map.put("tipoSuscripcion", u.getTipoSuscripcion());
+            map.put("proximaEntrega", u.getProximaEntrega());
             usuariosSeguros.add(map);
         }
         return ResponseEntity.ok(usuariosSeguros);
+    }
+
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<?> obtenerUsuario(@PathVariable Long id) {
+        java.util.Optional<Usuario> userOpt = usuarioRepository.findById(id);
+        if (userOpt.isPresent()) {
+            return ResponseEntity.ok(userOpt.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/usuarios/{id}")
@@ -101,6 +112,7 @@ public class AuthController {
                 if (payload.containsKey("username")) u.setUsername((String) payload.get("username"));
                 if (payload.containsKey("tachis") && payload.get("tachis") != null) u.setTachis(Integer.valueOf(payload.get("tachis").toString()));
                 if (payload.containsKey("fechaNacimiento") && payload.get("fechaNacimiento") != null) u.setFechaNacimiento(java.time.LocalDate.parse(payload.get("fechaNacimiento").toString()));
+                if (payload.containsKey("proximaEntrega") && payload.get("proximaEntrega") != null) u.setProximaEntrega(java.time.LocalDate.parse(payload.get("proximaEntrega").toString()));
                 
                 usuarioRepository.save(u);
                 return ResponseEntity.ok().body(Map.of("mensaje", "Usuario actualizado"));

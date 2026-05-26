@@ -7,9 +7,10 @@ import './SuscripcionModal.css';
 interface Props {
     abierto: boolean;
     cerrarModal: () => void;
+    perfilAbierto?: boolean;
 }
 
-const SuscripcionModal: React.FC<Props> = ({ abierto, cerrarModal }) => {
+const SuscripcionModal: React.FC<Props> = ({ abierto, cerrarModal, perfilAbierto }) => {
     const { usuario, updateUsuario } = useAuth();
     const { addToast } = useToast();
     const [cargando, setCargando] = useState(false);
@@ -48,8 +49,8 @@ const SuscripcionModal: React.FC<Props> = ({ abierto, cerrarModal }) => {
     const planActual = usuario.tipoSuscripcion || 'Ninguna';
 
     return (
-        <div className="suscripcion-modal-overlay" onClick={cerrarModal}>
-            <div className="suscripcion-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className={`suscripcion-modal-overlay ${perfilAbierto ? 'con-perfil-abierto' : ''}`} onClick={cerrarModal}>
+            <div className={`suscripcion-modal-content ${perfilAbierto ? 'perfil-abierto' : ''}`} onClick={(e) => e.stopPropagation()}>
                 <button className="btn-cerrar-modal" onClick={cerrarModal}>
                     <X size={24} weight="bold" />
                 </button>

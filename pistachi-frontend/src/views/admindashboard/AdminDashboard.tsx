@@ -416,6 +416,7 @@ export const AdminDashboard = () => {
                                     <th>Tachis</th>
                                     <th>F. Nacimiento</th>
                                     <th>Próx. Entrega</th>
+                                    <th>Suscripción</th>
                                     <th>Rol</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -429,6 +430,7 @@ export const AdminDashboard = () => {
                                         <td><strong>{u.tachis || 0}</strong></td>
                                         <td>{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
                                         <td>{u.proximaEntrega ? new Date(u.proximaEntrega).toLocaleDateString() : '--'}</td>
+                                        <td>{u.tipoSuscripcion || 'Ninguna'}</td>
                                         <td><span className="categoria-badge">{u.rol}</span></td>
                                         <td className="actions-cell">
                                             <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
@@ -591,6 +593,16 @@ export const AdminDashboard = () => {
                                 <div className="form-group flex-1">
                                     <label>Fecha de Nacimiento</label>
                                     <input required type="date" value={usuarioData.fechaNacimiento || ''} onChange={e => setUsuarioData({...usuarioData, fechaNacimiento: e.target.value})} />
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group flex-1">
+                                    <label>Suscripción Actual</label>
+                                    <input type="text" value={usuarioData.tipoSuscripcion || 'Ninguna'} disabled style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }} />
+                                </div>
+                                <div className="form-group flex-1">
+                                    <label>Próxima Entrega</label>
+                                    <input type="date" value={usuarioData.proximaEntrega || ''} onChange={e => setUsuarioData({...usuarioData, proximaEntrega: e.target.value})} />
                                 </div>
                             </div>
                             <div className="form-group">

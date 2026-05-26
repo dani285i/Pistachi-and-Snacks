@@ -100,7 +100,7 @@ const Navbar = () => {
                         <div className="tools-section">
                             {usuario && (
                                 <div className="points-badge">
-                                    <PlusCircle size={16} weight="fill" />
+                                    <img src={iconoAdmin} alt="Tachis" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
                                     <span>{usuario.tachis || 0} Tachis</span>
                                 </div>
                             )}

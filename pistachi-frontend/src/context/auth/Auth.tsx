@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, type ReactNode } from 'react';
+import { createContext, useState, useEffect, useContext, type ReactNode } from 'react';
 
 interface Usuario {
     id: number;
@@ -24,6 +24,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const saved = localStorage.getItem('user_session');
         return saved ? JSON.parse(saved) : null;
     });
+
+    const refrescarUsuario = async () => {
+        if (!usuario) return;
+        try {
+            const res = await fetch(`http://localhost:9090/auth/usuarios/${usuario.id}`, {
+                cache: 'no-store'
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUsuario(data);
+                localStorage.setItem('user_session', JSON.stringify(data));
+            }
+        } catch (error) {
+            console.error("Error al refrescar usuario", error);
+        }
+    };
+
+    useEffect(() => {
+        if (usuario) {
+            refrescarUsuario();
+            const interval = setInterval(refrescarUsuario, 10000); // Poll cada 10s
+            return () => clearInterval(interval);
+        }
+    }, [usuario?.id]);
 
     const login = (userData: Usuario) => {
         setUsuario(userData);
