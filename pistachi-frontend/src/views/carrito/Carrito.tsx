@@ -1,10 +1,19 @@
 import { useCart } from '../../context/carrito/Carrito';
+import { useAuth } from '../../context/auth/Auth';
+import { useToast } from '../../context/toast/Toast';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import './Carrito.css';
 
 const Carrito = () => {
-    const { cartItems, removeFromCart, updateQuantity } = useCart();
+    const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+    const { usuario } = useAuth();
+    const { addToast } = useToast();
     const navigate = useNavigate();
+
+    const [mostrarPasarela, setMostrarPasarela] = useState(false);
+    const [procesando, setProcesando] = useState(false);
 
     // Cálculos a prueba de fallos para evitar el NaN
     const subtotal = cartItems.reduce((acc, item) => {
@@ -13,9 +22,43 @@ const Carrito = () => {
         return acc + (precioSeguro * cantidadSegura);
     }, 0);
 
-    // Lógica dinámica de envío: Gratis a partir de 30€
     const costeEnvio = subtotal >= 30 || subtotal === 0 ? 0 : 4.99;
     const totalSeguro = subtotal + costeEnvio;
+
+    // Función principal para registrar la venta en la Base de Datos
+    const confirmarPedidoBackend = async () => {
+        setProcesando(true);
+        try {
+            const pedidoPayload = {
+                usuarioId: usuario?.id || 1, // Fallback al admin si por algún motivo no hay id
+                total: totalSeguro,
+                lineas: cartItems.map(item => ({
+                    productoId: item.id,
+                    cantidad: item.cantidad,
+                    precioUnitario: item.precio
+                }))
+            };
+
+            const respuesta = await fetch('http://localhost:9090/pedidos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pedidoPayload)
+            });
+
+            if (respuesta.ok) {
+                addToast("🎉 ¡Pago recibido! Hemos empezado a hornear tu pedido.");
+                clearCart();
+                navigate('/productos');
+            } else {
+                addToast("❌ Hubo un error al registrar el pedido en el sistema.");
+            }
+        } catch (error) {
+            console.error(error);
+            addToast("❌ Error de conexión al procesar el pedido.");
+        } finally {
+            setProcesando(false);
+        }
+    };
 
     if (cartItems.length === 0) {
         return (
@@ -67,11 +110,11 @@ const Carrito = () => {
                                     <span className="item-categoria">{(item as any).categoria || 'Artesanal'}</span>
                                     <div className="item-controles">
                                         <div className="selector-cantidad">
-                                            <button onClick={() => updateQuantity(item.id, cantidadItem - 1)}>-</button>
+                                            <button onClick={() => updateQuantity(item.id, cantidadItem - 1)} disabled={mostrarPasarela}>-</button>
                                             <span className="cantidad-numero">{cantidadItem}</span>
-                                            <button onClick={() => updateQuantity(item.id, cantidadItem + 1)}>+</button>
+                                            <button onClick={() => updateQuantity(item.id, cantidadItem + 1)} disabled={mostrarPasarela}>+</button>
                                         </div>
-                                        <button className="btn-eliminar-item" onClick={() => removeFromCart(item.id)}>
+                                        <button className="btn-eliminar-item" onClick={() => removeFromCart(item.id)} disabled={mostrarPasarela}>
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                         </button>
                                     </div>
@@ -117,11 +160,59 @@ const Carrito = () => {
                                 <span>Total a pagar</span>
                                 <span>{totalSeguro.toFixed(2)} €</span>
                             </div>
-                            <button className="btn-hornear-pedido">
-                                Confirmar y Hornear
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                            </button>
-                            <p className="ticket-seguridad">
+                            
+                            {!mostrarPasarela ? (
+                                <button className="btn-hornear-pedido" onClick={() => setMostrarPasarela(true)}>
+                                    Confirmar y Hornear
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                </button>
+                            ) : (
+                                <div className="pasarelas-pago-container" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                    <p style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '10px' }}>Selecciona tu método de pago</p>
+                                    
+                                    {/* Pasarela PayPal (Sandbox Oficial) */}
+                                    <PayPalScriptProvider options={{ clientId: "test", currency: "EUR" }}>
+                                        <PayPalButtons 
+                                            style={{ layout: "vertical", color: "gold", shape: "pill", label: "pay" }} 
+                                            createOrder={(_data, actions) => {
+                                                return actions.order.create({
+                                                    intent: "CAPTURE",
+                                                    purchase_units: [{ amount: { currency_code: "EUR", value: totalSeguro.toFixed(2) } }]
+                                                });
+                                            }}
+                                            onApprove={async (_data, actions) => {
+                                                if(actions.order) {
+                                                    await actions.order.capture();
+                                                    confirmarPedidoBackend();
+                                                }
+                                            }}
+                                        />
+                                    </PayPalScriptProvider>
+
+                                    {/* Pasarela Simulada Stripe */}
+                                    <button 
+                                        onClick={confirmarPedidoBackend} 
+                                        disabled={procesando}
+                                        style={{
+                                            background: '#635BFF', color: 'white', padding: '15px', borderRadius: '30px', 
+                                            border: 'none', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer',
+                                            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
+                                        }}
+                                    >
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                                        {procesando ? 'Procesando pago...' : 'Pago con Tarjeta (Simulador Stripe)'}
+                                    </button>
+
+                                    <button 
+                                        onClick={() => setMostrarPasarela(false)} 
+                                        style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', textDecoration: 'underline', marginTop: '5px' }}
+                                    >
+                                        Cancelar y volver al carrito
+                                    </button>
+                                </div>
+                            )}
+
+                            <p className="ticket-seguridad" style={{ marginTop: '20px' }}>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                                 Pago seguro encriptado
                             </p>
