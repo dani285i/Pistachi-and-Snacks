@@ -32,6 +32,8 @@ interface Usuario {
     username: string;
     tachis: number;
     fechaNacimiento: string;
+    proximaEntrega?: string;
+    tipoSuscripcion?: string;
 }
 
 const estadoInicial: Producto = {
@@ -407,6 +409,7 @@ export const AdminDashboard = () => {
                                     <th>Email</th>
                                     <th>Tachis</th>
                                     <th>F. Nacimiento</th>
+                                    <th>Próx. Entrega</th>
                                     <th>Rol</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -419,6 +422,7 @@ export const AdminDashboard = () => {
                                         <td>{u.email}</td>
                                         <td><strong>{u.tachis || 0}</strong></td>
                                         <td>{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
+                                        <td>{u.proximaEntrega ? new Date(u.proximaEntrega).toLocaleDateString() : '--'}</td>
                                         <td><span className="categoria-badge">{u.rol}</span></td>
                                         <td className="actions-cell">
                                             <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
@@ -431,7 +435,7 @@ export const AdminDashboard = () => {
                                     </tr>
                                 ))}
                                 {usuarios.length === 0 && (
-                                    <tr><td colSpan={7} style={{textAlign: 'center', padding: '2rem', color: '#888'}}>No hay usuarios registrados.</td></tr>
+                                    <tr><td colSpan={8} style={{textAlign: 'center', padding: '2rem', color: '#888'}}>No hay usuarios registrados.</td></tr>
                                 )}
                             </tbody>
                         </table>

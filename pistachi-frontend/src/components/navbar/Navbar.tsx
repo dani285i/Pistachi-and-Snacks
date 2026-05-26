@@ -101,7 +101,7 @@ const Navbar = () => {
                             {usuario && (
                                 <div className="points-badge">
                                     <PlusCircle size={16} weight="fill" />
-                                    <span>0 Tachis</span>
+                                    <span>{usuario.tachis || 0} Tachis</span>
                                 </div>
                             )}
                             
