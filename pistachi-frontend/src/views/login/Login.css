@@ -1,47 +1,434 @@
-.login-page {
-    height: 80vh;
+/* =========================================
+   LOGIN INMERSIVO - PISTACHI & SNACKS
+========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --pistachi-dark: #121619;
+    --pistachi-green: #4A6741;
+    --pistachi-green-light: #8BC34A;
+    --text-muted: #6B7280;
+    --border-light: #E5E7EB;
+    --bg-light: #FFFFFF;
+    --bg-body: #FDFBF7;
+    --bg-form: #F2EFE9; /* Un tono un poco más oscuro/crema para el formulario */
+}
+
+/* --- Layout Principal --- */
+.login-split-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: var(--bg-body);
+    z-index: 50;
+}
+
+.login-split-wrapper * {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.login-image-section {
+    flex: 0 0 60%;
+    position: relative;
+    background-color: var(--pistachi-dark);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+/* --- Animaciones del Carrusel Automático --- */
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+}
+
+.carousel-slide.slide-active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.carousel-slide.slide-exit {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Direcciones de entrada */
+@keyframes slideEnterLeft {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+@keyframes slideEnterUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+@keyframes slideEnterRight {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+@keyframes slideEnterDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+.slide-enter-left { animation: slideEnterLeft 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.slide-enter-up { animation: slideEnterUp 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.slide-enter-right { animation: slideEnterRight 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.slide-enter-down { animation: slideEnterDown 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10; /* Siempre encima del carrusel */
+    background: linear-gradient(
+        to right,
+        rgba(18, 22, 25, 0.7) 0%,
+        rgba(18, 22, 25, 0.3) 50%,
+        rgba(18, 22, 25, 0.1) 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: 60px;
+}
+
+.brand-watermark {
+    margin-bottom: 80px;
+}
+
+.brand-watermark h2 {
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+/* Animación sutil de cambio de texto */
+.fade-title {
+    animation: fadeInText 1.5s ease forwards;
+}
+
+@keyframes fadeInText {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.brand-watermark p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 4px;
+    margin: 5px 0 0 0;
+}
+
+/* --- Columna Derecha: Formulario (40%) --- */
+.login-form-section {
+    flex: 0 0 40%;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--bg-form); /* Usa el nuevo color más oscuro */
+    padding: 40px;
+    position: relative;
+    z-index: 10;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    overflow-y: auto; /* Permite scroll interno SOLO si la pantalla vertical es diminuta */
 }
 
-.login-card {
-    background: var(--white);
-    padding: 3.5rem;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+.login-form-container {
     width: 100%;
-    max-width: 450px;
-    text-align: center;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
-.input-group {
-    text-align: left;
-    margin-bottom: 1.5rem;
-}
-
-.input-group label {
-    display: block;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-muted);
-}
-
-.input-group input {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
-    background: var(--bg-cream);
-}
-
-.login-btn {
-    width: 100%;
-    padding: 1rem;
-    background: var(--primary);
-    color: var(--white);
-    border: none;
-    border-radius: 8px;
+/* --- Tipografía y Jerarquía --- */
+.login-header h1 {
+    font-size: 2.2rem;
     font-weight: 700;
+    color: var(--pistachi-dark);
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+}
+
+.login-header p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Formulario --- */
+.premium-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* --- Floating Labels & Sensory Inputs --- */
+.floating-input-group {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px; /* Anclado a 10px fijo de la izquierda */
+    bottom: 12px;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.floating-input {
+    width: 100%;
+    padding: 10px 40px 10px 55px; /* 55px de padding-left para mayor gap con el icono */
+    font-size: 1rem;
+    color: var(--pistachi-dark);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-light);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* --- FIX DEL AUTOCOMPLETADO (AUTOFILL BUG) --- */
+.floating-input:-webkit-autofill,
+.floating-input:-webkit-autofill:hover,
+.floating-input:-webkit-autofill:focus,
+.floating-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--bg-form) inset !important;
+    -webkit-text-fill-color: var(--pistachi-dark) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Animación de la línea inferior (pseudo-elemento) */
+.floating-input-group::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--pistachi-green);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-input:focus ~ .floating-input-group::after {
+    width: 100%;
+}
+
+.floating-input:focus {
+    border-bottom-color: transparent; /* Oculta la línea base para que brille la animada */
+}
+
+/* Label Flotante */
+.floating-label {
+    position: absolute;
+    left: 55px; /* Aumentado a 55px para mantener el gap */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left top;
+    z-index: 1;
+}
+
+/* Estado activo del Floating Label (Sólido) */
+.floating-input:focus ~ .floating-label,
+.floating-input.filled ~ .floating-label,
+.floating-input:-webkit-autofill ~ .floating-label {
+    top: -12px;
+    left: 55px; /* Aumentado a 55px */
+    font-size: 0.75rem;
+    color: var(--pistachi-green);
+    font-weight: 600;
+}
+
+/* Color del icono al enfocar */
+.floating-input:focus ~ .input-icon {
+    color: var(--pistachi-green);
+}
+
+/* Botón Ojo (Password) */
+.toggle-pwd-btn {
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-muted);
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    z-index: 2;
+}
+
+.toggle-pwd-btn:hover {
+    color: var(--pistachi-dark);
+}
+
+/* --- Botón "Entrar" --- */
+.premium-submit-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: var(--pistachi-dark);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.premium-submit-btn:hover:not(:disabled) {
+    background-color: var(--pistachi-green);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(74, 103, 65, 0.2);
+}
+
+.premium-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.premium-submit-btn.loading {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* --- Enlaces y Footer --- */
+.form-actions-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+}
+
+.subtle-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.subtle-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--pistachi-green);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+.subtle-link:hover {
+    color: var(--pistachi-green);
+}
+
+.subtle-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.bold-link {
+    font-weight: 600;
+    color: var(--pistachi-dark);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login-footer p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Toast de Error Elegante */
+.error-toast {
+    background-color: #FFF1F0;
+    border-left: 4px solid #FF4D4F;
+    color: #CF1322;
+    padding: 12px 16px;
+    border-radius: 4px 8px 8px 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- RESPONSIVE DESIGN (CONTROLADO <900px) --- */
+@media (max-width: 900px) {
+    .login-split-wrapper {
+        position: relative; /* En móvil volvemos al flujo normal para permitir scroll natural */
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto; 
+    }
+    
+    .login-image-section {
+        flex: none;
+        width: 100%;
+        height: 250px;
+        min-height: 250px;
+    }
+
+    .image-overlay {
+        padding: 30px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .login-form-section {
+        flex: 1;
+        width: 100%;
+        height: auto;
+        padding: 40px 20px;
+        border-radius: 24px 24px 0 0;
+        margin-top: -24px;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+    }
 }
