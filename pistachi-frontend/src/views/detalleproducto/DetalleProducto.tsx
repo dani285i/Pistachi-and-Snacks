@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
-import { useToast } from '../../context/toast/Toast';
+import { useToast } from '../../context/toast/ToastContext';
 import BotonFavorito from '../../components/favorito/BotonFavorito';
 import { ShoppingCart, Bell } from '@phosphor-icons/react';
 import './DetalleProducto.css';
@@ -77,7 +77,7 @@ const DetalleProducto = () => {
                                         precio: Number(producto.precio),
                                         cantidad: 1
                                     });
-                                    addToast(`'${producto.nombre}' añadido al carrito`);
+                                    addToast('Producto añadido a la cesta', 'success');
                                 }}
                                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                             >

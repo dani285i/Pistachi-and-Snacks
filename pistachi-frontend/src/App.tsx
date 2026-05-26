@@ -15,8 +15,7 @@ import Registro from './views/registro/Registro';
 import ProtectedRoute from './components/protectedroute/ProtectedRoute';
 import Footer from './components/footer/Footer';
 import { AdminDashboard } from './views/admindashboard/AdminDashboard';
-import { ToastProvider } from './context/toast/Toast';
-import ToastContainer from './components/toast/ToastContainer';
+import { ToastProvider } from './context/toast/ToastContext';
 
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
         <ToastProvider>
           <FavoritosProvider>
             <BrowserRouter>
-              <ToastContainer />
                 <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                   <Navbar />
                   

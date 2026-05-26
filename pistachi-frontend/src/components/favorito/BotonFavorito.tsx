@@ -2,6 +2,7 @@ import React from 'react';
 import { useFavoritos } from '../../context/favoritos/Favoritos';
 import type { ProductoFav } from '../../context/favoritos/Favoritos';
 import { Heart } from '@phosphor-icons/react';
+import { useToast } from '../../context/toast/ToastContext';
 import './BotonFavorito.css';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 const BotonFavorito: React.FC<Props> = ({ producto, onIntentoRemover }) => {
     const { favoritos, toggleFavorito } = useFavoritos();
+    const { addToast } = useToast();
     const esFavorito = favoritos.some((fav: ProductoFav) => fav.id === producto.id);
 
     const handleClick = (e: React.MouseEvent) => {
@@ -21,6 +23,11 @@ const BotonFavorito: React.FC<Props> = ({ producto, onIntentoRemover }) => {
             onIntentoRemover(producto);
         } else {
             toggleFavorito(producto);
+            if (!esFavorito) {
+                addToast("Producto añadido a favoritos", 'success');
+            } else {
+                addToast("Producto eliminado de favoritos", 'info');
+            }
         }
     };
 

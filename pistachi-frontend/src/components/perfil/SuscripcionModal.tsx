@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/auth/Auth';
 import { X, Package, CheckCircle } from '@phosphor-icons/react';
+import { useToast } from '../../context/toast/ToastContext';
 import './SuscripcionModal.css';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 const SuscripcionModal: React.FC<Props> = ({ abierto, cerrarModal }) => {
     const { usuario, updateUsuario } = useAuth();
+    const { addToast } = useToast();
     const [cargando, setCargando] = useState(false);
     
     // Si no está abierto o no hay usuario, no renderizamos nada
@@ -34,11 +36,10 @@ const SuscripcionModal: React.FC<Props> = ({ abierto, cerrarModal }) => {
                 proximaEntrega: usuarioActualizado.proximaEntrega
             });
 
-            // Podríamos mostrar un Toast de éxito aquí
             cerrarModal();
         } catch (error) {
             console.error(error);
-            alert("No hemos podido actualizar tu plan. Inténtalo de nuevo más tarde.");
+            addToast("No hemos podido actualizar tu plan. Inténtalo de nuevo más tarde.", 'error');
         } finally {
             setCargando(false);
         }

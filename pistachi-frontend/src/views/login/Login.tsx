@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/auth/Auth';
+import { useToast } from '../../context/toast/ToastContext';
 import { EnvelopeSimple, LockKey, Eye, EyeSlash } from '@phosphor-icons/react';
 import './Login.css';
 
@@ -23,6 +24,7 @@ type Direction = 'left' | 'up' | 'right' | 'down';
 const Login = () => {
     const navigate = useNavigate();
     const { login, usuario } = useAuth();
+    const { addToast } = useToast();
     
     // Login states
     const [email, setEmail] = useState('');
@@ -77,7 +79,7 @@ const Login = () => {
             if (respuesta.ok) {
                 const dataUsuario = await respuesta.json();
                 login(dataUsuario);
-                alert(`¡Bienvenido ${dataUsuario.nombre}!`);
+                addToast(`¡Bienvenido de nuevo, ${dataUsuario.nombre}!`, 'success');
                 navigate('/');
             } else {
                 setError("Email o contraseña incorrectos.");

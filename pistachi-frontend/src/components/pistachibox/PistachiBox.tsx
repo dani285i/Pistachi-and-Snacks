@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/auth/Auth';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../context/toast/ToastContext';
 import './PistachiBox.css';
 
 const PistachiBox: React.FC = () => {
     const { usuario } = useAuth();
     const navigate = useNavigate();
+    const { addToast } = useToast();
     const [planSeleccionado, setPlanSeleccionado] = useState<'Degustación' | 'Premium'>('Degustación');
 
     const handleSuscribir = () => {
         if (!usuario) {
-            // Si no está logueado, alertar o redirigir (de momento solo un aviso o a login)
-            alert('¡Debes iniciar sesión para suscribirte al club!');
+            addToast('¡Debes iniciar sesión para suscribirte al club!', 'error');
             navigate('/login');
             return;
         }
 
-        // Si está logueado, le decimos que vaya a su perfil a gestionarlo
-        alert('Redirigiendo a tu Perfil para confirmar la suscripción...');
-        // En una app real, podríamos abrir el perfil aquí pasándole un state o abrir un modal de Checkout
-        // Por ahora, asumimos que puede ir al catálogo o le pediremos que abra su perfil.
+        addToast('Redirigiendo a tu Perfil para confirmar la suscripción...', 'info');
     };
 
     return (

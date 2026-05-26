@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/auth/Auth';
+import { useToast } from '../../context/toast/ToastContext';
 import { User, EnvelopeSimple, LockKey, Eye, EyeSlash } from '@phosphor-icons/react';
 import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker';
 import './Registro.css';
@@ -24,6 +25,7 @@ type Direction = 'left' | 'up' | 'right' | 'down';
 const Registro = () => {
     const navigate = useNavigate();
     const { login, usuario } = useAuth();
+    const { addToast } = useToast();
     const [errores, setErrores] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [mostrarPassword, setMostrarPassword] = useState(false);
@@ -99,7 +101,7 @@ const Registro = () => {
             if (respuesta.ok) {
                 const dataUsuario = await respuesta.json(); 
                 login(dataUsuario);
-                alert("Registro exitoso. ¡Bienvenido al obrador!");
+                addToast("Registro exitoso. ¡Bienvenido al obrador!", 'success');
                 navigate('/');
             } else {
                 setErrores(["Error al registrar el usuario. Es posible que el correo o usuario ya existan."]);

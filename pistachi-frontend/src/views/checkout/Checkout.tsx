@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
-import { useToast } from '../../context/toast/Toast';
+import { useToast } from '../../context/toast/ToastContext';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { MapPin, CreditCard, PaypalLogo } from '@phosphor-icons/react';
 import './Checkout.css';

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import CustomSelect from '../../components/customselect/CustomSelect'
 import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle } from '@phosphor-icons/react'
-import { useToast } from '../../context/toast/Toast'
+import { useToast } from '../../context/toast/ToastContext'
 import './AdminDashboard.css'
 
 interface Producto {
@@ -145,9 +145,15 @@ export const AdminDashboard = () => {
                     method: 'DELETE',
                     headers: getAuthHeaders()
                 })
-                if (response.ok) cargarProductos()
+                if (response.ok) {
+                    cargarProductos()
+                    addToast("Producto eliminado correctamente", 'success');
+                } else {
+                    addToast("Error al eliminar el producto", 'error');
+                }
             } catch (error) {
                 console.error("error al eliminar", error)
+                addToast("Fallo de conexión al eliminar el producto", 'error');
             }
         }
     }
@@ -162,7 +168,7 @@ export const AdminDashboard = () => {
             if (response.ok) {
                 cargarPedidos();
             } else {
-                alert("Error al actualizar el pedido");
+                addToast("Error al actualizar el estado del pedido", 'error');
             }
         } catch (error) {
             console.error("error al actualizar estado", error)
@@ -201,7 +207,7 @@ export const AdminDashboard = () => {
             if (response.ok) {
                 setMostrarModalEliminar(false);
                 cargarUsuarios();
-                addToast(`el usuario "${usuarioAEliminar.username || usuarioAEliminar.nombre}" ha sido eliminado de la base de datos...`);
+                addToast(`El usuario "${usuarioAEliminar.username || usuarioAEliminar.nombre}" ha sido eliminado.`, 'success');
             }
         } catch (error) {
             console.error("error al eliminar usuario", error);
@@ -232,7 +238,7 @@ export const AdminDashboard = () => {
                     setMostrarModalUsuario(false);
                     cargarUsuarios();
                 } else {
-                    alert("Error al actualizar el usuario");
+                    addToast("Error al actualizar el usuario", 'error');
                 }
             } catch (error) {
                 console.error("error al editar usuario", error);
@@ -255,13 +261,13 @@ export const AdminDashboard = () => {
             if (response.ok) {
                 setMostrarModal(false)
                 cargarProductos()
-                alert("Producto guardado correctamente");
+                addToast("Producto guardado correctamente", 'success');
             } else {
-                alert("Error al guardar el producto. El servidor devolvió código: " + response.status);
+                addToast("Error al guardar el producto. El servidor devolvió código: " + response.status, 'error');
             }
         } catch (error) {
-            console.error("error al guardar", error)
-            alert("Fallo de conexión al guardar el producto");
+            console.error("error al guardar producto", error)
+            addToast("Fallo de conexión al guardar el producto", 'error');
         }
     }
 

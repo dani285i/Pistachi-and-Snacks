@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import BotonFavorito from '../favorito/BotonFavorito';
 import { useCart } from '../../context/carrito/Carrito';
-import { useToast } from '../../context/toast/Toast';
+import { useToast } from '../../context/toast/ToastContext';
 import { Plus, ShoppingCart, Bell } from '@phosphor-icons/react';
 import '../../views/producto/Producto.css'; // Mantenemos los estilos originales
 
@@ -68,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
                                         precio: Number(producto.precio),
                                         cantidad: 1 
                                     });
-                                    addToast(`'${producto.nombre}' añadido al carrito con éxito`);
+                                    addToast('Producto añadido a la cesta', 'success');
                                 }}
                             >
                                 <div className="icon-wrapper">
