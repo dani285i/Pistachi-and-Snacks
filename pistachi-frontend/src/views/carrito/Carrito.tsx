@@ -4,6 +4,7 @@ import { useToast } from '../../context/toast/Toast';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { Basket, Trash, ArrowRight, Lock } from '@phosphor-icons/react';
 import './Carrito.css';
 
 const Carrito = () => {
@@ -64,10 +65,7 @@ const Carrito = () => {
         return (
             <div className="carrito-vacio-wrapper">
                 <div className="carrito-vacio-content">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#AAB3A6" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
+                    <Basket size={64} weight="light" color="#AAB3A6" />
                     <h2>Tu bandeja está vacía</h2>
                     <p>Parece que aún no has seleccionado ninguna de nuestras delicias artesanales.</p>
                     <button className="btn-volver-vitrina" onClick={() => navigate('/productos')}>
@@ -115,7 +113,7 @@ const Carrito = () => {
                                             <button onClick={() => updateQuantity(item.id, cantidadItem + 1)} disabled={mostrarPasarela}>+</button>
                                         </div>
                                         <button className="btn-eliminar-item" onClick={() => removeFromCart(item.id)} disabled={mostrarPasarela}>
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                            <Trash size={18} weight="bold" />
                                         </button>
                                     </div>
                                 </div>
@@ -163,11 +161,11 @@ const Carrito = () => {
                             
                             <button className="btn-hornear-pedido" onClick={() => navigate('/checkout')}>
                                 Procesar Pedido
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                <ArrowRight size={20} weight="bold" />
                             </button>
 
                             <p className="ticket-seguridad" style={{ marginTop: '20px' }}>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <Lock size={14} weight="bold" />
                                 Pago seguro encriptado
                             </p>
                         </div>

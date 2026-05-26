@@ -41,4 +41,13 @@ public class Usuario {
     @Column(nullable = false)
     private String rol;
 
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer tachis = 0;
+
+    @Column(name = "tipo_suscripcion")
+    private String tipoSuscripcion;
+
+    @Column(name = "proxima_entrega")
+    private LocalDate proximaEntrega;
+
 }

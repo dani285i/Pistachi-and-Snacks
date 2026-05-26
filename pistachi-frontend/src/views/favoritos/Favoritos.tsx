@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavoritos } from '../../context/favoritos/Favoritos';
 import BotonFavorito from '../../components/favorito/BotonFavorito';
+import { SmileySad } from '@phosphor-icons/react';
 import './Favoritos.css';
 
 const Favoritos = () => {
@@ -66,12 +67,7 @@ const Favoritos = () => {
             {modalVisible && (
                 <div className="modal-overlay" onClick={() => setModalVisible(false)}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#2A3B24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="cara-triste-svg">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
-                            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                            <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                        </svg>
+                        <SmileySad size={80} weight="light" color="var(--color-dark-green)" className="cara-triste-svg" />
                         <h3>¿Estás seguro?</h3>
                         <p>¿De verdad quieres sacar de favoritos esta delicia?</p>
                         <div className="modal-botones">

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth } from '../../context/auth/Auth';
 import { useNavigate } from 'react-router-dom';
+import { X, Clock, Cookie, SignOut, WarningCircle } from '@phosphor-icons/react';
+import SuscripcionModal from './SuscripcionModal';
 import './Perfil.css';
 
 interface PerfilProps {
@@ -11,6 +13,7 @@ interface PerfilProps {
 const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
     const { usuario, logout } = useAuth();
     const navigate = useNavigate();
+    const [modalSuscripcionAbierto, setModalSuscripcionAbierto] = React.useState(false);
 
     // Dejamos solo este array vacío para forzar a que salga el estado del "hambre de pistacho"
     const pedidos: any[] = [];
@@ -43,7 +46,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                         <p>Gestiona tu cuenta y echa un vistazo a tus pedidos</p>
                     </div>
                     <button className="btn-cerrar-bandeja" onClick={cerrarPerfil}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <X size={24} weight="bold" />
                     </button>
                 </div>
 
@@ -51,7 +54,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                     {/* Tarjeta de Tachi Points */}
                     <section className="tarjeta-premium oscura">
                         <span className="tarjeta-label">Tus Tachi Points</span>
-                        <h3>2,450 Tachis</h3>
+                        <h3>{usuario?.tachis || 0} Tachis</h3>
                         <p>¡Obtén más comprando nuestros productos!</p>
                     </section>
 
@@ -63,15 +66,24 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                                 <p>Tu subscripción mensual de snacks a domicilio</p>
                             </div>
                             <div className="suscripcion-acciones">
-                                <span className="badge-activo">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    Activo
-                                </span>
-                                <button className="btn-gestionar">Gestionar</button>
+                                {usuario?.tipoSuscripcion ? (
+                                    <span className="badge-activo">
+                                        <Clock size={14} weight="bold" />
+                                        Activo ({usuario.tipoSuscripcion})
+                                    </span>
+                                ) : (
+                                    <span className="badge-inactivo" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#7a7a7a', background: '#eae7e0', padding: '5px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
+                                        <WarningCircle size={14} weight="bold" />
+                                        Inactivo
+                                    </span>
+                                )}
+                                <button className="btn-gestionar" onClick={() => setModalSuscripcionAbierto(true)}>
+                                    Gestionar
+                                </button>
                             </div>
                         </div>
                         <div className="suscripcion-footer">
-                            <span>Siguiente entrega: <strong>27 Julio, 2026</strong></span>
+                            <span>Siguiente entrega: <strong>{usuario?.proximaEntrega ? new Date(usuario.proximaEntrega).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : 'No programada'}</strong></span>
                         </div>
                     </section>
 
@@ -81,12 +93,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                         
                         {pedidos.length === 0 ? (
                             <div className="pedidos-vacios">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#AAB3A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="icono-hambre">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                </svg>
+                                <Cookie size={48} weight="light" color="#AAB3A6" className="icono-hambre" />
                                 <h4>Mmmmm...</h4>
                                 <p>Veo que aún no te entró el hambre de pistacho...</p>
                                 <button 
@@ -131,10 +138,16 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                 <div className="perfil-footer">
                     <button className="btn-salir-cuenta" onClick={handleLogout}>
                         Cerrar Sesión
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        <SignOut size={18} weight="bold" />
                     </button>
                 </div>
             </aside>
+
+            {/* Modal de Suscripción */}
+            <SuscripcionModal 
+                abierto={modalSuscripcionAbierto} 
+                cerrarModal={() => setModalSuscripcionAbierto(false)} 
+            />
         </>
     );
 };

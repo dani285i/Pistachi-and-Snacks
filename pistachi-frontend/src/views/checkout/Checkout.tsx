@@ -4,6 +4,7 @@ import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { useToast } from '../../context/toast/Toast';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { MapPin, CreditCard, PaypalLogo } from '@phosphor-icons/react';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -109,7 +110,7 @@ const Checkout = () => {
                         <div className="form-group">
                             <label>Ciudad</label>
                             <div className="input-icon-wrapper">
-                                <svg className="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                <MapPin size={20} weight="bold" className="input-icon" />
                                 <input 
                                     type="text" 
                                     className="form-input" 
@@ -143,7 +144,7 @@ const Checkout = () => {
                                     </div>
                                     <div className="payment-info-subtitle">Tarjeta de Crédito o Débito</div>
                                 </div>
-                                <svg className="payment-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="1.5"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                                <CreditCard size={32} weight="bold" className="payment-icon" />
                             </label>
 
                             {/* Opción PayPal */}
@@ -161,20 +162,21 @@ const Checkout = () => {
                                     </div>
                                     <div className="payment-info-subtitle">Rápido y Seguro</div>
                                 </div>
-                                <svg className="payment-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#003087" strokeWidth="1.5"><path d="M7.144 19.532l1.049-5.641h3.298c2.964 0 4.885-1.285 5.378-3.79.16-.838.106-1.637-.21-2.311-.533-1.127-1.802-1.657-3.615-1.657H8.795l-1.397 7.502h-2.12l1.866-10.026h5.361c2.518 0 4.292.83 4.966 2.378.431.99.467 2.146.108 3.551-.628 2.502-2.827 4.394-5.918 4.394h-1.92l-.767 4.123h-2.031z" fill="#003087"/></svg>
+                                <PaypalLogo size={32} weight="fill" className="payment-icon" />
                             </label>
                         </div>
 
                         {/* Botón Pagar Dinámico */}
-                        <div style={{ marginTop: '30px' }}>
+                        <div className="pasarela-wrapper">
                             {metodoPago === 'stripe' ? (
                                 <button className="btn-pagar-ahora" onClick={handlePagoSeguro} disabled={procesando}>
-                                    {procesando ? 'Procesando...' : 'Pagar Ahora'}
+                                    <CreditCard size={24} weight="bold" />
+                                    {procesando ? 'Procesando pago...' : 'Pagar Ahora'}
                                 </button>
                             ) : (
                                 <PayPalScriptProvider options={{ clientId: "test", currency: "EUR" }}>
                                     <PayPalButtons 
-                                        style={{ layout: "horizontal", color: "gold", shape: "rect", height: 50 }} 
+                                        style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
                                         createOrder={(_data, actions) => {
                                             if (!form.nombre || !form.direccion || !form.ciudad) {
                                                 addToast("⚠️ Rellena los datos de envío primero.");

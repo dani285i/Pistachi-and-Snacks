@@ -16,9 +16,7 @@
 .corazon-svg {
     width: 28px;
     height: 28px;
-    fill: transparent;
-    stroke: #A0A0A0; /* Gris por defecto cuando está vacío */
-    stroke-width: 2;
+    color: #333333; /* Color carbón para Phosphor */
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -28,8 +26,7 @@
 }
 
 .btn-corazon.like-activo .corazon-svg {
-    fill: #E53935; /* Rojo vivo */
-    stroke: #E53935;
+    color: #E53935; /* Rojo vivo para Phosphor */
 }
 
 @keyframes latido {

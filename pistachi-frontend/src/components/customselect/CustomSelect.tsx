@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { CaretDown } from '@phosphor-icons/react';
 import './CustomSelect.css';
 
 interface Option {
@@ -39,9 +40,7 @@ const CustomSelect = ({ options, value, onChange }: CustomSelectProps) => {
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span>{selectedOption.label}</span>
-                <svg viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='3' strokeLinecap='round' strokeLinejoin='round' className={`arrow-icon ${isOpen ? 'open' : ''}`}>
-                    <polyline points='6 9 12 15 18 9'></polyline>
-                </svg>
+                <CaretDown size={16} weight="bold" className={`arrow-icon ${isOpen ? 'open' : ''}`} />
             </div>
 
             {isOpen && (

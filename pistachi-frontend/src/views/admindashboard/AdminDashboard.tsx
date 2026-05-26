@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import CustomSelect from '../../components/customselect/CustomSelect'
-// import { useNavigate } from 'react-router-dom'
+import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown } from '@phosphor-icons/react'
 import './AdminDashboard.css'
 
 interface Producto {
@@ -160,15 +160,15 @@ export const AdminDashboard = () => {
 
                 <nav className="sidebar-nav">
                     <button onClick={() => setSeccionActiva('productos')} className={seccionActiva === 'productos' ? 'nav-item active' : 'nav-item'}>
-                        <svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M224,120v88a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V120a8,8,0,0,1,16,0v88H208V120a8,8,0,0,1,16,0ZM88,160a8,8,0,0,0,8-8V112a8,8,0,0,0-16,0v40A8,8,0,0,0,88,160Zm40,0a8,8,0,0,0,8-8V112a8,8,0,0,0-16,0v40A8,8,0,0,0,128,160Zm40,0a8,8,0,0,0,8-8V112a8,8,0,0,0-16,0v40A8,8,0,0,0,168,160ZM232,80H24A8,8,0,0,1,24,64H232a8,8,0,0,1,0,16Z"></path></svg>
+                        <Package size={20} weight={seccionActiva === 'productos' ? 'fill' : 'regular'} />
                         Productos
                     </button>
                     <button onClick={() => setSeccionActiva('pedidos')} className={seccionActiva === 'pedidos' ? 'nav-item active' : 'nav-item'}>
-                        <svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M200,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H56V48H200V208ZM168,88a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,88Zm0,40a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,128Zm0,40a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,168Z"></path></svg>
+                        <Receipt size={20} weight={seccionActiva === 'pedidos' ? 'fill' : 'regular'} />
                         Pedidos
                     </button>
                     <button onClick={() => setSeccionActiva('usuarios')} className={seccionActiva === 'usuarios' ? 'nav-item active' : 'nav-item'}>
-                        <svg viewBox="0 0 256 256" width="20" height="20" fill="currentColor"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,202.76a8,8,0,1,0,13.94,8.48,80,80,0,0,1,133.06,0,8,8,0,1,0,13.94-8.48A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.71a8,8,0,0,1-11.07,2.45,80,80,0,0,0-97.14-12.15,8,8,0,0,1-9.17-13.13,95.78,95.78,0,0,1,114.93,11.76A8,8,0,0,1,250.14,206.71ZM172,152a44,44,0,1,1,44-44A44.05,44.05,0,0,1,172,152Zm0-72a28,28,0,1,0,28,28A28,28,0,0,0,172,80Z"></path></svg>
+                        <Users size={20} weight={seccionActiva === 'usuarios' ? 'fill' : 'regular'} />
                         Usuarios
                     </button>
                 </nav>
@@ -182,7 +182,7 @@ export const AdminDashboard = () => {
                     </div>
                     {seccionActiva === 'productos' && (
                         <button onClick={() => { setFormData(estadoInicial); setMostrarModal(true); }} className="add-btn pistachio-accent">
-                            <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                            <Plus size={18} weight="bold" />
                             Nuevo Producto
                         </button>
                     )}
@@ -230,10 +230,10 @@ export const AdminDashboard = () => {
                                                 }); 
                                                 setMostrarModal(true); 
                                             }} className="icon-btn edit">
-                                                <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"></path></svg>
+                                                <Pencil size={18} weight="bold" />
                                             </button>
                                             <button onClick={() => handleEliminarProducto(p.id)} className="icon-btn delete">
-                                                <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
+                                                <Trash size={18} weight="bold" />
                                             </button>
                                         </td>
                                     </tr>
@@ -260,7 +260,7 @@ export const AdminDashboard = () => {
                         <div className="modal-header">
                             <h2>{formData.id ? 'Editar Producto' : 'Añadir al Stock'}</h2>
                             <button onClick={() => setMostrarModal(false)} className="close-x">
-                                <svg viewBox="0 0 256 256" width="24" height="24" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+                                <X size={24} weight="bold" />
                             </button>
                         </div>
                         
@@ -279,10 +279,10 @@ export const AdminDashboard = () => {
                                         <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value) || 0})} placeholder="0.00" />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat((formData.precio + 0.10).toFixed(2))})}>
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                                <CaretUp size={16} weight="bold" />
                                             </button>
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: Math.max(0, parseFloat((formData.precio - 0.10).toFixed(2)))})}>
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                                <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>
                                     </div>
@@ -311,10 +311,10 @@ export const AdminDashboard = () => {
                                         <input required type="number" min="1" step="1" value={formData.unidades} onChange={e => setFormData({...formData, unidades: parseInt(e.target.value) || 1})} placeholder="Ej: 5" />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: formData.unidades + 1})}>
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                                <CaretUp size={16} weight="bold" />
                                             </button>
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: Math.max(1, formData.unidades - 1)})}>
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                                <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>
                                     </div>
@@ -325,10 +325,10 @@ export const AdminDashboard = () => {
                                         <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: formData.stock + 1})}>
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                                <CaretUp size={16} weight="bold" />
                                             </button>
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})}>
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                                <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>
                                     </div>

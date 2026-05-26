@@ -1,0 +1,130 @@
+.pistachibox-container {
+    max-width: 1250px;
+    margin: 80px auto;
+    padding: 0 50px;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.pistachibox-image-col {
+    flex: 1;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+    height: 450px;
+}
+
+.pistachibox-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.pistachibox-image-col:hover .pistachibox-img {
+    transform: scale(1.05);
+}
+
+.pistachibox-content-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.pistachibox-subtitle {
+    color: var(--color-texto-light);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.pistachibox-title {
+    font-size: 2.8rem;
+    color: var(--color-texto-main);
+    font-weight: 800;
+    margin: 0 0 20px 0;
+}
+
+.pistachibox-desc {
+    color: var(--color-texto-light);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+.pistachibox-plans {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.pistachibox-plan {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pistachibox-plan strong {
+    font-size: 1.1rem;
+    color: var(--color-texto-main);
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.pistachibox-plan span {
+    font-size: 1rem;
+    color: var(--color-texto-light);
+}
+
+.pistachibox-plan:hover {
+    background-color: #FAFAFA;
+}
+
+.pistachibox-plan.activo {
+    background-color: var(--color-pistacho-suave, #f4f7f2);
+    border-color: var(--color-dark-green);
+}
+
+.pistachibox-plan.activo strong {
+    color: var(--color-dark-green);
+}
+
+.pistachibox-btn {
+    width: 100%;
+    padding: 18px;
+    background-color: var(--color-dark-green, #2C2C2C);
+    color: #FFFFFF;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pistachibox-btn:hover {
+    background-color: var(--color-pistacho-oscuro, #4A6741);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 90, 39, 0.2);
+}
+
+@media (max-width: 900px) {
+    .pistachibox-container {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+    
+    .pistachibox-image-col {
+        width: 100%;
+        height: 350px;
+    }
+}

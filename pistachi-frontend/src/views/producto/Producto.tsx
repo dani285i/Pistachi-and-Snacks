@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../../components/productcard/ProductCard';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import './Producto.css';
 
 interface Producto {
@@ -124,7 +125,7 @@ const Productos = () => {
                                     onClick={() => setPaginaURL(paginaActual - 1)} 
                                     disabled={paginaActual === 1}
                                 >
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                    <CaretLeft size={24} weight="bold" />
                                 </button>
                                 
                                 {[...Array(totalPaginas)].map((_, i) => (
@@ -139,10 +140,11 @@ const Productos = () => {
                                 
                                 <button 
                                     className="pag-btn-nav" 
-                                    onClick={() => setPaginaURL(paginaActual + 1)} 
+                                    onClick={() => setPaginaURL(paginaActual + 1)}
                                     disabled={paginaActual === totalPaginas}
+                                    aria-label="Siguiente página"
                                 >
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    <CaretRight size={24} weight="bold" />
                                 </button>
                             </nav>
                         </div>

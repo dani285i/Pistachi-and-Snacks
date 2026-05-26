@@ -1,6 +1,6 @@
 -- Usuario Administrador por defecto
 -- Password es 'admin123' encriptado con BCrypt
-INSERT IGNORE INTO usuario (id, username, password, nombre, apellidos, email, fecha_nacimiento, rol)
+INSERT IGNORE INTO usuario (id, username, password, nombre, apellidos, email, fecha_nacimiento, rol, tachis, tipo_suscripcion, proxima_entrega)
 VALUES (
     1, 
     'admin', 
@@ -9,11 +9,14 @@ VALUES (
     'Sistema', 
     'admin@pistachi.com', 
     '2024-01-01', 
-    'ADMIN'
+    'ADMIN',
+    2450,
+    'Degustación',
+    '2026-07-27'
 );
 
 -- Forzar la actualización por si la base de datos ya tenía el usuario admin guardado previamente
-UPDATE usuario SET password = '$2a$10$fK8UYXg5rZM30JANZMcmBe3mzulJdFnCdUjwG3rdEAoLaWR7uEaoy' WHERE username = 'admin';
+UPDATE usuario SET password = '$2a$10$fK8UYXg5rZM30JANZMcmBe3mzulJdFnCdUjwG3rdEAoLaWR7uEaoy', tachis = 2450, tipo_suscripcion = 'Degustación', proxima_entrega = '2026-07-27' WHERE username = 'admin';
 
 -- Productos de prueba
 INSERT IGNORE INTO producto (id, nombre, descripcion, precio, imagen, categoria, destacado, unidades, stock)

@@ -1,15 +1,20 @@
 import { createContext, useState, useContext, type ReactNode } from 'react';
 
 interface Usuario {
+    id: number;
     username: string;
     nombre: string;
     email: string;
+    tachis?: number;
+    tipoSuscripcion?: string;
+    proximaEntrega?: string;
 }
 
 interface AuthContextType {
     usuario: Usuario | null;
     login: (userData: Usuario) => void;
     logout: () => void;
+    updateUsuario: (nuevosDatos: Partial<Usuario>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,13 +30,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('user_session', JSON.stringify(userData));
     };
 
+    const updateUsuario = (nuevosDatos: Partial<Usuario>) => {
+        setUsuario((prev) => {
+            if (!prev) return prev;
+            const actualizado = { ...prev, ...nuevosDatos };
+            localStorage.setItem('user_session', JSON.stringify(actualizado));
+            return actualizado;
+        });
+    };
+
     const logout = () => {
         setUsuario(null);
         localStorage.removeItem('user_session');
     };
 
     return (
-        <AuthContext.Provider value={{ usuario, login, logout }}>
+        <AuthContext.Provider value={{ usuario, login, logout, updateUsuario }}>
             {children}
         </AuthContext.Provider>
     );

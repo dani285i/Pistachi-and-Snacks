@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stage, Center, OrbitControls, useGLTF } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom' // 1. IMPORTAMOS EL HOOK
+import { ShieldCheck } from '@phosphor-icons/react'
 import './Hero.css'
 
 useGLTF.preload('/3D/DonutPistacho.glb')
@@ -18,7 +19,7 @@ const Hero = () => {
         <header className="hero-section">
             <div className="hero-content">
                 <div className="hero-badge-artesanal">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <ShieldCheck size={16} weight="bold" />
                     <span>Receta Tradicional 100% Ibérica</span>
                 </div>
                 

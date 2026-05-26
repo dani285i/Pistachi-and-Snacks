@@ -3,7 +3,9 @@ import { useLocation } from 'react-router-dom';
 import { scroller, Element } from 'react-scroll';
 import Hero from '../../components/hero/Hero';
 import Novedad from '../../components/novedad/Novedad';
+import PistachiBox from '../../components/pistachibox/PistachiBox';
 import ProductCard from '../../components/productcard/ProductCard';
+import { Leaf } from '@phosphor-icons/react';
 import './Home.css';
 
 interface Producto {
@@ -69,9 +71,7 @@ const Home = () => {
             
             <section className="craft-welcome">
                 <div className="welcome-content">
-                    <svg className="decorative-leaf" viewBox="0 0 24 24" fill="none" stroke="#8BC34A" strokeWidth="1.5">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                    </svg>
+                    <Leaf size={36} weight="fill" className="decorative-leaf" color="var(--color-soft-pistachio)" />
                     <h2>El Arte del Pistacho</h2>
                     <p>
                         Bienvenido a tu rincón de confianza. Amasamos, horneamos y preparamos cada detalle a mano, 
@@ -84,6 +84,8 @@ const Home = () => {
             <Element name="seccion-novedad">
                 <Novedad />
             </Element>
+
+            <PistachiBox />
 
             <section className="craft-showcase">
                 <div className="showcase-header">

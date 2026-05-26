@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BotonFavorito from '../favorito/BotonFavorito';
 import { useCart } from '../../context/carrito/Carrito';
 import { useToast } from '../../context/toast/Toast';
+import { Plus, ShoppingCart, Bell } from '@phosphor-icons/react';
 import '../../views/producto/Producto.css'; // Mantenemos los estilos originales
 
 export interface ProductoData {
@@ -71,14 +72,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
                                 }}
                             >
                                 <div className="icon-wrapper">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" className="icon-plus">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                    
-                                    <svg width="22" height="22" viewBox="0 0 256 256" fill="none" stroke="white" strokeWidth="20" className="icon-cart">
-                                        <path d="M216,72H56L59.86,149.25A24,24,0,0,0,83.82,168h96.36a24,24,0,0,0,23.96-18.75ZM62.4,208a16,16,0,1,1,16-16A16,16,0,0,1,62.4,208Zm128,0a16,16,0,1,1,16-16A16,16,0,0,1,190.4,208ZM24,40H40l4.33,21.64"></path>
-                                    </svg>
+                                    <Plus size={20} weight="bold" color="white" className="icon-plus" />
+                                    <ShoppingCart size={22} weight="fill" color="white" className="icon-cart" />
                                 </div>
                             </button>
                         ) : (
@@ -90,10 +85,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
                                 }}
                                 title="Avisadme cuando haya stock"
                             >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                                </svg>
+                                <Bell size={20} weight="bold" />
                             </button>
                         )}
                     </div>

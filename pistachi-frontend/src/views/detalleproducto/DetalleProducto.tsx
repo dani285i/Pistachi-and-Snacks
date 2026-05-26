@@ -4,6 +4,7 @@ import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { useToast } from '../../context/toast/Toast';
 import BotonFavorito from '../../components/favorito/BotonFavorito';
+import { ShoppingCart, Bell } from '@phosphor-icons/react';
 import './DetalleProducto.css';
 
 const DetalleProducto = () => {
@@ -51,7 +52,9 @@ const DetalleProducto = () => {
                             <button 
                                 className="boton-agotado"
                                 onClick={() => addToast(`🔔 Te enviaremos un email cuando repongamos stock de '${producto.nombre}'.`)}
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                             >
+                                <Bell size={24} weight="bold" />
                                 Agotado - Avisadme
                             </button>
                         ) : usuario ? (
@@ -65,7 +68,9 @@ const DetalleProducto = () => {
                                     });
                                     addToast(`'${producto.nombre}' añadido al carrito`);
                                 }}
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                             >
+                                <ShoppingCart size={24} weight="bold" />
                                 Añadir al Carrito
                             </button>
                         ) : (
