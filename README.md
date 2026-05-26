@@ -1,59 +1,64 @@
 # Pistachi & Snacks - Tienda Online
 
 ## Descripción del Proyecto
-Esta aplicación web es una plataforma de comercio electrónico orientada a la venta de productos de repostería y snacks basados en pistacho. El proyecto cumple con los requisitos de un sistema de ventas completo, dividiendo su arquitectura en un frontend interactivo y un backend robusto que gestiona la lógica de negocio y la persistencia de datos. 
+Esta aplicación web es una plataforma de comercio electrónico orientada a la venta de productos de repostería y snacks basados en pistacho. El proyecto cumple con los requisitos de un sistema de ventas completo, dividiendo su arquitectura en un frontend interactivo y un backend robusto que gestiona la lógica de negocio y la persistencia de datos.
 
-[cite_start]Este documento sirve como guía definitiva para la instalación, configuración y despliegue del proyecto, asegurando que cualquier persona con conocimientos técnicos básicos pueda poner en marcha la aplicación.
+Este documento sirve como guía definitiva para la instalación, configuración y despliegue del proyecto, asegurando que cualquier persona con conocimientos técnicos básicos pueda poner en marcha la aplicación.
 
 ## Arquitectura y Tecnologías Utilizadas
 
 El proyecto sigue una arquitectura cliente-servidor (Frontend/Backend) separada, comunicada a través de una API REST.
 
 ### Frontend
-* **Librería Principal:** React.
+* **Librería Principal:** React 19.
 * **Lenguaje:** TypeScript, proporcionando tipado estático para un desarrollo más seguro y predecible.
 * **Herramienta de Construcción:** Vite, utilizado para un empaquetado y recarga en caliente extremadamente rápidos.
-* **Enrutamiento:** React Router DOM, gestionando la navegación mediante una Single Page Application (SPA).
-* **Gestión de Estado:** React Context API, empleado para manejar el estado global de la autenticación de usuarios (`AuthContext`) y el carrito de compras (`CartContext`).
-* **Estilos:** CSS puro, asegurando un diseño responsive adaptable a múltiples resoluciones y dispositivos.
+* **Enrutamiento:** React Router DOM v7, gestionando la navegación, incluyendo el paso de parámetros y paginación mediante URL (Search Params).
+* **Gestión de Estado:** React Context API, empleado para manejar el estado global de la autenticación de usuarios (`AuthContext`), el carrito de compras (`CartContext`), favoritos (`FavoritosContext`) y notificaciones (`ToastContext`).
+* **Estilos e Iconografía:** CSS puro para un diseño responsive y Phosphor Icons para la iconografía de la interfaz.
 
 ### Backend
-* **Framework Principal:** Spring Boot, facilitando la creación de la aplicación basada en Java.
-* **Lenguaje:** Java.
+* **Framework Principal:** Spring Boot 4, facilitando la creación de la API REST.
+* **Lenguaje:** Java 21.
 * **Gestión de Dependencias:** Maven.
 * **Persistencia de Datos:** Spring Data JPA (Hibernate), manejando el mapeo objeto-relacional (ORM).
+* **Seguridad y Correo:** Módulos de Spring Security y Spring Boot Starter Mail (`JavaMailSender`).
 * **Arquitectura de Capas:** Separación estricta entre Controladores (`Controller`), Servicios (`Service`), Repositorios (`Repository`) y Modelos (`Model`).
 
 ### Base de Datos
 * **Motor:** MySQL (o compatible como MariaDB).
+* **Modelo Entidad-Relación:** Conformado por las entidades principales: `Usuario`, `Producto`, `Pedido` y `LineaPedido`.
 * **Inicialización:** Script SQL integrado para la creación automática de la estructura y la inyección de datos de prueba.
 
-## Funcionalidades Principales implementadas
+## Funcionalidades Principales Implementadas
 
-1.  **Catálogo de Productos:** Visualización de todos los artículos disponibles, con un sistema de paginación implementado en el cliente para gestionar grandes volúmenes de datos.
-2.  **Búsqueda Dinámica:** Motor de búsqueda integrado que consulta directamente a la base de datos por nombre o descripción del producto.
-3.  **Vista de Detalles:** Páginas individuales para cada producto que muestran información ampliada, categoría y precio.
-4.  **Gestión de Usuarios:** * Registro de nuevos clientes.
-    * Inicio de sesión.
-    * Protección de rutas privadas (el carrito de la compra solo es accesible para usuarios autenticados).
-5.  **Carrito de Compras:** Sistema que permite añadir productos, visualizar el total y gestionar los artículos seleccionados.
-6.  **Página Principal (Home):** Sección de bienvenida con exposición de productos "Destacados" o "Favoritos" filtrados desde el servidor.
+1. **Catálogo de Productos Dinámico:** Visualización de artículos con sistema de **paginación integrada en la URL** (`?page=2`) y filtrado funcional por categorías (`?categoria=Snacks`).
+2. **Panel de Gestión de Administrador:** Un *Dashboard* protegido que permite realizar operaciones CRUD (Crear, Leer, Actualizar, Borrar) sobre el catálogo de productos directamente desde la web, actualizando el stock, categorías y precios en tiempo real.
+3. **Gestión de Inventario y Notificaciones:** Los productos reflejan el stock real de la base de datos. Si un producto llega a stock 0, se deshabilita la compra y se ofrece añadirlo a una **lista de avisos/deseos** (botón "Agotado - Avisadme").
+4. **Sistema de Favoritos:** Funcionalidad para que los usuarios puedan guardar y consultar rápidamente sus productos preferidos para compras futuras.
+5. **Autenticación y Notificaciones Automáticas por Email:** 
+   * Registro y Login de usuarios protegiendo el ecosistema.
+   * **Envío automático de correo electrónico** de bienvenida a los nuevos usuarios al registrarse con éxito, validado en el servidor con Spring Mail.
+6. **Carrito y Pasarela de Pago:** Sistema completo de carrito de la compra con integración del entorno de pagos de **PayPal** (`@paypal/react-paypal-js`).
+7. **UX/UI Optimizada y Semántica Web:** Diseño moderno con etiquetas HTML5 semánticas que incluye animaciones fluidas, notificaciones tipo *Toast*, feedback visual inmediato y correcta implementación de Meta-etiquetas y Favicon multiplataforma.
 
-## Novedades (WIP)
-El diseño arquitectónico y de base de datos se ha planteado con la escalabilidad en mente. A continuación, se detallan las futuras funcionalidades y líneas de negocio innovadoras que se irán implementando en las próximas versiones para expandir la plataforma:
+## Trabajo Futuro y Funcionalidades en Desarrollo
 
-* **Club de Suscripción ("Pistachi Box"):** Implementación de un modelo de ingresos recurrentes donde los usuarios podrán suscribirse para recibir una caja mensual sorpresa con degustaciones, nuevos lanzamientos y ediciones limitadas.
-* **Programa de Fidelización (Pistachi Puntos):** Un sistema de gamificación para premiar la lealtad del cliente. Los usuarios acumularán puntos por sus compras o acciones específicas (como registrarse o invitar a amigos), que podrán canjear por descuentos directos en futuros pedidos.
-* **Sistema de Reseñas Verificadas:** Integración de un sistema de valoraciones (de 1 a 5 estrellas) y comentarios en la ficha de cada producto. Estará restringido a usuarios que hayan completado la compra previamente, aumentando la prueba social y la confianza en la plataforma.
-* **Motor de Promociones y Cupones:** Desarrollo de la lógica necesaria para lanzar campañas de marketing estacionales, permitiendo a los usuarios aplicar códigos de descuento (fijos o porcentuales) en el carrito, con control estricto de caducidad y límite de usos.
+Para continuar expandiendo la plataforma de cara a la evaluación y futuras versiones, se contemplan las siguientes integraciones que completan el ciclo de la aplicación:
+
+* **Panel Admin - Pedidos y Usuarios:** Finalizar las vistas en el Dashboard de administración para gestionar el estado de los envíos de los clientes e inhabilitar perfiles de usuario.
+* **Lista de Deseos Backend:** Conectar el botón actual de "Avisadme cuando haya stock" del frontend a una tabla relacional en base de datos para disparar automáticamente un email al cliente cuando el administrador suba el stock.
+* **Recuperación de Contraseña:** Flujo completo de "He olvidado mi contraseña" usando el motor de envíos de correo implementado.
+* **Club de Suscripción ("Pistachi Box"):** Implementación de modelo de ingresos recurrentes para suscripción de cajas mensuales sorpresa.
+* **Programa de Fidelización (Pistachi Puntos) y Reseñas:** Acumulación de puntos por pedidos y valoración (1 a 5 estrellas) para usuarios con compra verificada.
 
 ---
 
 ## Requisitos Previos para la Instalación
 
 Antes de proceder, es necesario contar con el siguiente software instalado en el sistema:
-* **Java Development Kit (JDK):** Versión 17 o superior.
-* **Node.js y npm:** Versión 18 o superior.
+* **Java Development Kit (JDK):** Versión 21 o superior.
+* **Node.js y npm:** Version 18 o superior.
 * **MySQL Server:** Versión 8 o superior, en ejecución.
 * **Git:** Para la clonación del repositorio (opcional si se descarga el código fuente directamente).
 
@@ -63,7 +68,7 @@ Antes de proceder, es necesario contar con el siguiente software instalado en el
 
 ### 1. Base de Datos
 1. Abre tu cliente de MySQL (ej. MySQL Workbench).
-2. Ejecuta el script SQL que se encuentra en `pistachi-backend/src/main/resources/data.sql`. Esto creará la base de datos `pistachi_and_snacks`, las tablas necesarias y añadirá los datos de prueba.
+2. Ejecuta el script SQL que se encuentra en `pistachi-backend/src/main/resources/data.sql` (o deja que Hibernate inicialice la estructura si está configurado en update). Esto creará la base de datos, las tablas necesarias y añadirá los datos de prueba.
 3. Asegúrate de revisar el archivo `application.properties` en el backend para confirmar que tu usuario y contraseña de MySQL (por defecto root) coinciden con los de tu máquina local.
 
 ### 2. Backend (Spring Boot)
@@ -71,7 +76,7 @@ Antes de proceder, es necesario contar con el siguiente software instalado en el
 2. Compila y ejecuta el proyecto usando Maven:
    - En Windows: `mvnw.cmd spring-boot:run`
    - En Linux/Mac: `./mvnw spring-boot:run`
-3. El servidor backend se iniciará en el puerto 80 (http://localhost:80).
+3. El servidor backend se iniciará y escuchará peticiones (usualmente en el puerto 9090 según configuración).
 
 ### 3. Frontend (React)
 1. Abre una nueva terminal y navega a la carpeta del frontend: `cd pistachi-frontend`
