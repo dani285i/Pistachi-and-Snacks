@@ -161,56 +161,10 @@ const Carrito = () => {
                                 <span>{totalSeguro.toFixed(2)} €</span>
                             </div>
                             
-                            {!mostrarPasarela ? (
-                                <button className="btn-hornear-pedido" onClick={() => setMostrarPasarela(true)}>
-                                    Confirmar y Hornear
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                </button>
-                            ) : (
-                                <div className="pasarelas-pago-container" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                                    <p style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '10px' }}>Selecciona tu método de pago</p>
-                                    
-                                    {/* Pasarela PayPal (Sandbox Oficial) */}
-                                    <PayPalScriptProvider options={{ clientId: "test", currency: "EUR" }}>
-                                        <PayPalButtons 
-                                            style={{ layout: "vertical", color: "gold", shape: "pill", label: "pay" }} 
-                                            createOrder={(_data, actions) => {
-                                                return actions.order.create({
-                                                    intent: "CAPTURE",
-                                                    purchase_units: [{ amount: { currency_code: "EUR", value: totalSeguro.toFixed(2) } }]
-                                                });
-                                            }}
-                                            onApprove={async (_data, actions) => {
-                                                if(actions.order) {
-                                                    await actions.order.capture();
-                                                    confirmarPedidoBackend();
-                                                }
-                                            }}
-                                        />
-                                    </PayPalScriptProvider>
-
-                                    {/* Pasarela Simulada Stripe */}
-                                    <button 
-                                        onClick={confirmarPedidoBackend} 
-                                        disabled={procesando}
-                                        style={{
-                                            background: '#635BFF', color: 'white', padding: '15px', borderRadius: '30px', 
-                                            border: 'none', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer',
-                                            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
-                                        }}
-                                    >
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-                                        {procesando ? 'Procesando pago...' : 'Pago con Tarjeta (Simulador Stripe)'}
-                                    </button>
-
-                                    <button 
-                                        onClick={() => setMostrarPasarela(false)} 
-                                        style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', textDecoration: 'underline', marginTop: '5px' }}
-                                    >
-                                        Cancelar y volver al carrito
-                                    </button>
-                                </div>
-                            )}
+                            <button className="btn-hornear-pedido" onClick={() => navigate('/checkout')}>
+                                Procesar Pedido
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </button>
 
                             <p className="ticket-seguridad" style={{ marginTop: '20px' }}>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>

@@ -6,6 +6,7 @@ import Login from './views/login/Login';
 import Productos from './views/producto/Producto'; 
 import DetalleProducto from './views/detalleproducto/DetalleProducto';
 import Carrito from './views/carrito/Carrito';
+import Checkout from './views/checkout/Checkout';
 import { CartProvider } from './context/carrito/Carrito';
 import { AuthProvider } from './context/auth/Auth';
 import { FavoritosProvider } from './context/favoritos/Favoritos';
@@ -38,6 +39,7 @@ function App() {
                       <Route path="/producto/:id" element={<DetalleProducto />} />
                       <Route path="/favoritos" element={<Favoritos />} />
                       <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} /> 
+                      <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} /> 
                       <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                     </Routes>
                   </div>
