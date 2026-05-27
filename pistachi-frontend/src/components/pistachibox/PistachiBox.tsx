@@ -9,6 +9,16 @@ const PistachiBox: React.FC = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
     const [planSeleccionado, setPlanSeleccionado] = useState<'Degustación' | 'Premium'>('Degustación');
+    const [animClass, setAnimClass] = useState<string>('anim-zoom-in');
+    const [animKey, setAnimKey] = useState<number>(0);
+
+    const handleSelectPlan = (plan: 'Degustación' | 'Premium') => {
+        setPlanSeleccionado(plan);
+        const anims = ['anim-zoom-in', 'anim-slide-fade', 'anim-rotate-fade', 'anim-blur-fade'];
+        const randomAnim = anims[Math.floor(Math.random() * anims.length)];
+        setAnimClass(randomAnim);
+        setAnimKey(prev => prev + 1);
+    };
 
     const handleSuscribir = () => {
         if (!usuario) {
@@ -22,12 +32,13 @@ const PistachiBox: React.FC = () => {
 
     return (
         <section className="pistachibox-container">
-            <div className="pistachibox-image-col">
+            <div className={`pistachibox-image-col ${planSeleccionado === 'Premium' ? 'premium-view' : 'degustacion-view'}`}>
                 {/* Imagen del placeholder (se usará una foto estética real) */}
                 <img 
-                    src="https://images.unsplash.com/photo-1620189507195-68309c04c4d0?q=80&w=800&auto=format&fit=crop" 
-                    alt="Pistachi Box Mensual" 
-                    className="pistachibox-img"
+                    key={animKey}
+                    src={planSeleccionado === 'Degustación' ? '/img/menu-degustacion.png' : '/img/menu-premium.png'} 
+                    alt={`Pistachi Box ${planSeleccionado}`} 
+                    className={`pistachibox-img ${animClass}`}
                 />
             </div>
 
@@ -41,14 +52,14 @@ const PistachiBox: React.FC = () => {
                 <div className="pistachibox-plans">
                     <div 
                         className={`pistachibox-plan ${planSeleccionado === 'Degustación' ? 'activo' : ''}`}
-                        onClick={() => setPlanSeleccionado('Degustación')}
+                        onClick={() => handleSelectPlan('Degustación')}
                     >
                         <strong>Caja Degustación</strong>
                         <span>15€ / mes</span>
                     </div>
                     <div 
                         className={`pistachibox-plan ${planSeleccionado === 'Premium' ? 'activo' : ''}`}
-                        onClick={() => setPlanSeleccionado('Premium')}
+                        onClick={() => handleSelectPlan('Premium')}
                     >
                         <strong>Caja Premium</strong>
                         <span>25€ / mes</span>
