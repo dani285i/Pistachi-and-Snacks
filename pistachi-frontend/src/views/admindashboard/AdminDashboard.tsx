@@ -4,6 +4,7 @@ import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker'
 import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle } from '@phosphor-icons/react'
 import { useToast } from '../../context/toast/ToastContext'
 import { getStatusClass } from '../../components/statuspill/StatusPill'
+import { StatusSelect } from '../../components/statusselect/StatusSelect'
 import '../../components/statuspill/StatusPill.css'
 import './AdminDashboard.css'
 
@@ -410,20 +411,13 @@ export const AdminDashboard = () => {
                                 {pedidos.map(p => (
                                     <tr key={p.id}>
                                         <td>#{p.id}</td>
-                                        <td>{new Date(p.fecha).toLocaleDateString()}</td>
-                                        <td>{p.total?.toFixed(2)}€</td>
+                                        <td><strong>{new Date(p.fecha).toLocaleDateString()}</strong></td>
+                                        <td><strong>{p.total?.toFixed(2)}€</strong></td>
                                         <td>
-                                            <select 
+                                            <StatusSelect 
                                                 value={p.estado} 
-                                                onChange={(e) => handleCambiarEstadoPedido(p.id, e.target.value)}
-                                                className={`status-pill ${getStatusClass(p.estado)}`}
-                                                style={{ border: 'none', outline: 'none', cursor: 'pointer', appearance: 'auto', textAlign: 'center' }}
-                                            >
-                                                <option value="Cancelado">Cancelado</option>
-                                                <option value="En Proceso">En Proceso</option>
-                                                <option value="En Tránsito">En Tránsito</option>
-                                                <option value="Entregado">Entregado</option>
-                                            </select>
+                                                onChange={(nuevoEstado) => handleCambiarEstadoPedido(p.id, nuevoEstado)}
+                                            />
                                         </td>
                                         <td className="actions-cell">
                                             <button onClick={() => window.location.href = `/pedido/${p.id}`} className="icon-btn edit" style={{ width: 'auto', padding: '0 12px' }}>

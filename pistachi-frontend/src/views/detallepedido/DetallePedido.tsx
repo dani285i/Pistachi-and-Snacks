@@ -31,6 +31,7 @@ const DetallePedido: React.FC = () => {
     const { usuario } = useAuth();
     const navigate = useNavigate();
     const [pedido, setPedido] = useState<Pedido | null>(null);
+    const [cliente, setCliente] = useState<{nombre: string, apellidos: string, email: string} | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -63,6 +64,13 @@ const DetallePedido: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setPedido(data);
+
+                    // Fetch details of the customer who made the order
+                    const userResponse = await fetch(`http://localhost:9090/auth/usuarios/${data.usuarioId}`);
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        setCliente({ nombre: userData.nombre, apellidos: userData.apellidos, email: userData.email });
+                    }
                 } else {
                     setError("No se pudo cargar el pedido.");
                 }
@@ -131,8 +139,8 @@ const DetallePedido: React.FC = () => {
 
                     <div className="ticket-user-info">
                         <h3>DATOS DEL CLIENTE</h3>
-                        <p><strong>Usuario:</strong> {usuario?.nombre} {usuario?.apellidos}</p>
-                        <p><strong>Email:</strong> {usuario?.email}</p>
+                        <p><strong>Usuario:</strong> {cliente ? `${cliente.nombre} ${cliente.apellidos}` : 'Cargando...'}</p>
+                        <p><strong>Email:</strong> {cliente ? cliente.email : 'Cargando...'}</p>
                     </div>
 
                     <div className="ticket-divider"></div>
@@ -158,6 +166,7 @@ const DetallePedido: React.FC = () => {
                     <div className="ticket-divider"></div>
 
                     <div className="ticket-totals">
+
                         <div className="total-row">
                             <span>SUBTOTAL:</span>
                             <span>{subtotal.toFixed(2)}€</span>

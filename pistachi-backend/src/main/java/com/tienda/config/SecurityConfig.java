@@ -37,8 +37,8 @@ public class SecurityConfig {
                 .requestMatchers("/productos/**").permitAll()
                 .requestMatchers("/codigos-postales/**").permitAll()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/pedidos/**").permitAll()
-                .requestMatchers("/usuarios/**").permitAll()
+                .requestMatchers("/pedidos", "/pedidos/**").permitAll()
+                .requestMatchers("/usuarios", "/usuarios/**").permitAll()
                 .anyRequest().authenticated()
             );
             

@@ -1,0 +1,75 @@
+.status-select-container {
+    position: relative;
+    display: inline-block;
+    min-width: 140px;
+}
+
+.status-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.status-select-trigger:hover {
+    filter: brightness(0.95);
+}
+
+.status-arrow-icon {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.status-arrow-icon.open {
+    transform: rotate(180deg);
+}
+
+.status-select-options {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+    padding: 10px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    z-index: 1000;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: fadeInDropdown 0.2s ease;
+    border: 1px solid #f0f0f0;
+}
+
+.status-select-option {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.status-select-option .option-pill {
+    width: 100%;
+    transition: transform 0.1s ease;
+}
+
+.status-select-option:hover .option-pill {
+    transform: scale(1.05);
+}
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
