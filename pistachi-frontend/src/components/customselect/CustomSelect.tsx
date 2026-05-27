@@ -11,9 +11,11 @@ interface CustomSelectProps {
     options: Option[];
     value: string;
     onChange: (value: string) => void;
+    triggerClassName?: string;
+    triggerStyle?: React.CSSProperties;
 }
 
-const CustomSelect = ({ options, value, onChange }: CustomSelectProps) => {
+const CustomSelect = ({ options, value, onChange, triggerClassName = '', triggerStyle = {} }: CustomSelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +38,8 @@ const CustomSelect = ({ options, value, onChange }: CustomSelectProps) => {
     return (
         <div className="custom-select-container" ref={selectRef}>
             <div 
-                className={`custom-select-trigger ${isOpen ? 'open' : ''}`} 
+                className={`custom-select-trigger ${isOpen ? 'open' : ''} ${triggerClassName}`} 
+                style={triggerStyle}
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span>{selectedOption.label}</span>

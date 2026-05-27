@@ -488,3 +488,18 @@
     background: #F3E8FF;
     color: #8E44AD;
 }
+
+/* Estilos para las opciones de los Select del Admin */
+.admin-form select option {
+    background-color: #FFFFFF;
+    color: #121619;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.admin-form select option:disabled {
+    color: #AAB3A6;
+    background-color: #F4F7F2;
+    font-style: italic;
+}

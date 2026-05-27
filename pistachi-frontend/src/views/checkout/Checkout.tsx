@@ -5,6 +5,7 @@ import { useAuth } from '../../context/auth/Auth';
 import { useToast } from '../../context/toast/ToastContext';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { MapPin } from '@phosphor-icons/react';
+import CustomSelect from '../../components/customselect/CustomSelect';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -99,7 +100,7 @@ const Checkout = () => {
                 <div className="checkout-formularios">
                     
                     {/* Detalles del Envío */}
-                    <section className="checkout-seccion">
+                    <section className="checkout-seccion" style={{ position: 'relative', zIndex: 20 }}>
                         <h2>Detalles del Envío</h2>
                         
                         <div className="form-group">
@@ -147,19 +148,20 @@ const Checkout = () => {
                             <label>Selecciona tu Concello</label>
                             <div className="input-icon-wrapper">
                                 <MapPin size={20} weight="bold" className="input-icon" />
-                                <select 
-                                    className="form-input" 
-                                    value={form.ciudad}
-                                    onChange={(e) => setForm({...form, ciudad: e.target.value})}
-                                >
-                                    <option value="" disabled>Selecciona tu Concello...</option>
-                                    <option value="A Coruña">A Coruña</option>
-                                    <option value="Culleredo">Culleredo</option>
-                                    <option value="Oleiros">Oleiros</option>
-                                    <option value="Cambre">Cambre</option>
-                                    <option value="Bergondo">Bergondo</option>
-                                    <option value="Betanzos">Betanzos</option>
-                                </select>
+                                <CustomSelect 
+                                    triggerStyle={{ paddingLeft: '48px', height: '58px', borderRadius: '14px', backgroundColor: '#F4F7F2', borderColor: '#F4F7F2' }}
+                                    value={form.ciudad || ''}
+                                    onChange={(val) => setForm({...form, ciudad: val})}
+                                    options={[
+                                        { value: '', label: 'Selecciona tu Concello...' },
+                                        { value: 'A Coruña', label: 'A Coruña' },
+                                        { value: 'Culleredo', label: 'Culleredo' },
+                                        { value: 'Oleiros', label: 'Oleiros' },
+                                        { value: 'Cambre', label: 'Cambre' },
+                                        { value: 'Bergondo', label: 'Bergondo' },
+                                        { value: 'Betanzos', label: 'Betanzos' }
+                                    ]}
+                                />
                             </div>
                         </div>
                     </section>

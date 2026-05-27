@@ -45,7 +45,7 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
-    overflow: hidden;
+    /* overflow: hidden; quitado para dropdowns */
     width: 100%;
 }
 
@@ -151,7 +151,7 @@
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; quitado para dropdowns */
 }
 
 .payment-method-card::before {
@@ -392,4 +392,32 @@
         position: static;
         order: -1;
     }
+}
+
+/* Custom Select */
+select.form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A6741' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 18px;
+    padding-right: 50px;
+    cursor: pointer;
+}
+
+/* Estilos para las opciones del Select */
+select.form-input option {
+    background-color: #FFFFFF;
+    color: #121619;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+select.form-input option:disabled {
+    color: #AAB3A6;
+    background-color: #F4F7F2;
+    font-style: italic;
 }
