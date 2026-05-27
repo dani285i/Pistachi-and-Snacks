@@ -33,9 +33,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         setCartItems(prev => {
             const existing = prev.find(i => i.id === item.id);
             if (existing) {
-                return prev.map(i => i.id === item.id ? { ...i, cantidad: i.cantidad + item.cantidad } : i);
+                const newCantidad = Math.min(existing.cantidad + item.cantidad, 10);
+                return prev.map(i => i.id === item.id ? { ...i, cantidad: newCantidad } : i);
             }
-            return [...prev, item];
+            return [...prev, { ...item, cantidad: Math.min(item.cantidad, 10) }];
         });
     };
     
@@ -45,6 +46,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     const updateQuantity = (id: number, cantidad: number) => {
         if (cantidad < 1) return;
+        if (cantidad > 10) return;
         setCartItems(prev => prev.map(i => i.id === id ? { ...i, cantidad } : i));
     };
 

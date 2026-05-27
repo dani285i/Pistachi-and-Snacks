@@ -6,6 +6,7 @@ import { useToast } from '../../context/toast/ToastContext';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { MapPin } from '@phosphor-icons/react';
 import CustomSelect from '../../components/customselect/CustomSelect';
+import faviconTachi from '../../assets/favicon/pistachi-favicon.png';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -182,12 +183,12 @@ const Checkout = () => {
                     {tachisDisponibles > 0 && (
                         <section className="checkout-seccion" style={{ background: 'linear-gradient(135deg, #fdfbf7, #f4f7f2)', border: '2px solid var(--color-pistacho)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                    <img src="/favicon.ico" alt="Tachis" style={{ width: '28px', height: '28px' }} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    <img src={faviconTachi} alt="Tachis" style={{ width: '56px', height: '56px', objectFit: 'contain' }} />
                                     <div>
                                         <h2 style={{ color: 'var(--color-pistacho-oscuro)', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>Tus Tachi Points</h2>
                                         <p style={{ fontSize: '0.9rem', color: 'var(--color-texto-light)', margin: 0 }}>
-                                            Tienes <strong>{tachisDisponibles} Tachis</strong> ({(tachisDisponibles / 1000).toFixed(2)}€)
+                                            Tienes <strong>{tachisDisponibles.toLocaleString('es-ES')} Tachis</strong> ({(tachisDisponibles / 1000).toFixed(2)}€)
                                         </p>
                                     </div>
                                 </div>
@@ -298,8 +299,8 @@ const Checkout = () => {
                         </div>
                         {usarTachis && tachisAAplicar > 0 && (
                             <div className="resumen-fila" style={{ color: 'var(--color-pistacho-oscuro)', fontWeight: 'bold' }}>
-                                <span>Descuento Tachis (-{tachisAAplicar})</span>
-                                <span>-{descuentoTachis.toFixed(2)} €</span>
+                                <span>Descuento Tachis (-{tachisAAplicar.toLocaleString('es-ES')})</span>
+                                <span>-{(tachisAAplicar / 1000).toFixed(2)} €</span>
                             </div>
                         )}
                         <div className="resumen-fila total">
