@@ -4,7 +4,7 @@ import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { useToast } from '../../context/toast/ToastContext';
 import BotonFavorito from '../../components/favorito/BotonFavorito';
-import { ShoppingCart, Bell } from '@phosphor-icons/react';
+import { ShoppingCart, Bell, X } from '@phosphor-icons/react';
 import './DetalleProducto.css';
 
 const DetalleProducto = () => {
@@ -25,6 +25,19 @@ const DetalleProducto = () => {
     }
 
     const [producto, setProducto] = useState<Producto | null>(null);
+
+    // Estados para el Zoom
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isZoomed, setIsZoomed] = useState(false);
+    const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!isZoomed) return;
+        const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - left) / width) * 100;
+        const y = ((e.clientY - top) / height) * 100;
+        setMousePosition({ x, y });
+    };
 
     useEffect(() => {
         fetch(`http://localhost:9090/productos/${id}`)
@@ -64,9 +77,47 @@ const DetalleProducto = () => {
 
     return (
         <div className="detalle-contenedor">
+            {/* Modal de Zoom */}
+            {isModalOpen && (
+                <div className="zoom-modal-overlay" onClick={() => { setIsModalOpen(false); setIsZoomed(false); }}>
+                    <div 
+                        className="zoom-modal-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            className="zoom-close-btn"
+                            onClick={() => { setIsModalOpen(false); setIsZoomed(false); }}
+                            title="Cerrar imagen"
+                        >
+                            <X size={24} weight="bold" />
+                        </button>
+                        
+                        <div 
+                            className={`zoom-image-container ${isZoomed ? 'zoomed' : ''}`}
+                            onClick={(e) => { e.stopPropagation(); setIsZoomed(!isZoomed); }}
+                            onMouseMove={handleMouseMove}
+                            onMouseLeave={() => setMousePosition({ x: 50, y: 50 })}
+                        >
+                            <img 
+                                src={producto.imagen} 
+                                alt={producto.nombre} 
+                                className="zoom-image"
+                                style={isZoomed ? { transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`, transform: 'scale(2)' } : { transformOrigin: 'center center', transform: 'scale(1)' }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="detalle-tarjeta">
                 <div className="detalle-galeria">
-                    <img src={producto.imagen} alt={producto.nombre} />
+                    <img 
+                        src={producto.imagen} 
+                        alt={producto.nombre} 
+                        style={{ cursor: 'zoom-in' }}
+                        onClick={() => setIsModalOpen(true)}
+                        title="Haz click para ampliar"
+                    />
                 </div>
                 <div className="detalle-info">
                     <h1 className="detalle-titulo">

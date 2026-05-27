@@ -91,3 +91,82 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Modal de Zoom */
+.zoom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.zoom-modal-content {
+    position: relative;
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoom-close-btn {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    background: #F4F4F4;
+    color: #333;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.zoom-close-btn:hover {
+    background: #EAE7E0;
+    transform: scale(1.05);
+}
+
+.zoom-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: zoom-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFFFFF;
+}
+
+.zoom-image-container.zoomed {
+    cursor: crosshair;
+}
+
+.zoom-image {
+    max-width: 100%;
+    max-height: calc(90vh - 40px);
+    object-fit: contain;
+    transition: transform 0.3s ease-out;
+}
