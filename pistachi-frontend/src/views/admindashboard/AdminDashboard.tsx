@@ -87,7 +87,7 @@ export const AdminDashboard = () => {
 
     const getAuthHeaders = () => {
         // preparo las cabeceras con el token de seguridad que tengo guardado para demostrarle al backend que soy el administrador
-        const sesionString = localStorage.getItem('user_session')
+        const sesionString = sessionStorage.getItem('user_session')
         const token = sesionString ? JSON.parse(sesionString).token : ''
         return {
             'Content-Type': 'application/json',

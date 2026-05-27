@@ -1,6 +1,8 @@
 package com.tienda.web.controller;
 
+import com.tienda.model.Producto;
 import com.tienda.model.Usuario;
+import com.tienda.repository.IProductoRepository;
 import com.tienda.repository.IUsuarioRepository;
 import com.tienda.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class AuthController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private IProductoRepository productoRepository;
 
     @PostMapping("/registro")
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
@@ -125,6 +130,36 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al editar usuario: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/usuarios/{id}/favoritos/{productoId}")
+    public ResponseEntity<?> addFavorito(@PathVariable Long id, @PathVariable Long productoId) {
+        java.util.Optional<Usuario> userOpt = usuarioRepository.findById(id);
+        java.util.Optional<Producto> prodOpt = productoRepository.findById(productoId);
+        
+        if (userOpt.isPresent() && prodOpt.isPresent()) {
+            Usuario u = userOpt.get();
+            Producto p = prodOpt.get();
+            u.getProductosFavoritos().add(p);
+            usuarioRepository.save(u);
+            return ResponseEntity.ok().body(Map.of("mensaje", "Favorito añadido"));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/usuarios/{id}/favoritos/{productoId}")
+    public ResponseEntity<?> removeFavorito(@PathVariable Long id, @PathVariable Long productoId) {
+        java.util.Optional<Usuario> userOpt = usuarioRepository.findById(id);
+        java.util.Optional<Producto> prodOpt = productoRepository.findById(productoId);
+        
+        if (userOpt.isPresent() && prodOpt.isPresent()) {
+            Usuario u = userOpt.get();
+            Producto p = prodOpt.get();
+            u.getProductosFavoritos().remove(p);
+            usuarioRepository.save(u);
+            return ResponseEntity.ok().body(Map.of("mensaje", "Favorito eliminado"));
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

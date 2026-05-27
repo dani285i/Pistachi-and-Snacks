@@ -27,38 +27,64 @@ export const FavoritosProvider = ({ children }: { children: React.ReactNode }) =
 
     const [favoritos, setFavoritos] = useState<ProductoFav[]>([]);
 
-    // Al iniciar o cambiar de usuario, cargamos los favoritos específicos de ese usuario
+    // Al iniciar o cambiar de usuario, cargamos los favoritos desde la base de datos (que vienen en el objeto usuario)
     useEffect(() => {
-        const key = getStorageKey(usuario?.id);
-        const guardados = localStorage.getItem(key);
-        if (guardados) {
-            setFavoritos(JSON.parse(guardados));
-        } else {
-            setFavoritos([]);
+        if (usuario && usuario.productosFavoritos) {
+            setFavoritos(usuario.productosFavoritos);
+        } else if (!usuario) {
+            // Si es invitado, mantenemos la lógica de localStorage
+            const guardados = localStorage.getItem('pistachi_favoritos_guest');
+            if (guardados) {
+                setFavoritos(JSON.parse(guardados));
+            } else {
+                setFavoritos([]);
+            }
         }
-    }, [usuario?.id]);
+    }, [usuario, usuario?.productosFavoritos]);
 
-    // Cada vez que cambian los favoritos, los guardamos en el perfil del usuario actual
+    // Cada vez que cambian los favoritos de un INVITADO, los guardamos en su localstorage
     useEffect(() => {
-        const key = getStorageKey(usuario?.id);
-        localStorage.setItem(key, JSON.stringify(favoritos));
-    }, [favoritos, usuario?.id]);
+        if (!usuario) {
+            localStorage.setItem('pistachi_favoritos_guest', JSON.stringify(favoritos));
+        }
+    }, [favoritos, usuario]);
 
     // Función que da o quita el like dependiendo de si ya existe
-    const toggleFavorito = (producto: ProductoFav) => {
-        setFavoritos(prev => {
-            const existe = prev.find(p => p.id === producto.id);
-            if (existe) {
-                return prev.filter(p => p.id !== producto.id);
-            } else {
-                return [...prev, producto];
+    const toggleFavorito = async (producto: ProductoFav) => {
+        const existe = favoritos.find(p => p.id === producto.id);
+        
+        // Actualización optimista del estado local
+        if (existe) {
+            setFavoritos(prev => prev.filter(p => p.id !== producto.id));
+        } else {
+            setFavoritos(prev => [...prev, producto]);
+        }
+
+        // Si hay usuario logueado, hacemos la petición a la BD
+        if (usuario?.id) {
+            try {
+                const url = `http://localhost:9090/auth/usuarios/${usuario.id}/favoritos/${producto.id}`;
+                await fetch(url, {
+                    method: existe ? 'DELETE' : 'POST'
+                });
+            } catch (err) {
+                console.error("Error actualizando favorito en base de datos:", err);
             }
-        });
+        }
     };
 
     // Función específica para borrar (útil para el modal de la vista de Favoritos)
-    const removerFavorito = (id: number) => {
+    const removerFavorito = async (id: number) => {
         setFavoritos(prev => prev.filter(p => p.id !== id));
+        if (usuario?.id) {
+            try {
+                await fetch(`http://localhost:9090/auth/usuarios/${usuario.id}/favoritos/${id}`, {
+                    method: 'DELETE'
+                });
+            } catch (err) {
+                console.error("Error eliminando favorito en base de datos:", err);
+            }
+        }
     };
 
     return (

@@ -22,7 +22,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
     React.useEffect(() => {
         if (abierto && usuario?.id) {
             // Se asume que el token puede ser necesario (aunque en PedidoController no parece estricto, es mejor enviarlo)
-            const sesionString = localStorage.getItem('user_session');
+            const sesionString = sessionStorage.getItem('user_session');
             const token = sesionString ? JSON.parse(sesionString).token : '';
             
             fetch(`http://localhost:9090/pedidos/usuario/${usuario.id}`, {

@@ -8,6 +8,7 @@ interface Usuario {
     tachis?: number;
     tipoSuscripcion?: string;
     proximaEntrega?: string;
+    productosFavoritos?: any[];
 }
 
 interface AuthContextType {
@@ -21,7 +22,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [usuario, setUsuario] = useState<Usuario | null>(() => {
-        const saved = localStorage.getItem('user_session');
+        const saved = sessionStorage.getItem('user_session');
         return saved ? JSON.parse(saved) : null;
     });
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (res.ok) {
                 const data = await res.json();
                 setUsuario(data);
-                localStorage.setItem('user_session', JSON.stringify(data));
+                sessionStorage.setItem('user_session', JSON.stringify(data));
             }
         } catch (error) {
             console.error("Error al refrescar usuario", error);
@@ -53,21 +54,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = (userData: Usuario) => {
         setUsuario(userData);
-        localStorage.setItem('user_session', JSON.stringify(userData));
+        sessionStorage.setItem('user_session', JSON.stringify(userData));
     };
 
     const updateUsuario = (nuevosDatos: Partial<Usuario>) => {
         setUsuario((prev) => {
             if (!prev) return prev;
             const actualizado = { ...prev, ...nuevosDatos };
-            localStorage.setItem('user_session', JSON.stringify(actualizado));
+            sessionStorage.setItem('user_session', JSON.stringify(actualizado));
             return actualizado;
         });
     };
 
     const logout = () => {
         setUsuario(null);
-        localStorage.removeItem('user_session');
+        sessionStorage.removeItem('user_session');
     };
 
     return (

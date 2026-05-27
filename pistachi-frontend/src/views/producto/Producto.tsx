@@ -86,7 +86,7 @@ const Productos = () => {
     return (
         <div className="catalogo-wrapper">
             <header className="catalogo-cabecera">
-                <span className="subtitulo-obrador">Nuestra Vitrina</span>
+                <span className="subtitulo-obrador">Nuestro Catálogo</span>
                 <h1>El Obrador de Pistacho</h1>
                 <p>Repostería artesanal y snacks premium, horneados a diario.</p>
                 
