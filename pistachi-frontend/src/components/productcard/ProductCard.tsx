@@ -27,14 +27,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
     const { addToCart } = useCart();
     const { addToast } = useToast();
 
+    // Lógica de Stock
+    const isAgotado = producto.stock < (producto.unidades || 1);
+    const isPocasUnidades = !isAgotado && producto.stock < 10;
+
     return (
         <article 
-            className="tarjeta-obrador" 
-            onClick={() => navigate(`/producto/${producto.id}`)}
+            className={`tarjeta-obrador ${isAgotado ? 'agotado' : ''}`}
+            onClick={() => !isAgotado && navigate(`/producto/${producto.id}`)}
         >
             <div className="tarjeta-img-box">
-                <img src={producto.imagen} alt={producto.nombre} className="tarjeta-img" />
-                {producto.destacado && <span className="craft-badge">Top Ventas</span>}
+                <img 
+                    src={producto.imagen} 
+                    alt={producto.nombre} 
+                    className="tarjeta-img" 
+                    style={isAgotado ? { filter: 'grayscale(100%) blur(2px)' } : {}}
+                />
+                {isAgotado && <span className="agotado-badge">AGOTADO</span>}
+                {producto.destacado && !isAgotado && <span className="craft-badge">Top Ventas</span>}
+                {isPocasUnidades && <span className="pocas-unidades-badge">¡Quedan pocas unidades!</span>}
             </div>
             
             <div className="tarjeta-body">
@@ -58,7 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <BotonFavorito producto={producto} />
                         
-                        {producto.stock > 0 ? (
+                        {!isAgotado ? (
                             <button 
                                 className="btn-carrito-animado"
                                 onClick={(e) => {

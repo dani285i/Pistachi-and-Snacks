@@ -498,14 +498,14 @@ export const AdminDashboard = () => {
                             {/* este contenedor flex row garantiza que precio y categoria se dividan el espacio de forma limpia */}
                             <div className="form-row">
                                 <div className="form-group flex-1">
-                                    <label>Precio (€)</label>
+                                    <label>Stock Disponible</label>
                                     <div className="number-input-wrapper">
-                                        <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value) || 0})} placeholder="0.00" />
+                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" />
                                         <div className="spinner-controls">
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat((formData.precio + 0.10).toFixed(2))})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: formData.stock + 1})}>
                                                 <CaretUp size={16} weight="bold" />
                                             </button>
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: Math.max(0, parseFloat((formData.precio - 0.10).toFixed(2)))})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})}>
                                                 <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>
@@ -534,6 +534,20 @@ export const AdminDashboard = () => {
 
                             <div className="form-row">
                                 <div className="form-group flex-1">
+                                    <label>Precio (€)</label>
+                                    <div className="number-input-wrapper">
+                                        <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value) || 0})} placeholder="0.00" />
+                                        <div className="spinner-controls">
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat((formData.precio + 0.10).toFixed(2))})}>
+                                                <CaretUp size={16} weight="bold" />
+                                            </button>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: Math.max(0, parseFloat((formData.precio - 0.10).toFixed(2)))})}>
+                                                <CaretDown size={16} weight="bold" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-group flex-1">
                                     <label>Unidades por Pack</label>
                                     <div className="number-input-wrapper">
                                         <input required type="number" min="1" step="1" value={formData.unidades} onChange={e => setFormData({...formData, unidades: parseInt(e.target.value) || 1})} placeholder="Ej: 5" />
@@ -542,20 +556,6 @@ export const AdminDashboard = () => {
                                                 <CaretUp size={16} weight="bold" />
                                             </button>
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: Math.max(1, formData.unidades - 1)})}>
-                                                <CaretDown size={16} weight="bold" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="form-group flex-1">
-                                    <label>Stock Disponible</label>
-                                    <div className="number-input-wrapper">
-                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" />
-                                        <div className="spinner-controls">
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: formData.stock + 1})}>
-                                                <CaretUp size={16} weight="bold" />
-                                            </button>
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})}>
                                                 <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>

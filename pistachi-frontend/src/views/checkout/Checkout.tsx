@@ -21,6 +21,9 @@ const Checkout = () => {
         codigoPostal: '',
         ciudad: ''
     });
+    
+    // Estado de Tachis
+    const [usarTachis, setUsarTachis] = useState(false);
 
     const [codigosValidos, setCodigosValidos] = useState<{codigo: string, descripcion: string}[]>([]);
     
@@ -46,7 +49,15 @@ const Checkout = () => {
 
     const subtotal = cartItems.reduce((acc, item) => acc + (Number(item.precio) * Number(item.cantidad)), 0);
     const costeEnvio = subtotal >= 30 ? 0 : 4.99;
-    const totalSeguro = subtotal + costeEnvio;
+    const totalOriginal = subtotal + costeEnvio;
+
+    // Lógica Tachis (1000 Tachis = 1€)
+    const tachisDisponibles = usuario?.tachis || 0;
+    const tachisMaximosNecesarios = Math.ceil(totalOriginal * 1000);
+    const tachisAAplicar = usarTachis ? Math.min(tachisDisponibles, tachisMaximosNecesarios) : 0;
+    const descuentoTachis = tachisAAplicar / 1000;
+    
+    const totalFinal = Math.max(0, totalOriginal - descuentoTachis);
 
     const handlePagoSeguro = async () => {
         if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
@@ -62,7 +73,8 @@ const Checkout = () => {
         try {
             const pedidoPayload = {
                 usuarioId: usuario?.id || 1,
-                total: totalSeguro,
+                total: totalFinal,
+                tachisUsados: tachisAAplicar,
                 lineas: cartItems.map(item => ({
                     productoId: item.id,
                     cantidad: item.cantidad,
@@ -166,38 +178,72 @@ const Checkout = () => {
                         </div>
                     </section>
 
+                    {/* Tachi Points */}
+                    {tachisDisponibles > 0 && (
+                        <section className="checkout-seccion" style={{ background: 'linear-gradient(135deg, #fdfbf7, #f4f7f2)', border: '2px solid var(--color-pistacho)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <div>
+                                    <h2 style={{ color: 'var(--color-pistacho-oscuro)', marginBottom: '5px' }}>💎 Tus Tachi Points</h2>
+                                    <p style={{ fontSize: '0.9rem', color: 'var(--color-texto-light)', margin: 0 }}>
+                                        Tienes <strong>{tachisDisponibles} Tachis</strong> (Equivalen a {(tachisDisponibles / 1000).toFixed(2)}€)
+                                    </p>
+                                </div>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem' }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={usarTachis} 
+                                        onChange={(e) => setUsarTachis(e.target.checked)} 
+                                        style={{ width: '20px', height: '20px', accentColor: 'var(--color-pistacho)' }}
+                                    />
+                                    Aplicar Descuento
+                                </label>
+                            </div>
+                        </section>
+                    )}
+
                     {/* Métodos de Pago */}
                     <section className="checkout-seccion">
                         <h2>Pago Seguro</h2>
-                        <p style={{ color: '#555', marginBottom: '20px', fontSize: '0.9rem' }}>Finaliza tu pedido con PayPal</p>
+                        <p style={{ color: '#555', marginBottom: '20px', fontSize: '0.9rem' }}>
+                            {totalFinal === 0 ? 'Tu pedido está completamente cubierto por tus Tachi Points.' : 'Finaliza tu pedido con PayPal'}
+                        </p>
 
                         <div className="pasarela-wrapper" style={{ marginTop: 0, borderTop: 'none', paddingTop: 0 }}>
-                            <PayPalScriptProvider options={{ clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || "test", currency: "EUR" }}>
-                                <PayPalButtons 
-                                    disabled={!isCodigoValido}
-                                    style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
-                                    createOrder={(_data, actions) => {
-                                        if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
-                                            addToast("⚠️ Rellena los datos de envío primero.");
-                                            return Promise.reject();
-                                        }
-                                        if (!isCodigoValido) {
-                                            addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
-                                            return Promise.reject();
-                                        }
-                                        return actions.order.create({
-                                            intent: "CAPTURE",
-                                            purchase_units: [{ amount: { currency_code: "EUR", value: totalSeguro.toFixed(2) } }]
-                                        });
-                                    }}
-                                    onApprove={async (_data, actions) => {
-                                        if(actions.order) {
-                                            await actions.order.capture();
-                                            handlePagoSeguro();
-                                        }
-                                    }}
-                                />
-                            </PayPalScriptProvider>
+                            {totalFinal === 0 ? (
+                                <button 
+                                    onClick={handlePagoSeguro}
+                                    style={{ width: '100%', padding: '15px', background: 'var(--color-pistacho)', color: 'white', border: 'none', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold', cursor: 'pointer' }}
+                                >
+                                    Confirmar Pedido Gratis
+                                </button>
+                            ) : (
+                                <PayPalScriptProvider options={{ clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || "test", currency: "EUR" }}>
+                                    <PayPalButtons 
+                                        disabled={!isCodigoValido}
+                                        style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
+                                        createOrder={(_data, actions) => {
+                                            if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
+                                                addToast("⚠️ Rellena los datos de envío primero.");
+                                                return Promise.reject();
+                                            }
+                                            if (!isCodigoValido) {
+                                                addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
+                                                return Promise.reject();
+                                            }
+                                            return actions.order.create({
+                                                intent: "CAPTURE",
+                                                purchase_units: [{ amount: { currency_code: "EUR", value: totalFinal.toFixed(2) } }]
+                                            });
+                                        }}
+                                        onApprove={async (_data, actions) => {
+                                            if(actions.order) {
+                                                await actions.order.capture();
+                                                handlePagoSeguro();
+                                            }
+                                        }}
+                                    />
+                                </PayPalScriptProvider>
+                            )}
                         </div>
 
                     </section>
@@ -228,9 +274,15 @@ const Checkout = () => {
                             <span>Envío</span>
                             <span>{costeEnvio === 0 ? 'GRATIS' : `${costeEnvio.toFixed(2)} €`}</span>
                         </div>
+                        {usarTachis && tachisAAplicar > 0 && (
+                            <div className="resumen-fila" style={{ color: 'var(--color-pistacho-oscuro)', fontWeight: 'bold' }}>
+                                <span>Descuento Tachis (-{tachisAAplicar})</span>
+                                <span>-{descuentoTachis.toFixed(2)} €</span>
+                            </div>
+                        )}
                         <div className="resumen-fila total">
                             <span>Total</span>
-                            <span>{totalSeguro.toFixed(2)} €</span>
+                            <span>{totalFinal.toFixed(2)} €</span>
                         </div>
                     </div>
                 </aside>
