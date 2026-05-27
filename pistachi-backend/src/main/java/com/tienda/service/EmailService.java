@@ -37,4 +37,27 @@ public class EmailService {
             System.err.println("Error al enviar el correo a " + emailDestino + ": " + e.getMessage());
         }
     }
+
+    public void enviarEmailStockDisponible(String emailDestino, String nombreUsuario, String nombreProducto) {
+        try {
+            MimeMessage mensaje = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+
+            helper.setTo(emailDestino);
+            helper.setSubject("¡" + nombreProducto + " vuelve a estar disponible! 🥐");
+
+            String contenidoHtml = "<h1>¡Hola " + nombreUsuario + "!</h1>"
+                    + "<p>Te escribimos para avisarte de que el producto <b>" + nombreProducto + "</b> que estabas esperando ya vuelve a tener stock en <b>El Obrador de Pistacho</b>.</p>"
+                    + "<p>¡Date prisa y haz tu pedido antes de que se vuelva a agotar!</p>"
+                    + "<br><p>Un saludo,<br>El equipo de Pistachitos y Snacks.</p>";
+
+            helper.setText(contenidoHtml, true);
+
+            mailSender.send(mensaje);
+            System.out.println("Email de stock disponible enviado con éxito a: " + emailDestino);
+
+        } catch (MessagingException e) {
+            System.err.println("Error al enviar el correo de stock a " + emailDestino + ": " + e.getMessage());
+        }
+    }
 }

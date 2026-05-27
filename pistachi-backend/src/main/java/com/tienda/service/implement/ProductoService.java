@@ -3,6 +3,12 @@ package com.tienda.service.implement;
 import com.tienda.model.Producto;
 import com.tienda.repository.IProductoRepository;
 import com.tienda.service.interfaces.IProductoService;
+import com.tienda.model.NotificacionStock;
+import com.tienda.repository.INotificacionStockRepository;
+import com.tienda.repository.IUsuarioRepository;
+import com.tienda.service.EmailService;
+import com.tienda.model.Usuario;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,6 +19,15 @@ public class ProductoService implements IProductoService {
 
     @Autowired
     private IProductoRepository productoRepository;
+
+    @Autowired
+    private INotificacionStockRepository notificacionRepository;
+
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public List<Producto> obtenerTodos() {
@@ -40,11 +55,14 @@ public class ProductoService implements IProductoService {
     }
 
     @Override
+    @Transactional
     public Producto actualizar(Long id, Producto productoDetalles) {
         Optional<Producto> productoExistente = productoRepository.findById(id);
         
         if (productoExistente.isPresent()) {
             Producto producto = productoExistente.get();
+            boolean notificar = producto.getStock() == 0 && productoDetalles.getStock() > 0;
+
             producto.setNombre(productoDetalles.getNombre());
             producto.setDescripcion(productoDetalles.getDescripcion());
             producto.setPrecio(productoDetalles.getPrecio());
@@ -54,7 +72,17 @@ public class ProductoService implements IProductoService {
             producto.setUnidades(productoDetalles.getUnidades());
             producto.setStock(productoDetalles.getStock());
             
-            return productoRepository.save(producto);
+            Producto productoGuardado = productoRepository.save(producto);
+
+            if (notificar) {
+                List<NotificacionStock> notificaciones = notificacionRepository.findByProducto(productoGuardado);
+                for (NotificacionStock notificacion : notificaciones) {
+                    emailService.enviarEmailStockDisponible(notificacion.getUsuario().getEmail(), notificacion.getUsuario().getNombre(), productoGuardado.getNombre());
+                }
+                notificacionRepository.deleteByProducto(productoGuardado);
+            }
+            
+            return productoGuardado;
         }
         return null; // O podrías lanzar una excepción personalizada aquí
     }
@@ -62,6 +90,25 @@ public class ProductoService implements IProductoService {
     @Override
     public void eliminar(Long id) {
         productoRepository.deleteById(id);
+    }
+    
+    @Override
+    public void registrarNotificacionStock(Long productoId, Long usuarioId) {
+        Optional<Producto> productoOpt = productoRepository.findById(productoId);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+
+        if (productoOpt.isPresent() && usuarioOpt.isPresent()) {
+            Producto producto = productoOpt.get();
+            Usuario usuario = usuarioOpt.get();
+
+            Optional<NotificacionStock> existente = notificacionRepository.findByUsuarioAndProducto(usuario, producto);
+            if (existente.isEmpty()) {
+                NotificacionStock notificacion = new NotificacionStock();
+                notificacion.setUsuario(usuario);
+                notificacion.setProducto(producto);
+                notificacionRepository.save(notificacion);
+            }
+        }
     }
     
 }

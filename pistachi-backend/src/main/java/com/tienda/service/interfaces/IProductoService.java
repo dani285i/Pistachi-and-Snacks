@@ -14,4 +14,7 @@ public interface IProductoService {
     Producto guardar(Producto producto);
     Producto actualizar(Long id, Producto productoDetalles);
     void eliminar(Long id);
+    
+    // Métodos para Notificaciones
+    void registrarNotificacionStock(Long productoId, Long usuarioId);
 }

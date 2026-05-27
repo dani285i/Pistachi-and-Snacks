@@ -73,4 +73,13 @@ public class ProductoController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/{id}/notificar-stock")
+    public ResponseEntity<Void> registrarNotificacionStock(@PathVariable Long id, @RequestBody java.util.Map<String, Long> payload) {
+        Long usuarioId = payload.get("usuarioId");
+        if (usuarioId != null) {
+            productoService.registrarNotificacionStock(id, usuarioId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

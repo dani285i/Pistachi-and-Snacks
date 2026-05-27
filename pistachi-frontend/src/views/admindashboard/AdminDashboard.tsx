@@ -75,6 +75,9 @@ export const AdminDashboard = () => {
     const [usuarioAEliminar, setUsuarioAEliminar] = useState<Usuario | null>(null);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+    const [mostrarModalEliminarProducto, setMostrarModalEliminarProducto] = useState(false);
+    const [productoAEliminar, setProductoAEliminar] = useState<Producto | null>(null);
+
     const getClaseSuscripcion = (tipo: string | undefined) => {
         if (!tipo || tipo.toLowerCase() === 'ninguna') return 'ninguna';
         if (tipo === 'Degustación') return 'degustacion';
@@ -145,25 +148,30 @@ export const AdminDashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [seccionActiva])
 
-    const handleEliminarProducto = async (id: number | undefined) => {
-        // lanzo una alerta de confirmacion antes de mandar la peticion de borrado para evitar desastres si hago un clic accidental
-        if (!id) return
-        if (window.confirm("¿Estás seguro de que quieres eliminar este producto de la base de datos?")) {
-            try {
-                const response = await fetch(`http://localhost:9090/productos/${id}`, {
-                    method: 'DELETE',
-                    headers: getAuthHeaders()
-                })
-                if (response.ok) {
-                    cargarProductos()
-                    addToast("Producto eliminado correctamente", 'success');
-                } else {
-                    addToast("Error al eliminar el producto", 'error');
-                }
-            } catch (error) {
-                console.error("error al eliminar", error)
-                addToast("Fallo de conexión al eliminar el producto", 'error');
+    const handleEliminarProducto = (producto: Producto) => {
+        setProductoAEliminar(producto);
+        setMostrarModalEliminarProducto(true);
+    };
+
+    const confirmarEliminarProducto = async () => {
+        if (!productoAEliminar?.id) return;
+        try {
+            const response = await fetch(`http://localhost:9090/productos/${productoAEliminar.id}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            })
+            if (response.ok) {
+                cargarProductos()
+                addToast(`El producto "${productoAEliminar.nombre}" ha sido eliminado.`, 'success');
+            } else {
+                addToast("Error al eliminar el producto", 'error');
             }
+        } catch (error) {
+            console.error("error al eliminar", error)
+            addToast("Fallo de conexión al eliminar el producto", 'error');
+        } finally {
+            setMostrarModalEliminarProducto(false);
+            setProductoAEliminar(null);
         }
     }
 
@@ -265,11 +273,17 @@ export const AdminDashboard = () => {
         const url = formData.id ? `http://localhost:9090/productos/${formData.id}` : 'http://localhost:9090/productos'
         const method = formData.id ? 'PUT' : 'POST'
 
+        // IMPORTANTE: Si es un POST (crear), borramos el id (que es 0) para que Spring Boot no intente actualizar la BD y falle
+        const payload: any = { ...formData };
+        if (!payload.id) {
+            delete payload.id;
+        }
+
         try {
             const response = await fetch(url, {
                 method: method,
                 headers: getAuthHeaders(),
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             })
             if (response.ok) {
                 setMostrarModal(false)
@@ -370,7 +384,7 @@ export const AdminDashboard = () => {
                                             }} className="icon-btn edit">
                                                 <Pencil size={18} weight="bold" />
                                             </button>
-                                            <button onClick={() => handleEliminarProducto(p.id)} className="icon-btn delete">
+                                            <button onClick={() => handleEliminarProducto(p)} className="icon-btn delete">
                                                 <Trash size={18} weight="bold" />
                                             </button>
                                         </td>
@@ -706,6 +720,28 @@ export const AdminDashboard = () => {
                                 }}
                             >
                                 Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {mostrarModalEliminarProducto && (
+                <div className="modal-overlay" style={{ zIndex: 10001 }}>
+                    <div className="glass-modal" style={{ maxWidth: '400px', textAlign: 'center' }}>
+                        <WarningCircle size={80} weight="fill" color="#E74C3C" style={{ margin: '0 auto 20px auto' }} />
+                        <h2 style={{ color: '#E74C3C', marginBottom: '15px' }}>Eliminar Producto</h2>
+                        <p style={{ marginBottom: '20px', lineHeight: '1.5' }}>
+                            ¿Estás seguro de que quieres eliminar el producto <strong>{productoAEliminar?.nombre}</strong>?
+                        </p>
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                            <button className="btn-cancel" onClick={() => {
+                                setMostrarModalEliminarProducto(false);
+                                setProductoAEliminar(null);
+                            }}>
+                                Cancelar
+                            </button>
+                            <button className="btn-save" style={{ backgroundColor: '#E74C3C' }} onClick={confirmarEliminarProducto}>
+                                Sí, eliminar
                             </button>
                         </div>
                     </div>

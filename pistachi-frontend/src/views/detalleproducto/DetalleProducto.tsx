@@ -32,6 +32,34 @@ const DetalleProducto = () => {
             .then(data => setProducto(data));
     }, [id]);
 
+    const handleNotificarStock = async () => {
+        if (!usuario) {
+            navigate('/login');
+            return;
+        }
+
+        if (!producto) return;
+
+        try {
+            const response = await fetch(`http://localhost:9090/productos/${producto.id}/notificar-stock`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ usuarioId: usuario.id })
+            });
+
+            if (response.ok) {
+                addToast(`🔔 Te enviaremos un email cuando repongamos stock de '${producto.nombre}'.`, 'success');
+            } else {
+                addToast('Hubo un error al intentar registrar la notificación.', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            addToast('Error de conexión con el servidor.', 'error');
+        }
+    };
+
     if (!producto) return <div className="cargando">Cargando producto...</div>;
 
     return (
@@ -62,7 +90,7 @@ const DetalleProducto = () => {
                         {producto.stock === 0 ? (
                             <button 
                                 className="boton-agotado"
-                                onClick={() => addToast(`🔔 Te enviaremos un email cuando repongamos stock de '${producto.nombre}'.`)}
+                                onClick={handleNotificarStock}
                                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                             >
                                 <Bell size={24} weight="bold" />
