@@ -3,7 +3,7 @@ import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
-import { PlusCircle, ShoppingCart } from '@phosphor-icons/react';
+import { ShoppingCart } from '@phosphor-icons/react';
 import iconoAdmin from '../../assets/favicon/web-app-manifest-512x512.png';
 import Perfil from '../perfil/Perfil';
 import './Navbar.css';

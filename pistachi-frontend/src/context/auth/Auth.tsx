@@ -43,10 +43,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         if (usuario) {
+             
             refrescarUsuario();
             const interval = setInterval(refrescarUsuario, 10000); // Poll cada 10s
             return () => clearInterval(interval);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [usuario?.id]);
 
     const login = (userData: Usuario) => {

@@ -35,6 +35,7 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
         if (value) {
             const [y, m, d] = value.split('-');
             if (y && m) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setViewYear(parseInt(y));
                 setViewMonth(parseInt(m));
             }
@@ -48,6 +49,7 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
                 }
             }
         } else if (mode === 'birthdate') {
+             
             setViewYear(new Date().getFullYear() - 25); // Default to 25 years ago for birthdate
         }
     }, [value, mode, onChange]);
@@ -77,7 +79,7 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
     };
 
     const getFirstDayOfMonth = (year: number, month: number) => {
-        let day = new Date(year, month - 1, 1).getDay();
+        const day = new Date(year, month - 1, 1).getDay();
         // Convert Sunday=0 to Monday=0, Sunday=6
         return day === 0 ? 6 : day - 1;
     };
@@ -87,7 +89,7 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
     let minYear = currentYear;
     let maxYear = currentYear;
     
-    let maxFutureDate = new Date();
+    const maxFutureDate = new Date();
     if (mode === 'future') {
         maxFutureDate.setDate(maxFutureDate.getDate() + 14);
     }

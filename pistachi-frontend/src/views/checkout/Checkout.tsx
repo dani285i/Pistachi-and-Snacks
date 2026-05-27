@@ -4,7 +4,7 @@ import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { useToast } from '../../context/toast/ToastContext';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { MapPin, CreditCard, PaypalLogo } from '@phosphor-icons/react';
+import { MapPin } from '@phosphor-icons/react';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -12,9 +12,6 @@ const Checkout = () => {
     const { usuario } = useAuth();
     const { addToast } = useToast();
     const navigate = useNavigate();
-
-    const [metodoPago, setMetodoPago] = useState<'stripe' | 'paypal'>('stripe');
-    const [procesando, setProcesando] = useState(false);
 
     // Formulario State
     const [form, setForm] = useState({
@@ -34,6 +31,7 @@ const Checkout = () => {
                 .then(data => setCodigosValidos(data))
                 .catch(err => console.error("Error al obtener códigos postales:", err));
         } else {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCodigosValidos([]);
         }
     }, [form.ciudad]);
@@ -60,7 +58,6 @@ const Checkout = () => {
             return;
         }
 
-        setProcesando(true);
         try {
             const pedidoPayload = {
                 usuarioId: usuario?.id || 1,
@@ -88,8 +85,6 @@ const Checkout = () => {
         } catch (error) {
             console.error(error);
             addToast("❌ Error de conexión al procesar el pago.");
-        } finally {
-            setProcesando(false);
         }
     };
 
@@ -171,83 +166,36 @@ const Checkout = () => {
 
                     {/* Métodos de Pago */}
                     <section className="checkout-seccion">
-                        <h2>Métodos de Pago</h2>
-                        <p style={{ color: '#555', marginBottom: '20px', fontSize: '0.9rem' }}>Escoge tu método de pago</p>
+                        <h2>Pago Seguro</h2>
+                        <p style={{ color: '#555', marginBottom: '20px', fontSize: '0.9rem' }}>Finaliza tu pedido con PayPal</p>
 
-                        <div className="payment-methods-grid">
-                            
-                            {/* Opción Stripe */}
-                            <label className={`payment-method-card ${metodoPago === 'stripe' ? 'active' : ''}`}>
-                                <input 
-                                    type="radio" 
-                                    name="metodoPago" 
-                                    className="payment-radio" 
-                                    checked={metodoPago === 'stripe'}
-                                    onChange={() => setMetodoPago('stripe')}
+                        <div className="pasarela-wrapper" style={{ marginTop: 0, borderTop: 'none', paddingTop: 0 }}>
+                            <PayPalScriptProvider options={{ clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || "test", currency: "EUR" }}>
+                                <PayPalButtons 
+                                    disabled={!isCodigoValido}
+                                    style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
+                                    createOrder={(_data, actions) => {
+                                        if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
+                                            addToast("⚠️ Rellena los datos de envío primero.");
+                                            return Promise.reject();
+                                        }
+                                        if (!isCodigoValido) {
+                                            addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
+                                            return Promise.reject();
+                                        }
+                                        return actions.order.create({
+                                            intent: "CAPTURE",
+                                            purchase_units: [{ amount: { currency_code: "EUR", value: totalSeguro.toFixed(2) } }]
+                                        });
+                                    }}
+                                    onApprove={async (_data, actions) => {
+                                        if(actions.order) {
+                                            await actions.order.capture();
+                                            handlePagoSeguro();
+                                        }
+                                    }}
                                 />
-                                <div className="payment-info">
-                                    <div className="payment-info-title">
-                                        Stripe
-                                    </div>
-                                    <div className="payment-info-subtitle">Tarjeta de Crédito o Débito</div>
-                                </div>
-                                <CreditCard size={32} weight="bold" className="payment-icon" />
-                            </label>
-
-                            {/* Opción PayPal */}
-                            <label className={`payment-method-card ${metodoPago === 'paypal' ? 'active' : ''}`}>
-                                <input 
-                                    type="radio" 
-                                    name="metodoPago" 
-                                    className="payment-radio" 
-                                    checked={metodoPago === 'paypal'}
-                                    onChange={() => setMetodoPago('paypal')}
-                                />
-                                <div className="payment-info">
-                                    <div className="payment-info-title">
-                                        PayPal
-                                    </div>
-                                    <div className="payment-info-subtitle">Rápido y Seguro</div>
-                                </div>
-                                <PaypalLogo size={32} weight="fill" className="payment-icon" />
-                            </label>
-                        </div>
-
-                        {/* Botón Pagar Dinámico */}
-                        <div className="pasarela-wrapper">
-                            {metodoPago === 'stripe' ? (
-                                <button className="btn-pagar-ahora" onClick={handlePagoSeguro} disabled={procesando || !isCodigoValido}>
-                                    <CreditCard size={24} weight="bold" />
-                                    {procesando ? 'Procesando pago...' : 'Pagar Ahora'}
-                                </button>
-                            ) : (
-                                <PayPalScriptProvider options={{ clientId: "test", currency: "EUR" }}>
-                                    <PayPalButtons 
-                                        disabled={!isCodigoValido}
-                                        style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
-                                        createOrder={(_data, actions) => {
-                                            if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
-                                                addToast("⚠️ Rellena los datos de envío primero.");
-                                                return Promise.reject();
-                                            }
-                                            if (!isCodigoValido) {
-                                                addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
-                                                return Promise.reject();
-                                            }
-                                            return actions.order.create({
-                                                intent: "CAPTURE",
-                                                purchase_units: [{ amount: { currency_code: "EUR", value: totalSeguro.toFixed(2) } }]
-                                            });
-                                        }}
-                                        onApprove={async (_data, actions) => {
-                                            if(actions.order) {
-                                                await actions.order.capture();
-                                                handlePagoSeguro();
-                                            }
-                                        }}
-                                    />
-                                </PayPalScriptProvider>
-                            )}
+                            </PayPalScriptProvider>
                         </div>
 
                     </section>

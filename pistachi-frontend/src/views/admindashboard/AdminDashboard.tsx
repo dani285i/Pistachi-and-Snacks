@@ -73,7 +73,6 @@ export const AdminDashboard = () => {
     const [mostrarConfirmacionEdicion, setMostrarConfirmacionEdicion] = useState(false);
     const [cuentaRegresiva, setCuentaRegresiva] = useState(5);
     const [usuarioAEliminar, setUsuarioAEliminar] = useState<Usuario | null>(null);
-    const [ordenAscendente, setOrdenAscendente] = useState(true)
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const getClaseSuscripcion = (tipo: string | undefined) => {
