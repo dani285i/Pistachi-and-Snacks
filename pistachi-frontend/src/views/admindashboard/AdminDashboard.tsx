@@ -237,6 +237,7 @@ export const AdminDashboard = () => {
                 if (response.ok) {
                     setMostrarModalUsuario(false);
                     cargarUsuarios();
+                    addToast(`Los datos de ${usuarioData.nombre} han sido guardados`, 'success');
                 } else {
                     addToast("Error al actualizar el usuario", 'error');
                 }
@@ -598,7 +599,14 @@ export const AdminDashboard = () => {
                             <div className="form-row">
                                 <div className="form-group flex-1">
                                     <label>Suscripción Actual</label>
-                                    <input type="text" value={usuarioData.tipoSuscripcion || 'Ninguna'} disabled style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }} />
+                                    <select 
+                                        value={usuarioData.tipoSuscripcion || 'Ninguna'} 
+                                        onChange={e => setUsuarioData({...usuarioData, tipoSuscripcion: e.target.value})}
+                                    >
+                                        <option value="Ninguna">Ninguna</option>
+                                        <option value="Degustación">Degustación</option>
+                                        <option value="Premium">Premium</option>
+                                    </select>
                                 </div>
                                 <div className="form-group flex-1">
                                     <label>Próxima Entrega</label>

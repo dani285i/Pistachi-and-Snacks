@@ -8,13 +8,13 @@ VALUES (
     'pistachiandsnacks@gmail.com', 
     '2006-07-27', 
     'ADMIN',
-    2450,
-    'Degustación',
+    99999,
+    'Premium',
     '2026-07-27'
 );
 
--- Forzar la actualización por si la base de datos ya tenía el usuario admin guardado previamente
-UPDATE usuario SET password = '$2a$10$fK8UYXg5rZM30JANZMcmBe3mzulJdFnCdUjwG3rdEAoLaWR7uEaoy', tachis = 2450, tipo_suscripcion = 'Degustación', proxima_entrega = '2026-07-27' WHERE username = 'admin';
+-- Forzar la actualización de la contraseña por si la base de datos ya tenía el usuario admin guardado previamente
+UPDATE usuario SET password = '$2a$10$fK8UYXg5rZM30JANZMcmBe3mzulJdFnCdUjwG3rdEAoLaWR7uEaoy' WHERE username = 'admin';
 
 -- Productos de prueba
 INSERT IGNORE INTO producto (id, nombre, descripcion, precio, imagen, categoria, destacado, unidades, stock)

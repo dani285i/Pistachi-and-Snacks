@@ -15,8 +15,6 @@ interface Producto {
     stock: number;
 }
 
-const CATEGORIAS = ['Todas', 'Snacks', 'Bollería', 'Repostería', 'Tartas', 'Bebidas', 'Café', 'Helados'];
-
 const Productos = () => {
     const [totalProductos, setTotalProductos] = useState<Producto[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
@@ -29,6 +27,10 @@ const Productos = () => {
     const categoriaSeleccionada = searchParams.get('categoria') || 'Todas';
     
     const productosPorPagina = 6;
+    
+    // Generar categorías dinámicamente basadas en los productos disponibles
+    const categoriasBase = Array.from(new Set(totalProductos.map(p => p.categoria))).sort();
+    const CATEGORIAS = ['Todas', ...categoriasBase];
 
     useEffect(() => {
         const obtenerProductos = async () => {

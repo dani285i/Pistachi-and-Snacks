@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/auth/Auth';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/toast/ToastContext';
+import SuscripcionModal from '../perfil/SuscripcionModal';
 import './PistachiBox.css';
 
 const PistachiBox: React.FC = () => {
@@ -11,6 +12,7 @@ const PistachiBox: React.FC = () => {
     const [planSeleccionado, setPlanSeleccionado] = useState<'Degustación' | 'Premium'>('Degustación');
     const [animClass, setAnimClass] = useState<string>('anim-zoom-in');
     const [animKey, setAnimKey] = useState<number>(0);
+    const [modalSuscripcionAbierto, setModalSuscripcionAbierto] = useState(false);
 
     const handleSelectPlan = (plan: 'Degustación' | 'Premium') => {
         setPlanSeleccionado(plan);
@@ -27,7 +29,7 @@ const PistachiBox: React.FC = () => {
             return;
         }
 
-        addToast('Redirigiendo a tu Perfil para confirmar la suscripción...', 'info');
+        setModalSuscripcionAbierto(true);
     };
 
     return (
@@ -70,6 +72,12 @@ const PistachiBox: React.FC = () => {
                     Suscribirme a Caja {planSeleccionado}
                 </button>
             </div>
+
+            <SuscripcionModal 
+                abierto={modalSuscripcionAbierto} 
+                cerrarModal={() => setModalSuscripcionAbierto(false)} 
+                perfilAbierto={false}
+            />
         </section>
     );
 };

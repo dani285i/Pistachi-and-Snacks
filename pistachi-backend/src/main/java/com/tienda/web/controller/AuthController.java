@@ -29,6 +29,9 @@ public class AuthController {
         try {
             // Rol por defecto para los usuarios de la web
             usuario.setRol("CLIENTE");
+            if (usuario.getTipoSuscripcion() == null || usuario.getTipoSuscripcion().isEmpty()) {
+                usuario.setTipoSuscripcion("Ninguna");
+            }
 
             // Encriptar la contraseña antes de guardar el usuario en MySQL
             String hashPassword = passwordEncoder.encode(usuario.getPassword());
@@ -113,6 +116,7 @@ public class AuthController {
                 if (payload.containsKey("tachis") && payload.get("tachis") != null) u.setTachis(Integer.valueOf(payload.get("tachis").toString()));
                 if (payload.containsKey("fechaNacimiento") && payload.get("fechaNacimiento") != null) u.setFechaNacimiento(java.time.LocalDate.parse(payload.get("fechaNacimiento").toString()));
                 if (payload.containsKey("proximaEntrega") && payload.get("proximaEntrega") != null) u.setProximaEntrega(java.time.LocalDate.parse(payload.get("proximaEntrega").toString()));
+                if (payload.containsKey("tipoSuscripcion")) u.setTipoSuscripcion((String) payload.get("tipoSuscripcion"));
                 
                 usuarioRepository.save(u);
                 return ResponseEntity.ok().body(Map.of("mensaje", "Usuario actualizado"));
