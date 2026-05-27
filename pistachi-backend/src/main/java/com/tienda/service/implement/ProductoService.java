@@ -94,7 +94,16 @@ public class ProductoService implements IProductoService {
 
     @Override
     public void eliminar(Long id) {
-        productoRepository.deleteById(id);
+        Optional<Producto> productoOpt = productoRepository.findById(id);
+        if (productoOpt.isPresent()) {
+            Producto p = productoOpt.get();
+            // Limpiar referencias antes de borrar para evitar DataIntegrityViolationException
+            notificacionRepository.deleteByProducto(p);
+            productoRepository.removeFromAllFavorites(id);
+            productoRepository.removeAllLineaPedidos(id);
+            
+            productoRepository.deleteById(id);
+        }
     }
     
     @Override

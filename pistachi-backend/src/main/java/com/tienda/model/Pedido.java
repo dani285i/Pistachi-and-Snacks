@@ -41,6 +41,9 @@ public class Pedido {
     @Column(nullable = false)
     private EstadoPedido estado; // CANCELADO, EN_PROCESO, EN_TRANSITO, ENTREGADO
 
+    @Column(name = "tachis_generados", nullable = false)
+    private Integer tachisGenerados = 0;
+
     // Relación: Un pedido tiene muchas líneas de pedido. 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineaPedido> lineas = new ArrayList<>();

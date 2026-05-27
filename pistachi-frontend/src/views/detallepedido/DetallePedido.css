@@ -21,15 +21,25 @@
 
 @keyframes imprimirTicket {
     0% { transform: translateY(100vh); opacity: 0; animation-timing-function: ease-out; }
-    5% { transform: translateY(90vh); opacity: 1; }
-    12% { transform: translateY(90vh); animation-timing-function: ease-out; }
-    17% { transform: translateY(80vh); }
-    24% { transform: translateY(80vh); animation-timing-function: ease-out; }
-    29% { transform: translateY(70vh); }
-    36% { transform: translateY(70vh); animation-timing-function: ease-out; }
-    41% { transform: translateY(60vh); }
-    50% { transform: translateY(60vh); animation-timing-function: ease-out; }
-    90% { transform: translateY(0); }
+    5% { transform: translateY(80vh); opacity: 1; }
+    12% { transform: translateY(80vh); animation-timing-function: ease-out; }
+    
+    17% { transform: translateY(70vh); }
+    24% { transform: translateY(70vh); animation-timing-function: ease-out; }
+    
+    29% { transform: translateY(55vh); }
+    36% { transform: translateY(55vh); animation-timing-function: ease-out; }
+    
+    41% { transform: translateY(45vh); }
+    48% { transform: translateY(45vh); animation-timing-function: ease-out; }
+    
+    53% { transform: translateY(35vh); }
+    60% { transform: translateY(35vh); animation-timing-function: ease-out; }
+    
+    65% { transform: translateY(20vh); }
+    72% { transform: translateY(20vh); animation-timing-function: ease-out; }
+    
+    80% { transform: translateY(0); }
     100% { transform: translateY(0); }
 }
 
@@ -229,10 +239,20 @@
     font-weight: bold;
 }
 
-.wip-text {
-    color: #666;
-    font-size: 0.9rem;
-    font-style: italic;
+.tachis-text {
+    color: #000;
+    font-size: 1.4rem;
+    font-weight: 900 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tachis-icon-inline {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .ticket-thanks {
@@ -255,6 +275,7 @@
 
 /* Mensajes de carga o error */
 .loading-container, .error-container {
+    flex-direction: column;
     align-items: center;
     color: white;
     font-size: 1.2rem;

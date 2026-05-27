@@ -24,6 +24,7 @@ interface Pedido {
     total: number;
     estado: string;
     lineas: LineaPedido[];
+    tachisGenerados?: number;
 }
 
 const DetallePedido: React.FC = () => {
@@ -37,10 +38,23 @@ const DetallePedido: React.FC = () => {
 
     const [animationKey, setAnimationKey] = useState(0);
 
+    const isPrintingRef = React.useRef(false);
+
     const playAnimation = () => {
+        if (isPrintingRef.current) return;
+        isPrintingRef.current = true;
+
         const audio = new Audio('/sounds/sonido-impresora-ticket.mp3');
         audio.volume = 0.5;
-        audio.play().catch(e => console.log("Autoplay bloqueado por el navegador:", e));
+        
+        audio.onended = () => {
+            isPrintingRef.current = false;
+        };
+        
+        audio.play().catch(e => {
+            console.log("Autoplay bloqueado por el navegador:", e);
+            isPrintingRef.current = false;
+        });
         setAnimationKey(prev => prev + 1);
     };
 
@@ -98,7 +112,7 @@ const DetallePedido: React.FC = () => {
         return (
             <div className="detalle-pedido-container error-container">
                 <p>{error || "Pedido no encontrado"}</p>
-                <button onClick={() => navigate('/perfil')} className="btn-volver">Volver al Perfil</button>
+                <button onClick={() => navigate('/')} className="btn-volver">Volver al Inicio</button>
             </div>
         );
     }
@@ -199,10 +213,14 @@ const DetallePedido: React.FC = () => {
                     
                     <div className="ticket-divider dashed"></div>
 
-                    <div className="ticket-tachis-earned">
-                        <p>🎉 ¡Has ganado Tachis con esta compra! 🎉</p>
-                        <p className="wip-text">Tachis Ganados: (WIP)</p>
-                    </div>
+                    {pedido.tachisGenerados !== undefined && pedido.tachisGenerados > 0 && (
+                        <div className="ticket-tachis-earned">
+                            <p>🎉 ¡Has ganado Tachis con esta compra! 🎉</p>
+                            <p className="tachis-text">
+                                +{pedido.tachisGenerados} <img src={faviconTachi} alt="Tachis" className="tachis-icon-inline" />
+                            </p>
+                        </div>
+                    )}
 
                     <div className="ticket-thanks">
                         <p>¡Gracias por tu compra!</p>

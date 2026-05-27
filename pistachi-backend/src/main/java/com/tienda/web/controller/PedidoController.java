@@ -8,6 +8,7 @@ import com.tienda.model.Usuario;
 import com.tienda.repository.IPedidoRepository;
 import com.tienda.repository.IProductoRepository;
 import com.tienda.repository.IUsuarioRepository;
+import com.tienda.service.interfaces.IPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,9 @@ import java.util.List;
 public class PedidoController {
 
     @Autowired
+    private IPedidoService pedidoService;
+
+    @Autowired
     private IPedidoRepository pedidoRepository;
 
     @Autowired
@@ -32,58 +36,12 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<?> crearPedido(@RequestBody PedidoRequest request) {
         try {
-            Pedido pedido = new Pedido();
-            pedido.setUsuarioId(request.getUsuarioId());
-            pedido.setFecha(LocalDateTime.now());
-            pedido.setEstado(EstadoPedido.EN_PROCESO);
-
-            double subtotal = 0.0;
-
-            for (LineaPedidoRequest lpReq : request.getLineas()) {
-                Producto producto = productoRepository.findById(lpReq.getProductoId()).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-                
-                // Calcular subtotal real basado en el precio de la base de datos
-                subtotal += producto.getPrecio() * lpReq.getCantidad();
-
-                // Restar el stock
-                int nuevoStock = producto.getStock() - lpReq.getCantidad();
-                producto.setStock(Math.max(nuevoStock, 0));
-                productoRepository.save(producto);
-
-                LineaPedido linea = new LineaPedido();
-                linea.setProducto(producto);
-                linea.setCantidad(lpReq.getCantidad());
-                linea.setPrecioUnitario(producto.getPrecio()); // Usar precio seguro de BD
-                linea.setPedido(pedido);
-                
-                pedido.getLineas().add(linea);
-            }
-
-            // Calcular Envío y Descuento
-            double costeEnvio = subtotal >= 30.0 ? 0.0 : 4.99;
-            double totalCalculado = subtotal + costeEnvio;
-            double descuento = 0.0;
-
-            if (request.getTachisUsados() != null && request.getTachisUsados() > 0) {
-                Usuario usuario = usuarioRepository.findById(request.getUsuarioId()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-                if (usuario.getTachis() < request.getTachisUsados()) {
-                    throw new RuntimeException("No tienes suficientes Tachis.");
-                }
-                descuento = request.getTachisUsados() / 1000.0;
-                usuario.setTachis(usuario.getTachis() - request.getTachisUsados());
-                usuarioRepository.save(usuario);
-            }
-
-            double totalFinal = Math.max(0, totalCalculado - descuento);
-
-            // Verificación Anti-Trampas
-            if (Math.abs(totalFinal - request.getTotal()) > 0.01) {
-                throw new RuntimeException("El total calculado (" + totalFinal + "€) no coincide con el total proporcionado (" + request.getTotal() + "€). Intento de fraude detectado.");
-            }
-
-            pedido.setTotal(totalFinal);
-            
-            Pedido pedidoGuardado = pedidoRepository.save(pedido);
+            Pedido pedidoGuardado = pedidoService.crearPedido(
+                    request.getUsuarioId(),
+                    request.getTotal(),
+                    request.getTachisUsados(),
+                    request.getLineas()
+            );
             return ResponseEntity.ok(pedidoGuardado);
 
         } catch (Exception e) {
@@ -113,19 +71,16 @@ public class PedidoController {
 
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstadoPedido(@PathVariable Long id, @RequestBody java.util.Map<String, String> payload) {
-        java.util.Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
-        if (pedidoOpt.isPresent()) {
-            Pedido pedido = pedidoOpt.get();
-            try {
-                EstadoPedido nuevoEstado = EstadoPedido.fromDescripcion(payload.get("estado"));
-                pedido.setEstado(nuevoEstado);
-                pedidoRepository.save(pedido);
-                return ResponseEntity.ok(pedido);
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body("Estado inválido");
+        try {
+            EstadoPedido nuevoEstado = EstadoPedido.fromDescripcion(payload.get("estado"));
+            Pedido pedidoActualizado = pedidoService.actualizarEstadoPedido(id, nuevoEstado);
+            if (pedidoActualizado != null) {
+                return ResponseEntity.ok(pedidoActualizado);
             }
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Estado inválido");
         }
-        return ResponseEntity.notFound().build();
     }
 
     // Clases DTO internas para recibir el JSON
