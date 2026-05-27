@@ -118,13 +118,13 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                             </div>
                             <div className="suscripcion-acciones">
                                 {usuario?.tipoSuscripcion && usuario.tipoSuscripcion !== 'Ninguna' ? (
-                                    <span className="badge-activo" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#2ECC71', background: '#D5F5E3', padding: '5px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
-                                        <Clock size={14} weight="bold" />
+                                    <span className="badge-activo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', fontSize: '0.9rem', color: '#2ECC71', background: '#D5F5E3', border: '1px solid #D5F5E3', padding: '8px 20px', borderRadius: '50px', fontWeight: '600' }}>
+                                        <Clock size={16} weight="bold" />
                                         Activo
                                     </span>
                                 ) : (
-                                    <span className="badge-inactivo" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#7a7a7a', background: '#eae7e0', padding: '5px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
-                                        <X size={14} weight="bold" />
+                                    <span className="badge-inactivo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', fontSize: '0.9rem', color: '#7a7a7a', background: '#eae7e0', border: '1px solid #eae7e0', padding: '8px 20px', borderRadius: '50px', fontWeight: '600' }}>
+                                        <X size={16} weight="bold" />
                                         Inactivo
                                     </span>
                                 )}
