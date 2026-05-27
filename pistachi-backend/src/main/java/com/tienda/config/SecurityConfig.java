@@ -35,6 +35,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/productos/**").permitAll()
+                .requestMatchers("/codigos-postales/**").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
             );

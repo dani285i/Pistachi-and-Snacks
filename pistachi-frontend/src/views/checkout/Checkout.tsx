@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
@@ -20,8 +20,25 @@ const Checkout = () => {
     const [form, setForm] = useState({
         nombre: usuario?.nombre || '',
         direccion: '',
+        codigoPostal: '',
         ciudad: ''
     });
+
+    const [codigosValidos, setCodigosValidos] = useState<{codigo: string, descripcion: string}[]>([]);
+    
+    // Fetch códigos válidos cuando cambia el concello
+    useEffect(() => {
+        if (form.ciudad) {
+            fetch(`http://localhost:9090/codigos-postales?concello=${encodeURIComponent(form.ciudad)}`)
+                .then(res => res.json())
+                .then(data => setCodigosValidos(data))
+                .catch(err => console.error("Error al obtener códigos postales:", err));
+        } else {
+            setCodigosValidos([]);
+        }
+    }, [form.ciudad]);
+
+    const isCodigoValido = form.codigoPostal.length === 5 && codigosValidos.some(cp => cp.codigo === form.codigoPostal);
 
     if (cartItems.length === 0) {
         navigate('/productos');
@@ -33,8 +50,13 @@ const Checkout = () => {
     const totalSeguro = subtotal + costeEnvio;
 
     const handlePagoSeguro = async () => {
-        if (!form.nombre || !form.direccion || !form.ciudad) {
+        if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
             addToast("⚠️ Por favor, rellena todos los detalles del envío antes de pagar.");
+            return;
+        }
+
+        if (!isCodigoValido) {
+            addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
             return;
         }
 
@@ -96,15 +118,34 @@ const Checkout = () => {
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label>Dirección y Código Postal</label>
-                            <input 
-                                type="text" 
-                                className="form-input" 
-                                placeholder="Calle..., Avenida..., Nº123" 
-                                value={form.direccion}
-                                onChange={(e) => setForm({...form, direccion: e.target.value})}
-                            />
+                        <div className="form-row" style={{ display: 'flex', gap: '20px' }}>
+                            <div className="form-group" style={{ flex: 1, position: 'relative' }}>
+                                <label>Código Postal</label>
+                                <input 
+                                    type="text" 
+                                    className="form-input" 
+                                    placeholder="Ej. 15004" 
+                                    value={form.codigoPostal}
+                                    onChange={(e) => setForm({...form, codigoPostal: e.target.value})}
+                                />
+                                {form.codigoPostal.length === 5 && form.ciudad && (
+                                    <div style={{ marginTop: '8px', fontSize: '0.8rem', fontWeight: 600, color: isCodigoValido ? '#28a745' : '#dc3545' }}>
+                                        {isCodigoValido 
+                                            ? "✅ Este Código Postal es correcto para el Concello seleccionado" 
+                                            : "❌ Este Código Postal no es correcto para el Concello Seleccionado"}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="form-group" style={{ flex: 1 }}>
+                                <label>Dirección</label>
+                                <input 
+                                    type="text" 
+                                    className="form-input" 
+                                    placeholder="Calle..., Avenida..., Nº123" 
+                                    value={form.direccion}
+                                    onChange={(e) => setForm({...form, direccion: e.target.value})}
+                                />
+                            </div>
                         </div>
 
                         <div className="form-group">
@@ -175,17 +216,22 @@ const Checkout = () => {
                         {/* Botón Pagar Dinámico */}
                         <div className="pasarela-wrapper">
                             {metodoPago === 'stripe' ? (
-                                <button className="btn-pagar-ahora" onClick={handlePagoSeguro} disabled={procesando}>
+                                <button className="btn-pagar-ahora" onClick={handlePagoSeguro} disabled={procesando || !isCodigoValido}>
                                     <CreditCard size={24} weight="bold" />
                                     {procesando ? 'Procesando pago...' : 'Pagar Ahora'}
                                 </button>
                             ) : (
                                 <PayPalScriptProvider options={{ clientId: "test", currency: "EUR" }}>
                                     <PayPalButtons 
+                                        disabled={!isCodigoValido}
                                         style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
                                         createOrder={(_data, actions) => {
-                                            if (!form.nombre || !form.direccion || !form.ciudad) {
+                                            if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
                                                 addToast("⚠️ Rellena los datos de envío primero.");
+                                                return Promise.reject();
+                                            }
+                                            if (!isCodigoValido) {
+                                                addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
                                                 return Promise.reject();
                                             }
                                             return actions.order.create({
