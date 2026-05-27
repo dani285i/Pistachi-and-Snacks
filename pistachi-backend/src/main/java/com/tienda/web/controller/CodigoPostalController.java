@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import com.tienda.model.Concello;
+
 @RestController
 @RequestMapping("/codigos-postales")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -16,7 +18,7 @@ public class CodigoPostalController {
     private CodigoPostalRepository codigoPostalRepository;
 
     @GetMapping
-    public List<CodigoPostal> getByConcello(@RequestParam String concello) {
+    public List<CodigoPostal> getByConcello(@RequestParam Concello concello) {
         return codigoPostalRepository.findByConcello(concello);
     }
 }

@@ -29,7 +29,7 @@ public class AdminSetup implements CommandLineRunner {
             admin.setApellidos("Administrador");
             admin.setEmail("admin@pistachi.com");
             admin.setFechaNacimiento(LocalDate.of(2006, 7, 27));
-            admin.setRol("ADMIN");
+            admin.setRol(com.tienda.model.RolUsuario.ADMIN);
 
             usuarioRepository.save(admin);
             System.out.println("========== USUARIO ADMIN CREADO CON ÉXITO ==========");

@@ -28,7 +28,7 @@ public class AuthController {
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
         try {
             // Rol por defecto para los usuarios de la web
-            usuario.setRol("CLIENTE");
+            usuario.setRol(com.tienda.model.RolUsuario.USUARIO);
             if (usuario.getTipoSuscripcion() == null || usuario.getTipoSuscripcion().isEmpty()) {
                 usuario.setTipoSuscripcion("Ninguna");
             }

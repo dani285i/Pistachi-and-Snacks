@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,7 +30,8 @@ public class Producto {
 
     private String imagen;
 
-    private String categoria;
+    @Enumerated(EnumType.STRING)
+    private CategoriaProducto categoria;
 
     private Boolean destacado;
 

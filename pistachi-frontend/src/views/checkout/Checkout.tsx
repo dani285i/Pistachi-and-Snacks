@@ -154,12 +154,12 @@ const Checkout = () => {
                                     onChange={(val) => setForm({...form, ciudad: val})}
                                     options={[
                                         { value: '', label: 'Selecciona tu Concello...' },
-                                        { value: 'A Coruña', label: 'A Coruña' },
-                                        { value: 'Culleredo', label: 'Culleredo' },
-                                        { value: 'Oleiros', label: 'Oleiros' },
-                                        { value: 'Cambre', label: 'Cambre' },
-                                        { value: 'Bergondo', label: 'Bergondo' },
-                                        { value: 'Betanzos', label: 'Betanzos' }
+                                        { value: 'A_CORUNA', label: 'A Coruña' },
+                                        { value: 'CULLEREDO', label: 'Culleredo' },
+                                        { value: 'OLEIROS', label: 'Oleiros' },
+                                        { value: 'CAMBRE', label: 'Cambre' },
+                                        { value: 'BERGONDO', label: 'Bergondo' },
+                                        { value: 'BETANZOS', label: 'Betanzos' }
                                     ]}
                                 />
                             </div>

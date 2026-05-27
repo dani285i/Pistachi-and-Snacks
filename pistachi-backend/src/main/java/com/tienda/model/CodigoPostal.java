@@ -10,13 +10,14 @@ public class CodigoPostal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String concello;
+    @Enumerated(EnumType.STRING)
+    private Concello concello;
     private String codigo;
     private String descripcion;
 
     public CodigoPostal() {}
 
-    public CodigoPostal(String concello, String codigo, String descripcion) {
+    public CodigoPostal(Concello concello, String codigo, String descripcion) {
         this.concello = concello;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -30,11 +31,11 @@ public class CodigoPostal {
         this.id = id;
     }
 
-    public String getConcello() {
+    public Concello getConcello() {
         return concello;
     }
 
-    public void setConcello(String concello) {
+    public void setConcello(Concello concello) {
         this.concello = concello;
     }
 

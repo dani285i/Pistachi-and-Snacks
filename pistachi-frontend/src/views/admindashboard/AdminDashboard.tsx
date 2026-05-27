@@ -43,7 +43,7 @@ const estadoInicial: Producto = {
     descripcion: '',
     precio: 0,
     imagen: '',
-    categoria: 'Snacks',
+    categoria: 'Bollería',
     destacado: false,
     unidades: 1,
     stock: 0
@@ -274,7 +274,7 @@ export const AdminDashboard = () => {
         const method = formData.id ? 'PUT' : 'POST'
 
         // IMPORTANTE: Si es un POST (crear), borramos el id (que es 0) para que Spring Boot no intente actualizar la BD y falle
-        const payload: any = { ...formData };
+        const payload: Partial<Producto> = { ...formData };
         if (!payload.id) {
             delete payload.id;
         }
@@ -515,13 +515,16 @@ export const AdminDashboard = () => {
                                     <label>Categoría</label>
                                     <CustomSelect 
                                         options={[
-                                            { value: 'Snacks', label: 'Snacks' },
                                             { value: 'Bollería', label: 'Bollería' },
                                             { value: 'Repostería', label: 'Repostería' },
                                             { value: 'Tartas', label: 'Tartas' },
                                             { value: 'Bebidas', label: 'Bebidas' },
-                                            { value: 'Café', label: 'Café' },
-                                            { value: 'Helados', label: 'Helados' }
+                                            { value: 'Dulces', label: 'Dulces' },
+                                            { value: 'Untables', label: 'Untables' },
+                                            { value: 'Galletas', label: 'Galletas' },
+                                            { value: 'Helados', label: 'Helados' },
+                                            { value: 'Postres', label: 'Postres' },
+                                            { value: 'Desayunos', label: 'Desayunos' }
                                         ]}
                                         value={formData.categoria}
                                         onChange={(val) => setFormData({...formData, categoria: val})}
