@@ -30,6 +30,14 @@ const DetalleProducto = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+    const [haSolicitadoAviso, setHaSolicitadoAviso] = useState(() => {
+        const requested = sessionStorage.getItem('notificaciones_solicitadas');
+        if (requested && id) {
+            const parsed = JSON.parse(requested);
+            return parsed.includes(Number(id));
+        }
+        return false;
+    });
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!isZoomed) return;
@@ -63,7 +71,14 @@ const DetalleProducto = () => {
             });
 
             if (response.ok) {
-                addToast(`🔔 Te enviaremos un email cuando repongamos stock de '${producto.nombre}'.`, 'success');
+                setHaSolicitadoAviso(true);
+                const requested = sessionStorage.getItem('notificaciones_solicitadas');
+                const parsed = requested ? JSON.parse(requested) : [];
+                if (producto && !parsed.includes(producto.id)) {
+                    parsed.push(producto.id);
+                    sessionStorage.setItem('notificaciones_solicitadas', JSON.stringify(parsed));
+                }
+                addToast('Te enviaremos un email cuando vuelva a estar disponible.', 'success');
             } else {
                 addToast('Hubo un error al intentar registrar la notificación.', 'error');
             }
@@ -141,11 +156,12 @@ const DetalleProducto = () => {
                         {producto.stock === 0 ? (
                             <button 
                                 className="boton-agotado"
+                                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', filter: haSolicitadoAviso ? 'opacity(0.6)' : 'none', cursor: haSolicitadoAviso ? 'not-allowed' : 'pointer' }}
                                 onClick={handleNotificarStock}
-                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+                                disabled={haSolicitadoAviso}
                             >
                                 <Bell size={24} weight="bold" />
-                                Agotado - Avisadme
+                                {haSolicitadoAviso ? '¡Te avisaremos cuando se reponga el Stock!' : '¡Haz click para recibir un email cuando se reponga el Stock!'}
                             </button>
                         ) : usuario ? (
                             <button 

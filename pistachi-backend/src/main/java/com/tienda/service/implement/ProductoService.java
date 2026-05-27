@@ -101,7 +101,7 @@ public class ProductoService implements IProductoService {
             Producto producto = productoOpt.get();
             Usuario usuario = usuarioOpt.get();
 
-            Optional<NotificacionStock> existente = notificacionRepository.findByUsuarioAndProducto(usuario, producto);
+            Optional<NotificacionStock> existente = notificacionRepository.findFirstByUsuarioAndProducto(usuario, producto);
             if (existente.isEmpty()) {
                 NotificacionStock notificacion = new NotificacionStock();
                 notificacion.setUsuario(usuario);

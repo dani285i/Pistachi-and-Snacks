@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface INotificacionStockRepository extends JpaRepository<NotificacionStock, Long> {
     List<NotificacionStock> findByProducto(Producto producto);
-    Optional<NotificacionStock> findByUsuarioAndProducto(Usuario usuario, Producto producto);
+    Optional<NotificacionStock> findFirstByUsuarioAndProducto(Usuario usuario, Producto producto);
     void deleteByProducto(Producto producto);
 }

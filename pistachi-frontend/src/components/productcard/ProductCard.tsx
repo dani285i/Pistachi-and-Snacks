@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BotonFavorito from '../favorito/BotonFavorito';
 import { useCart } from '../../context/carrito/Carrito';
 import { useToast } from '../../context/toast/ToastContext';
+import { useAuth } from '../../context/auth/Auth';
 import { Plus, ShoppingCart, Bell } from '@phosphor-icons/react';
 import '../../views/producto/Producto.css'; // Mantenemos los estilos originales
 
@@ -27,15 +28,57 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { addToast } = useToast();
+    const { usuario } = useAuth();
+    const [haSolicitadoAviso, setHaSolicitadoAviso] = useState(() => {
+        const requested = sessionStorage.getItem('notificaciones_solicitadas');
+        if (requested) {
+            const parsed = JSON.parse(requested);
+            return parsed.includes(producto.id);
+        }
+        return false;
+    });
 
     // Lógica de Stock
     const isAgotado = producto.stock < (producto.unidades || 1);
     const isPocasUnidades = !isAgotado && producto.stock < 10;
 
+    const handleNotificarStock = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!usuario) {
+            navigate('/login');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:9090/productos/${producto.id}/notificar-stock`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ usuarioId: usuario.id })
+            });
+
+            if (response.ok) {
+                setHaSolicitadoAviso(true);
+                const requested = sessionStorage.getItem('notificaciones_solicitadas');
+                const parsed = requested ? JSON.parse(requested) : [];
+                if (!parsed.includes(producto.id)) {
+                    parsed.push(producto.id);
+                    sessionStorage.setItem('notificaciones_solicitadas', JSON.stringify(parsed));
+                }
+                addToast('Te enviaremos un email cuando vuelva a estar disponible.', 'success');
+            } else {
+                addToast('Hubo un error al intentar registrar la notificación.', 'error');
+            }
+        } catch (error) {
+            addToast('Error de conexión con el servidor.', 'error');
+        }
+    };
+
     return (
         <article 
             className={`tarjeta-obrador ${isAgotado ? 'agotado' : ''}`}
-            onClick={() => !isAgotado && navigate(`/producto/${producto.id}`)}
+            onClick={() => navigate(`/producto/${producto.id}`)}
         >
             <div className="tarjeta-img-box">
                 <img 
@@ -91,11 +134,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
                         ) : (
                             <button 
                                 className="btn-wishlist-animado"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    addToast(`🔔 Te enviaremos un email cuando repongamos stock de '${producto.nombre}'.`);
-                                }}
-                                title="Avisadme cuando haya stock"
+                                onClick={handleNotificarStock}
+                                title={haSolicitadoAviso ? "Aviso Solicitado" : "Avisadme cuando haya stock"}
+                                disabled={haSolicitadoAviso}
+                                style={{ filter: haSolicitadoAviso ? 'opacity(0.6)' : 'none', cursor: haSolicitadoAviso ? 'not-allowed' : 'pointer' }}
                             >
                                 <Bell size={20} weight="bold" />
                             </button>
