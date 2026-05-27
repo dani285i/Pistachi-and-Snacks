@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from '../auth/Auth';
 
 export interface ProductoFav {
     id: number;
@@ -18,16 +19,30 @@ interface FavoritosContextType {
 const FavoritosContext = createContext<FavoritosContextType | null>(null);
 
 export const FavoritosProvider = ({ children }: { children: React.ReactNode }) => {
-    // Inicializamos leyendo del almacenamiento local por si el usuario ya tenía likes guardados
-    const [favoritos, setFavoritos] = useState<ProductoFav[]>(() => {
-        const guardados = localStorage.getItem('pistachi_favoritos');
-        return guardados ? JSON.parse(guardados) : [];
-    });
+    const { usuario } = useAuth();
 
-    // Cada vez que cambian los favoritos, los guardamos en memoria
+    const getStorageKey = (userId: number | undefined) => {
+        return userId ? `pistachi_favoritos_${userId}` : 'pistachi_favoritos_guest';
+    };
+
+    const [favoritos, setFavoritos] = useState<ProductoFav[]>([]);
+
+    // Al iniciar o cambiar de usuario, cargamos los favoritos específicos de ese usuario
     useEffect(() => {
-        localStorage.setItem('pistachi_favoritos', JSON.stringify(favoritos));
-    }, [favoritos]);
+        const key = getStorageKey(usuario?.id);
+        const guardados = localStorage.getItem(key);
+        if (guardados) {
+            setFavoritos(JSON.parse(guardados));
+        } else {
+            setFavoritos([]);
+        }
+    }, [usuario?.id]);
+
+    // Cada vez que cambian los favoritos, los guardamos en el perfil del usuario actual
+    useEffect(() => {
+        const key = getStorageKey(usuario?.id);
+        localStorage.setItem(key, JSON.stringify(favoritos));
+    }, [favoritos, usuario?.id]);
 
     // Función que da o quita el like dependiendo de si ya existe
     const toggleFavorito = (producto: ProductoFav) => {

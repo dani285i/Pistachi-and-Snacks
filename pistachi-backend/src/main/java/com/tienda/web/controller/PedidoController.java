@@ -63,6 +63,11 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoRepository.findAll());
     }
 
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Pedido>> obtenerPedidosPorUsuario(@PathVariable Long usuarioId) {
+        return ResponseEntity.ok(pedidoRepository.findByUsuarioId(usuarioId));
+    }
+
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstadoPedido(@PathVariable Long id, @RequestBody java.util.Map<String, String> payload) {
         java.util.Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);

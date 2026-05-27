@@ -15,8 +15,41 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
     const { usuario, logout } = useAuth();
     const navigate = useNavigate();
     const [modalSuscripcionAbierto, setModalSuscripcionAbierto] = React.useState(false);
+    const [modalConfirmarSalir, setModalConfirmarSalir] = React.useState(false);
 
-    const pedidos: { id: string, fecha: string, total: number, estado: string }[] = [];
+    const [pedidos, setPedidos] = React.useState<{ id: string, fecha: string, total: number, estado: string }[]>([]);
+
+    React.useEffect(() => {
+        if (abierto && usuario?.id) {
+            // Se asume que el token puede ser necesario (aunque en PedidoController no parece estricto, es mejor enviarlo)
+            const sesionString = localStorage.getItem('user_session');
+            const token = sesionString ? JSON.parse(sesionString).token : '';
+            
+            fetch(`http://localhost:9090/pedidos/usuario/${usuario.id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Error en la respuesta");
+                return res.json();
+            })
+            .then(data => {
+                // Formateamos la fecha para que quede bonita (ej: "27 de mayo de 2026")
+                const formated = data.map((p: any) => ({
+                    ...p,
+                    fecha: new Date(p.fecha).toLocaleDateString('es-ES', { 
+                        day: 'numeric', month: 'short', year: 'numeric' 
+                    })
+                }));
+                // Ordenamos del más reciente al más antiguo
+                formated.sort((a: any, b: any) => b.id - a.id);
+                setPedidos(formated);
+            })
+            .catch(err => console.error("Error al cargar historial de pedidos:", err));
+        }
+    }, [abierto, usuario]);
 
     const getClaseSuscripcion = (tipo: string | undefined) => {
         if (!tipo || tipo.toLowerCase() === 'ninguna') return 'ninguna';
@@ -36,6 +69,11 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
     };
 
     const handleLogout = () => {
+        setModalConfirmarSalir(true);
+    };
+
+    const confirmarLogout = () => {
+        setModalConfirmarSalir(false);
         logout();
         cerrarPerfil();
     };
@@ -79,14 +117,14 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                                 <p>Tu subscripción mensual de snacks a domicilio</p>
                             </div>
                             <div className="suscripcion-acciones">
-                                {usuario?.tipoSuscripcion ? (
-                                    <span className="badge-activo">
+                                {usuario?.tipoSuscripcion && usuario.tipoSuscripcion !== 'Ninguna' ? (
+                                    <span className="badge-activo" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#2ECC71', background: '#D5F5E3', padding: '5px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
                                         <Clock size={14} weight="bold" />
                                         Activo
                                     </span>
                                 ) : (
                                     <span className="badge-inactivo" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#7a7a7a', background: '#eae7e0', padding: '5px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
-                                        <WarningCircle size={14} weight="bold" />
+                                        <X size={14} weight="bold" />
                                         Inactivo
                                     </span>
                                 )}
@@ -162,6 +200,33 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                 cerrarModal={() => setModalSuscripcionAbierto(false)} 
                 perfilAbierto={abierto}
             />
+
+            {/* Modal Confirmar Salir */}
+            {modalConfirmarSalir && (
+                <div className="modal-overlay activo" style={{ zIndex: 10002 }}>
+                    <div className="glass-modal" style={{ maxWidth: '400px', textAlign: 'center', background: '#FDFBF7', padding: '30px', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+                        <WarningCircle size={80} weight="fill" color="#E74C3C" style={{ margin: '0 auto 20px auto' }} />
+                        <h2 style={{ color: '#121619', margin: '0 0 15px 0' }}>¿Cerrar sesión?</h2>
+                        <p style={{ color: '#666', marginBottom: '25px', lineHeight: '1.5' }}>
+                            ¿Estás seguro de que quieres salir de tu cuenta?
+                        </p>
+                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                            <button 
+                                onClick={() => setModalConfirmarSalir(false)} 
+                                style={{ padding: '10px 20px', borderRadius: '50px', border: '1px solid #121619', background: 'transparent', color: '#121619', cursor: 'pointer', fontWeight: 600, transition: 'all 0.3s' }}
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={confirmarLogout} 
+                                style={{ padding: '10px 20px', borderRadius: '50px', border: 'none', background: '#E74C3C', color: 'white', cursor: 'pointer', fontWeight: 600, transition: 'all 0.3s' }}
+                            >
+                                Sí, cerrar sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

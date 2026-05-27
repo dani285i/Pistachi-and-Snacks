@@ -196,7 +196,7 @@
 
 /* Tabla de Pedidos */
 .tabla-pedidos-container {
-    background: #E8EBE6;
+    background: rgba(45, 90, 39, 0.1);
 }
 
 .tabla-pedidos-container h3 {
@@ -242,22 +242,31 @@
     padding: 20px 50px;
     border-top: 1px solid #EAE7E0;
     background: #FFFFFF;
+    display: flex;
+    justify-content: center;
 }
 
 .btn-salir-cuenta {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    background: transparent;
+    background: rgba(231, 76, 60, 0.1);
     border: none;
     color: #E74C3C;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
+    padding: 12px 35px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
 }
 
 .btn-salir-cuenta:hover {
-    text-decoration: underline;
+    background: #E74C3C;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
 
 /* Estado Vacío de Pedidos */
