@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/pedidos", "/pedidos/**").permitAll()
                 .requestMatchers("/usuarios", "/usuarios/**").permitAll()
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
             );
             

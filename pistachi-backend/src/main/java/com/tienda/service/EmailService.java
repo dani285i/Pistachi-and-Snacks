@@ -33,7 +33,7 @@ public class EmailService {
             mailSender.send(mensaje);
             System.out.println("Email de bienvenida enviado con éxito a: " + emailDestino);
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             System.err.println("Error al enviar el correo a " + emailDestino + ": " + e.getMessage());
         }
     }
@@ -56,7 +56,7 @@ public class EmailService {
             mailSender.send(mensaje);
             System.out.println("Email de stock disponible enviado con éxito a: " + emailDestino);
 
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             System.err.println("Error al enviar el correo de stock a " + emailDestino + ": " + e.getMessage());
         }
     }

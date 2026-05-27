@@ -17,4 +17,6 @@ public interface IProductoService {
     
     // Métodos para Notificaciones
     void registrarNotificacionStock(Long productoId, Long usuarioId);
+    void resetearNotificacionesStock(Long productoId);
+    boolean estaSuscritoANotificacion(Long productoId, Long usuarioId);
 }

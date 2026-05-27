@@ -489,6 +489,11 @@ export const AdminDashboard = () => {
                         
                         <form onSubmit={handleSubmitProducto} className="admin-form">
                             
+                            {/* Validation check */}
+                            {(() => {
+                                const isStockInvalid = formData.stock > 0 && formData.stock < formData.unidades;
+                                return (
+                                    <>
                             <div className="form-group">
                                 <label>Nombre del Producto</label>
                                 <input required type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} placeholder="Ej: Croissant de Pistacho" />
@@ -498,8 +503,8 @@ export const AdminDashboard = () => {
                             <div className="form-row">
                                 <div className="form-group flex-1">
                                     <label>Stock Disponible</label>
-                                    <div className="number-input-wrapper">
-                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" />
+                                    <div className="number-input-wrapper" style={isStockInvalid ? { border: '1px solid #E74C3C', borderRadius: '12px', overflow: 'hidden' } : {}}>
+                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" style={isStockInvalid ? { color: '#E74C3C' } : {}} />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: formData.stock + 1})}>
                                                 <CaretUp size={16} weight="bold" />
@@ -509,6 +514,11 @@ export const AdminDashboard = () => {
                                             </button>
                                         </div>
                                     </div>
+                                    {isStockInvalid && (
+                                        <p style={{ color: '#E74C3C', fontSize: '12px', marginTop: '6px', lineHeight: '1.2' }}>
+                                            No puedes poner stock menor que la cantidad en pack, porque sigue estando agotado.
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="form-group flex-1">
                                     <label>Categoría</label>
@@ -578,9 +588,12 @@ export const AdminDashboard = () => {
 
                             <div className="form-actions">
                                 <button type="button" onClick={() => setMostrarModal(false)} className="btn-cancel">Descartar</button>
-                                <button type="submit" className="btn-save">Guardar Cambios</button>
+                                <button type="submit" className="btn-save" disabled={isStockInvalid} style={isStockInvalid ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>Guardar Cambios</button>
                             </div>
 
+                                    </>
+                                );
+                            })()}
                         </form>
                     </div>
                 </div>

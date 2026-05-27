@@ -30,14 +30,16 @@ const DetalleProducto = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-    const [haSolicitadoAviso, setHaSolicitadoAviso] = useState(() => {
-        const requested = sessionStorage.getItem('notificaciones_solicitadas');
-        if (requested && id) {
-            const parsed = JSON.parse(requested);
-            return parsed.includes(Number(id));
+    const [haSolicitadoAviso, setHaSolicitadoAviso] = useState(false);
+
+    useEffect(() => {
+        if (id && usuario) {
+            fetch(`http://localhost:9090/productos/${id}/notificar-status?usuarioId=${usuario.id}`)
+                .then(res => res.json())
+                .then(suscrito => setHaSolicitadoAviso(suscrito))
+                .catch(() => setHaSolicitadoAviso(false));
         }
-        return false;
-    });
+    }, [id, usuario]);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!isZoomed) return;
@@ -72,12 +74,6 @@ const DetalleProducto = () => {
 
             if (response.ok) {
                 setHaSolicitadoAviso(true);
-                const requested = sessionStorage.getItem('notificaciones_solicitadas');
-                const parsed = requested ? JSON.parse(requested) : [];
-                if (producto && !parsed.includes(producto.id)) {
-                    parsed.push(producto.id);
-                    sessionStorage.setItem('notificaciones_solicitadas', JSON.stringify(parsed));
-                }
                 addToast('Te enviaremos un email cuando vuelva a estar disponible.', 'success');
             } else {
                 addToast('Hubo un error al intentar registrar la notificación.', 'error');

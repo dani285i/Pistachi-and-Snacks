@@ -83,4 +83,16 @@ public class ProductoController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @DeleteMapping("/{id}/notificar-stock")
+    public ResponseEntity<Void> resetearNotificacionesStock(@PathVariable Long id) {
+        productoService.resetearNotificacionesStock(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/notificar-status")
+    public ResponseEntity<Boolean> estaSuscrito(@PathVariable Long id, @RequestParam Long usuarioId) {
+        boolean suscrito = productoService.estaSuscritoANotificacion(id, usuarioId);
+        return new ResponseEntity<>(suscrito, HttpStatus.OK);
+    }
 }

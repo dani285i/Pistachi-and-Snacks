@@ -29,14 +29,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
     const { addToCart } = useCart();
     const { addToast } = useToast();
     const { usuario } = useAuth();
-    const [haSolicitadoAviso, setHaSolicitadoAviso] = useState(() => {
-        const requested = sessionStorage.getItem('notificaciones_solicitadas');
-        if (requested) {
-            const parsed = JSON.parse(requested);
-            return parsed.includes(producto.id);
+    const [haSolicitadoAviso, setHaSolicitadoAviso] = useState(false);
+
+    React.useEffect(() => {
+        if (producto.id && usuario) {
+            fetch(`http://localhost:9090/productos/${producto.id}/notificar-status?usuarioId=${usuario.id}`)
+                .then(res => res.json())
+                .then(suscrito => setHaSolicitadoAviso(suscrito))
+                .catch(() => setHaSolicitadoAviso(false));
         }
-        return false;
-    });
+    }, [producto.id, usuario]);
 
     // Lógica de Stock
     const isAgotado = producto.stock < (producto.unidades || 1);
@@ -60,12 +62,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
 
             if (response.ok) {
                 setHaSolicitadoAviso(true);
-                const requested = sessionStorage.getItem('notificaciones_solicitadas');
-                const parsed = requested ? JSON.parse(requested) : [];
-                if (!parsed.includes(producto.id)) {
-                    parsed.push(producto.id);
-                    sessionStorage.setItem('notificaciones_solicitadas', JSON.stringify(parsed));
-                }
                 addToast('Te enviaremos un email cuando vuelva a estar disponible.', 'success');
             } else {
                 addToast('Hubo un error al intentar registrar la notificación.', 'error');

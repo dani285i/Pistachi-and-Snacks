@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductoService implements IProductoService {
 
     @Autowired
@@ -77,7 +78,11 @@ public class ProductoService implements IProductoService {
             if (notificar) {
                 List<NotificacionStock> notificaciones = notificacionRepository.findByProducto(productoGuardado);
                 for (NotificacionStock notificacion : notificaciones) {
-                    emailService.enviarEmailStockDisponible(notificacion.getUsuario().getEmail(), notificacion.getUsuario().getNombre(), productoGuardado.getNombre());
+                    try {
+                        emailService.enviarEmailStockDisponible(notificacion.getUsuario().getEmail(), notificacion.getUsuario().getNombre(), productoGuardado.getNombre());
+                    } catch (Exception e) {
+                        System.err.println("Error al notificar al usuario " + notificacion.getUsuario().getEmail() + ": " + e.getMessage());
+                    }
                 }
                 notificacionRepository.deleteByProducto(productoGuardado);
             }
@@ -110,5 +115,22 @@ public class ProductoService implements IProductoService {
             }
         }
     }
-    
+
+    @Override
+    public void resetearNotificacionesStock(Long productoId) {
+        Optional<Producto> productoOpt = productoRepository.findById(productoId);
+        if (productoOpt.isPresent()) {
+            notificacionRepository.deleteByProducto(productoOpt.get());
+        }
+    }
+
+    @Override
+    public boolean estaSuscritoANotificacion(Long productoId, Long usuarioId) {
+        Optional<Producto> productoOpt = productoRepository.findById(productoId);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+        if (productoOpt.isPresent() && usuarioOpt.isPresent()) {
+            return notificacionRepository.findFirstByUsuarioAndProducto(usuarioOpt.get(), productoOpt.get()).isPresent();
+        }
+        return false;
+    }
 }
