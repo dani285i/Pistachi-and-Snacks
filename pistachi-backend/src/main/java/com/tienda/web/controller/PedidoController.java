@@ -2,6 +2,7 @@ package com.tienda.web.controller;
 
 import com.tienda.model.LineaPedido;
 import com.tienda.model.Pedido;
+import com.tienda.model.EstadoPedido;
 import com.tienda.model.Producto;
 import com.tienda.model.Usuario;
 import com.tienda.repository.IPedidoRepository;
@@ -34,7 +35,7 @@ public class PedidoController {
             Pedido pedido = new Pedido();
             pedido.setUsuarioId(request.getUsuarioId());
             pedido.setFecha(LocalDateTime.now());
-            pedido.setEstado("Pagado y En Proceso");
+            pedido.setEstado(EstadoPedido.EN_PROCESO);
 
             double subtotal = 0.0;
 
@@ -101,14 +102,28 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoRepository.findByUsuarioId(usuarioId));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerPedidoPorId(@PathVariable Long id) {
+        java.util.Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+        if (pedidoOpt.isPresent()) {
+            return ResponseEntity.ok(pedidoOpt.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstadoPedido(@PathVariable Long id, @RequestBody java.util.Map<String, String> payload) {
         java.util.Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
         if (pedidoOpt.isPresent()) {
             Pedido pedido = pedidoOpt.get();
-            pedido.setEstado(payload.get("estado"));
-            pedidoRepository.save(pedido);
-            return ResponseEntity.ok(pedido);
+            try {
+                EstadoPedido nuevoEstado = EstadoPedido.fromDescripcion(payload.get("estado"));
+                pedido.setEstado(nuevoEstado);
+                pedidoRepository.save(pedido);
+                return ResponseEntity.ok(pedido);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body("Estado inválido");
+            }
         }
         return ResponseEntity.notFound().build();
     }

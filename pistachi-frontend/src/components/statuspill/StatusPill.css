@@ -1,0 +1,35 @@
+.status-pill {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.status-cancelado {
+    background-color: #eed7d7;
+    color: #f75555;
+}
+
+.status-proceso {
+    background-color: #e5dfd3;
+    color: #8c603a;
+}
+
+.status-transito {
+    background-color: #d3dce5;
+    color: #3f6ca6;
+}
+
+.status-entregado {
+    background-color: #dae5c3;
+    color: #4b6a38;
+}
+
+.status-default {
+    background-color: #f0f0f0;
+    color: #333333;
+}

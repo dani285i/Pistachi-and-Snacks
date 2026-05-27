@@ -1,0 +1,279 @@
+.detalle-pedido-container {
+    background-color: #2c2c2c; /* Fondo grisáceo oscuro */
+    min-height: calc(100vh - 80px); /* Restando navbar */
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    overflow: hidden; /* Para evitar scroll horizontal */
+}
+
+/* Contenedor que maneja la animación de la impresora */
+.ticket-wrapper {
+    width: 100%;
+    max-width: 450px;
+    /* La animación levanta el ticket a tirones agresivos */
+    animation: imprimirTicket 3.5s ease-out forwards;
+    /* Padding bottom para que baje hasta detrás del footer */
+    padding-bottom: 100px;
+}
+
+@keyframes imprimirTicket {
+    0% { transform: translateY(100vh); opacity: 0; animation-timing-function: ease-out; }
+    5% { transform: translateY(90vh); opacity: 1; }
+    12% { transform: translateY(90vh); animation-timing-function: ease-out; }
+    17% { transform: translateY(80vh); }
+    24% { transform: translateY(80vh); animation-timing-function: ease-out; }
+    29% { transform: translateY(70vh); }
+    36% { transform: translateY(70vh); animation-timing-function: ease-out; }
+    41% { transform: translateY(60vh); }
+    50% { transform: translateY(60vh); animation-timing-function: ease-out; }
+    90% { transform: translateY(0); }
+    100% { transform: translateY(0); }
+}
+
+/* El ticket en sí */
+.ticket {
+    background-color: #ffffff;
+    position: relative;
+    padding: 30px 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace; /* Tipografía estilo ticket de papel */
+}
+
+/* Efecto de borde serrado arriba */
+.ticket-top-edge {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    /* SVG para garantizar un serrado perfecto */
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='0,10 10,0 20,10' fill='%23ffffff'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: bottom;
+}
+
+/* El final del ticket: una extensión blanca para que pase detrás del footer */
+.ticket-bottom-extension {
+    position: absolute;
+    bottom: -100px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: #ffffff;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* Contenido del Ticket */
+.ticket-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.ticket-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    filter: grayscale(100%) contrast(150%); /* Estilo tinta negra impresa */
+}
+
+.ticket-header h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.ticket-date {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.ticket-order-id {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.ticket-divider {
+    height: 2px;
+    background-color: #000;
+    margin: 20px 0;
+}
+
+.ticket-divider.dashed {
+    background-color: transparent;
+    border-top: 2px dashed #000;
+}
+
+.ticket-user-info h3, .ticket-items h3 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ticket-user-info p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+}
+
+.items-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.items-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.items-header span:nth-child(2) {
+    flex: 1;
+    text-align: left;
+    margin-left: 15px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.item-qty {
+    width: 40px;
+    font-weight: bold;
+}
+
+.item-name {
+    flex: 1;
+    margin-left: 10px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.item-total {
+    width: 70px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.ticket-totals {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+}
+
+.total-row.discount {
+    color: #555;
+    font-style: italic;
+}
+
+.final-total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-top: 2px dashed #000;
+    padding-top: 10px;
+    margin-top: 5px;
+}
+
+.ticket-footer-info {
+    text-align: center;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border: 2px solid #000;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.delivery-date {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.ticket-tachis-earned {
+    text-align: center;
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #000;
+    margin: 20px 0;
+}
+
+.ticket-tachis-earned p {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.wip-text {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.ticket-thanks {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.ticket-thanks p {
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+.barcode {
+    font-family: 'Libre Barcode 39', 'Courier New', Courier, monospace; /* Fallback si no hay fuente de barcode */
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin-top: 15px !important;
+    font-weight: normal;
+}
+
+/* Mensajes de carga o error */
+.loading-container, .error-container {
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.btn-volver {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--color-pistacho);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-volver:hover {
+    background-color: var(--color-pistacho-oscuro);
+}
+.btn-replay-animacion { position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px; border-radius: 50%; background-color: var(--color-pistacho, #8BC34A); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .btn-replay-animacion:hover { transform: scale(1.1) rotate(15deg); background-color: var(--color-pistacho-oscuro, #4A6741); } .btn-replay-animacion:active { transform: scale(0.95); } 
+.fondo-imprimiendo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; font-weight: bold; color: rgba(255, 255, 255, 0.3); font-family: 'Montserrat', sans-serif; z-index: 1; display: flex; align-items: center; letter-spacing: 2px; text-transform: uppercase; } .fondo-imprimiendo .puntos span { animation: saltarPuntos 1.5s infinite; display: inline-block; margin-left: 2px; } .fondo-imprimiendo .puntos span:nth-child(1) { animation-delay: 0s; } .fondo-imprimiendo .puntos span:nth-child(2) { animation-delay: 0.2s; } .fondo-imprimiendo .puntos span:nth-child(3) { animation-delay: 0.4s; } @keyframes saltarPuntos { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } } .ticket-wrapper { position: relative; z-index: 10; } 

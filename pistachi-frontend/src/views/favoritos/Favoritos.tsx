@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { useFavoritos } from '../../context/favoritos/Favoritos';
 import type { ProductoFav } from '../../context/favoritos/Favoritos';
 import ProductCard from '../../components/productcard/ProductCard';
@@ -8,7 +8,6 @@ import './Favoritos.css';
 
 const Favoritos = () => {
     const { favoritos, removerFavorito } = useFavoritos();
-    const navigate = useNavigate();
     
     // Estados para controlar el modal
     const [productoSeleccionado, setProductoSeleccionado] = useState<ProductoFav | null>(null);
@@ -40,7 +39,7 @@ const Favoritos = () => {
             ) : (
                 <div className="rejilla-catalogo">
                     {favoritos.map((p: ProductoFav) => (
-                        <ProductCard key={p.id} producto={p as any} onIntentoRemover={intentarRemover} />
+                        <ProductCard key={p.id} producto={p as unknown as import('../../components/productcard/ProductCard').ProductoData} onIntentoRemover={intentarRemover} />
                     ))}
                 </div>
             )}

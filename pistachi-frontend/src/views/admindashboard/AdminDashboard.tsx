@@ -3,6 +3,8 @@ import CustomSelect from '../../components/customselect/CustomSelect'
 import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker'
 import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle } from '@phosphor-icons/react'
 import { useToast } from '../../context/toast/ToastContext'
+import { getStatusClass } from '../../components/statuspill/StatusPill'
+import '../../components/statuspill/StatusPill.css'
 import './AdminDashboard.css'
 
 interface Producto {
@@ -414,16 +416,19 @@ export const AdminDashboard = () => {
                                             <select 
                                                 value={p.estado} 
                                                 onChange={(e) => handleCambiarEstadoPedido(p.id, e.target.value)}
-                                                style={{ padding: '6px 10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                                                className={`status-pill ${getStatusClass(p.estado)}`}
+                                                style={{ border: 'none', outline: 'none', cursor: 'pointer', appearance: 'auto', textAlign: 'center' }}
                                             >
-                                                <option value="Pagado y En Proceso">En Proceso</option>
-                                                <option value="Enviado">Enviado</option>
-                                                <option value="Entregado">Entregado</option>
                                                 <option value="Cancelado">Cancelado</option>
+                                                <option value="En Proceso">En Proceso</option>
+                                                <option value="En Tránsito">En Tránsito</option>
+                                                <option value="Entregado">Entregado</option>
                                             </select>
                                         </td>
                                         <td className="actions-cell">
-                                            <span style={{ fontSize: '0.8rem', color: '#888' }}>Auto-guardado</span>
+                                            <button onClick={() => window.location.href = `/pedido/${p.id}`} className="icon-btn edit" style={{ width: 'auto', padding: '0 12px' }}>
+                                                <Receipt size={18} weight="bold" style={{ marginRight: '6px' }} /> Ver Ticket
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -633,14 +638,15 @@ export const AdminDashboard = () => {
                             <div className="form-row" style={{ alignItems: 'flex-end' }}>
                                 <div className="form-group flex-1">
                                     <label style={{ marginBottom: '2px' }}>Suscripción Actual</label>
-                                    <select 
-                                        value={usuarioData.tipoSuscripcion || 'Ninguna'} 
-                                        onChange={e => setUsuarioData({...usuarioData, tipoSuscripcion: e.target.value})}
-                                    >
-                                        <option value="Ninguna">Ninguna</option>
-                                        <option value="Degustación">Degustación</option>
-                                        <option value="Premium">Premium</option>
-                                    </select>
+                                    <CustomSelect 
+                                        options={[
+                                            { value: 'Ninguna', label: 'Ninguna' },
+                                            { value: 'Degustación', label: 'Degustación' },
+                                            { value: 'Premium', label: 'Premium' }
+                                        ]}
+                                        value={usuarioData.tipoSuscripcion || 'Ninguna'}
+                                        onChange={(val) => setUsuarioData({...usuarioData, tipoSuscripcion: val})}
+                                    />
                                 </div>
                                 <div className="form-group flex-1">
                                     <CustomDatePicker 

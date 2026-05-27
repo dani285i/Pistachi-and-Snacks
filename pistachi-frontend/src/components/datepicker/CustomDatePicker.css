@@ -206,3 +206,4 @@
     left: 16px;
     z-index: 2;
 }
+.clear-date-btn { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 50%; transition: all 0.2s ease; } .clear-date-btn:hover { background: var(--bg-body); color: var(--pistachi-dark); } 

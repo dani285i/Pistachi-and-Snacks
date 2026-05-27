@@ -21,7 +21,7 @@ export interface ProductoData {
 
 interface ProductCardProps {
     producto: ProductoData;
-    onIntentoRemover?: (producto: any) => void;
+    onIntentoRemover?: (producto: ProductoData) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover }) => {
@@ -70,7 +70,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
             } else {
                 addToast('Hubo un error al intentar registrar la notificación.', 'error');
             }
-        } catch (error) {
+        } catch {
             addToast('Error de conexión con el servidor.', 'error');
         }
     };

@@ -16,6 +16,7 @@ import ProtectedRoute from './components/protectedroute/ProtectedRoute';
 import Footer from './components/footer/Footer';
 import { AdminDashboard } from './views/admindashboard/AdminDashboard';
 import { ToastProvider } from './context/toast/ToastContext';
+import DetallePedido from './views/detallepedido/DetallePedido';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                       <Route path="/favoritos" element={<Favoritos />} />
                       <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} /> 
                       <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} /> 
+                      <Route path="/pedido/:id" element={<ProtectedRoute><DetallePedido /></ProtectedRoute>} /> 
                       <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                     </Routes>
                   </div>

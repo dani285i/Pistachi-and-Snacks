@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { CaretLeft, CaretRight, CalendarBlank } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, CalendarBlank, X } from '@phosphor-icons/react';
 import './CustomDatePicker.css';
 
 interface CustomDatePickerProps {
@@ -204,6 +204,19 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
                     required={required}
                 />
                 <label className="floating-label">{label || "Fecha"}</label>
+                {!required && value && (
+                    <button 
+                        type="button"
+                        className="clear-date-btn"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onChange('');
+                        }}
+                        title="Borrar fecha"
+                    >
+                        <X size={16} weight="bold" />
+                    </button>
+                )}
             </div>
 
             {/* The Modal / Popover */}

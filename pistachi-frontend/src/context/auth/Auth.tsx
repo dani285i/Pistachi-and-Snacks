@@ -4,11 +4,12 @@ interface Usuario {
     id: number;
     username: string;
     nombre: string;
+    apellidos?: string;
     email: string;
     tachis?: number;
     tipoSuscripcion?: string;
     proximaEntrega?: string;
-    productosFavoritos?: any[];
+    productosFavoritos?: unknown[];
 }
 
 interface AuthContextType {

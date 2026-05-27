@@ -83,9 +83,15 @@ const Checkout = () => {
                 }))
             };
 
+            const sesionString = sessionStorage.getItem('user_session');
+            const token = sesionString ? JSON.parse(sesionString).token : '';
+
             const respuesta = await fetch('http://localhost:9090/pedidos', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
                 body: JSON.stringify(pedidoPayload)
             });
 

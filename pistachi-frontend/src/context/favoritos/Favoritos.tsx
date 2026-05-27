@@ -21,16 +21,15 @@ const FavoritosContext = createContext<FavoritosContextType | null>(null);
 export const FavoritosProvider = ({ children }: { children: React.ReactNode }) => {
     const { usuario } = useAuth();
 
-    const getStorageKey = (userId: number | undefined) => {
-        return userId ? `pistachi_favoritos_${userId}` : 'pistachi_favoritos_guest';
-    };
+
 
     const [favoritos, setFavoritos] = useState<ProductoFav[]>([]);
 
     // Al iniciar o cambiar de usuario, cargamos los favoritos desde la base de datos (que vienen en el objeto usuario)
     useEffect(() => {
         if (usuario && usuario.productosFavoritos) {
-            setFavoritos(usuario.productosFavoritos);
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setFavoritos(usuario.productosFavoritos as ProductoFav[]);
         } else if (!usuario) {
             // Si es invitado, mantenemos la lógica de localStorage
             const guardados = localStorage.getItem('pistachi_favoritos_guest');

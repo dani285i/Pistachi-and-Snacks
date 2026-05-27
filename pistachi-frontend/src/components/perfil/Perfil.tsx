@@ -37,14 +37,14 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
             })
             .then(data => {
                 // Formateamos la fecha para que quede bonita (ej: "27 de mayo de 2026")
-                const formated = data.map((p: any) => ({
+                const formated = data.map((p: { id: string, fecha: string, total: number, estado: string }) => ({
                     ...p,
                     fecha: new Date(p.fecha).toLocaleDateString('es-ES', { 
                         day: 'numeric', month: 'short', year: 'numeric' 
                     })
                 }));
                 // Ordenamos del más reciente al más antiguo
-                formated.sort((a: any, b: any) => b.id - a.id);
+                formated.sort((a: { id: string }, b: { id: string }) => Number(b.id) - Number(a.id));
                 setPedidos(formated);
             })
             .catch(err => console.error("Error al cargar historial de pedidos:", err));
@@ -169,7 +169,13 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                                 </thead>
                                 <tbody>
                                     {pedidos.map((pedido, index) => (
-                                        <tr key={index}>
+                                        <tr 
+                                            key={index} 
+                                            onClick={() => { cerrarPerfil(); navigate(`/pedido/${pedido.id}`); }} 
+                                            style={{ cursor: 'pointer', transition: 'background-color 0.2s' }}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f4f4f4'}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                        >
                                             <td><strong>{pedido.id}</strong></td>
                                             <td>{pedido.fecha}</td>
                                             <td>{pedido.total}€</td>

@@ -7,6 +7,8 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,8 +37,9 @@ public class Pedido {
     @Column(nullable = false)
     private Double total;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String estado; // "En Proceso", "En Tránsito", "Entregado", "Cancelado"
+    private EstadoPedido estado; // CANCELADO, EN_PROCESO, EN_TRANSITO, ENTREGADO
 
     // Relación: Un pedido tiene muchas líneas de pedido. 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
