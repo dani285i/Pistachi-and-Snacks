@@ -101,7 +101,7 @@ const Navbar = () => {
                             {usuario && (
                                 <div className="points-badge">
                                     <img src={iconoAdmin} alt="Tachis" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
-                                    <span>{usuario.tachis || 0} Tachis</span>
+                                    <span>{Number(usuario.tachis || 0).toLocaleString('de-DE')} Tachis</span>
                                 </div>
                             )}
                             

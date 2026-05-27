@@ -463,4 +463,28 @@
     background-color: var(--admin-accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(139, 195, 74, 0.25);
+}/* Badges de Nivel de Suscripción copiados de Perfil para la tabla */
+.badge-suscripcion {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    display: inline-block;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.badge-suscripcion.ninguna {
+    background: #F4F4F4;
+    color: #666666;
+}
+
+.badge-suscripcion.degustacion {
+    background: #EAF2E4;
+    color: #4A6741;
+}
+
+.badge-suscripcion.premium {
+    background: #F3E8FF;
+    color: #8E44AD;
 }

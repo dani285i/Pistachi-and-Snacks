@@ -33,15 +33,24 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
     // Initialize view from value
     useEffect(() => {
         if (value) {
-            const [y, m] = value.split('-');
+            const [y, m, d] = value.split('-');
             if (y && m) {
                 setViewYear(parseInt(y));
                 setViewMonth(parseInt(m));
             }
+            // Auto-clear if future mode and date is in the past
+            if (mode === 'future' && y && m && d) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const selectedDate = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+                if (selectedDate < today) {
+                    onChange('');
+                }
+            }
         } else if (mode === 'birthdate') {
             setViewYear(new Date().getFullYear() - 25); // Default to 25 years ago for birthdate
         }
-    }, [value, mode]);
+    }, [value, mode, onChange]);
 
     // Click outside to close
     useEffect(() => {
@@ -77,16 +86,33 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
     const currentYear = new Date().getFullYear();
     let minYear = currentYear;
     let maxYear = currentYear;
+    
+    let maxFutureDate = new Date();
+    if (mode === 'future') {
+        maxFutureDate.setDate(maxFutureDate.getDate() + 14);
+    }
 
     if (mode === 'birthdate') {
         minYear = currentYear - 110;
         maxYear = currentYear - 1;
     } else if (mode === 'future') {
         minYear = currentYear;
-        maxYear = currentYear + 10;
+        maxYear = maxFutureDate.getFullYear();
     }
 
-    const yearsList = Array.from({ length: maxYear - minYear + 1 }, (_, i) => maxYear - i);
+    const maxMonth = mode === 'future' ? maxFutureDate.getMonth() + 1 : 12;
+
+    const allowedMonthsFuture = mode === 'future' 
+        ? Array.from(new Set([new Date().getMonth() + 1, maxFutureDate.getMonth() + 1]))
+        : [];
+    const allowedYearsFuture = mode === 'future'
+        ? Array.from(new Set([currentYear, maxFutureDate.getFullYear()]))
+        : [];
+
+    let yearsList = Array.from({ length: maxYear - minYear + 1 }, (_, i) => maxYear - i);
+    if (mode === 'future') {
+        yearsList = allowedYearsFuture;
+    }
 
     // Handlers
     const handleDayClick = (day: number) => {
@@ -123,16 +149,35 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
     const daysInMonth = getDaysInMonth(viewYear, viewMonth);
     const firstDay = getFirstDayOfMonth(viewYear, viewMonth);
     
+    const isPastDate = (year: number, month: number, day: number) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dateToCheck = new Date(year, month - 1, day);
+        return dateToCheck < today;
+    };
+
+    const isTooFarFutureDate = (year: number, month: number, day: number) => {
+        const dateToCheck = new Date(year, month - 1, day);
+        dateToCheck.setHours(23, 59, 59, 999);
+        return dateToCheck > maxFutureDate;
+    };
+
     const blanks = Array.from({ length: firstDay }, (_, i) => <div key={`blank-${i}`} className="calendar-day empty"></div>);
     const days = Array.from({ length: daysInMonth }, (_, i) => {
         const day = i + 1;
         const isSelected = value === `${viewYear}-${viewMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        const isPast = mode === 'future' ? isPastDate(viewYear, viewMonth, day) : false;
+        const isTooFar = mode === 'future' ? isTooFarFutureDate(viewYear, viewMonth, day) : false;
+        const isDisabled = isPast || isTooFar;
+
         return (
             <button 
                 key={`day-${day}`} 
                 type="button"
                 className={`calendar-day ${isSelected ? 'selected' : ''}`}
-                onClick={() => handleDayClick(day)}
+                onClick={() => !isDisabled && handleDayClick(day)}
+                disabled={isDisabled}
+                style={isDisabled ? { opacity: 0.3, cursor: 'not-allowed', backgroundColor: 'transparent', color: '#999' } : {}}
             >
                 {day}
             </button>
@@ -163,35 +208,66 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
             {isOpen && (
                 <div className="datepicker-popover">
                     <div className="datepicker-header">
-                        <button type="button" className="nav-btn" onClick={handlePrevMonth} disabled={viewYear === minYear && viewMonth === 1}>
-                            <CaretLeft size={20} weight="bold" />
-                        </button>
+                        {mode === 'future' ? <div style={{width: 20}}></div> : (
+                            <button type="button" className="nav-btn" onClick={handlePrevMonth} disabled={viewYear === minYear && viewMonth === 1}>
+                                <CaretLeft size={20} weight="bold" />
+                            </button>
+                        )}
 
                         <div className="selectors">
                             {/* Month Selector */}
                             <div className="selector-wrapper">
-                                <button type="button" className="selector-btn" onClick={() => {setShowMonthSelector(!showMonthSelector); setShowYearSelector(false);}}>
+                                <button 
+                                    type="button" 
+                                    className="selector-btn" 
+                                    onClick={() => {
+                                        if (mode === 'future' && allowedMonthsFuture.length <= 1) return;
+                                        setShowMonthSelector(!showMonthSelector); 
+                                        setShowYearSelector(false);
+                                    }}
+                                    style={{ cursor: (mode === 'future' && allowedMonthsFuture.length <= 1) ? 'default' : 'pointer' }}
+                                >
                                     {MESES[viewMonth - 1]}
                                 </button>
                                 {showMonthSelector && (
                                     <div className="selector-dropdown">
-                                        {MESES.map((mes, idx) => (
-                                            <button 
-                                                key={mes} 
-                                                type="button" 
-                                                className={`dropdown-item ${viewMonth === idx + 1 ? 'active' : ''}`}
-                                                onClick={() => { setViewMonth(idx + 1); setShowMonthSelector(false); }}
-                                            >
-                                                {mes}
-                                            </button>
-                                        ))}
+                                        {MESES.map((mes, idx) => {
+                                            if (mode === 'future' && !allowedMonthsFuture.includes(idx + 1)) return null;
+                                            return (
+                                                <button 
+                                                    key={mes} 
+                                                    type="button" 
+                                                    className={`dropdown-item ${viewMonth === idx + 1 ? 'active' : ''}`}
+                                                    onClick={() => { 
+                                                        const newMonth = idx + 1;
+                                                        setViewMonth(newMonth); 
+                                                        setShowMonthSelector(false); 
+                                                        if (mode === 'future') {
+                                                            if (newMonth === new Date().getMonth() + 1) setViewYear(currentYear);
+                                                            else setViewYear(maxFutureDate.getFullYear());
+                                                        }
+                                                    }}
+                                                >
+                                                    {mes}
+                                                </button>
+                                            )
+                                        })}
                                     </div>
                                 )}
                             </div>
 
                             {/* Year Selector */}
                             <div className="selector-wrapper">
-                                <button type="button" className="selector-btn" onClick={() => {setShowYearSelector(!showYearSelector); setShowMonthSelector(false);}}>
+                                <button 
+                                    type="button" 
+                                    className="selector-btn" 
+                                    onClick={() => {
+                                        if (mode === 'future' && allowedYearsFuture.length <= 1) return;
+                                        setShowYearSelector(!showYearSelector); 
+                                        setShowMonthSelector(false);
+                                    }}
+                                    style={{ cursor: (mode === 'future' && allowedYearsFuture.length <= 1) ? 'default' : 'pointer' }}
+                                >
                                     {viewYear}
                                 </button>
                                 {showYearSelector && (
@@ -201,7 +277,14 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
                                                 key={y} 
                                                 type="button" 
                                                 className={`dropdown-item ${viewYear === y ? 'active' : ''}`}
-                                                onClick={() => { setViewYear(y); setShowYearSelector(false); }}
+                                                onClick={() => { 
+                                                    setViewYear(y); 
+                                                    setShowYearSelector(false); 
+                                                    if (mode === 'future') {
+                                                        if (y === currentYear) setViewMonth(new Date().getMonth() + 1);
+                                                        else setViewMonth(maxFutureDate.getMonth() + 1);
+                                                    }
+                                                }}
                                             >
                                                 {y}
                                             </button>
@@ -211,9 +294,11 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
                             </div>
                         </div>
 
-                        <button type="button" className="nav-btn" onClick={handleNextMonth} disabled={viewYear === maxYear && viewMonth === 12}>
-                            <CaretRight size={20} weight="bold" />
-                        </button>
+                        {mode === 'future' ? <div style={{width: 20}}></div> : (
+                            <button type="button" className="nav-btn" onClick={handleNextMonth} disabled={viewYear === maxYear && viewMonth >= maxMonth}>
+                                <CaretRight size={20} weight="bold" />
+                            </button>
+                        )}
                     </div>
 
                     <div className="calendar-grid">

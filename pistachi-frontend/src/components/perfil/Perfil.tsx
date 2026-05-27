@@ -63,7 +63,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                         <span className="tarjeta-label">Tus Tachi Points</span>
                         <h3>
                             <img src={iconoAdmin} alt="Tachis" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-                            {usuario?.tachis || 0} Tachis
+                            {Number(usuario?.tachis || 0).toLocaleString('de-DE')} Tachis
                         </h3>
                         <p>¡Obtén más comprando nuestros productos!</p>
                     </section>

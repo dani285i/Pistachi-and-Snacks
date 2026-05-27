@@ -191,3 +191,18 @@
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(74, 103, 65, 0.3);
 }
+
+/* Fix icon and text overlap */
+.custom-datepicker-container .floating-input {
+    padding-left: 48px !important;
+}
+
+.custom-datepicker-container .floating-label {
+    left: 48px !important;
+}
+
+.custom-datepicker-container .input-icon.left-icon {
+    position: absolute;
+    left: 16px;
+    z-index: 2;
+}

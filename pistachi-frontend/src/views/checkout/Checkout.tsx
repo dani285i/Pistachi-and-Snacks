@@ -108,16 +108,22 @@ const Checkout = () => {
                         </div>
 
                         <div className="form-group">
-                            <label>Ciudad</label>
+                            <label>Selecciona tu Concello</label>
                             <div className="input-icon-wrapper">
                                 <MapPin size={20} weight="bold" className="input-icon" />
-                                <input 
-                                    type="text" 
+                                <select 
                                     className="form-input" 
-                                    placeholder="Seleccionar Ciudad..." 
                                     value={form.ciudad}
                                     onChange={(e) => setForm({...form, ciudad: e.target.value})}
-                                />
+                                >
+                                    <option value="" disabled>Selecciona tu Concello...</option>
+                                    <option value="A Coruña">A Coruña</option>
+                                    <option value="Culleredo">Culleredo</option>
+                                    <option value="Oleiros">Oleiros</option>
+                                    <option value="Cambre">Cambre</option>
+                                    <option value="Bergondo">Bergondo</option>
+                                    <option value="Betanzos">Betanzos</option>
+                                </select>
                             </div>
                         </div>
                     </section>

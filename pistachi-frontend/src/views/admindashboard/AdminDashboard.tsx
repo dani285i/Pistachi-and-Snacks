@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import CustomSelect from '../../components/customselect/CustomSelect'
+import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker'
 import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle } from '@phosphor-icons/react'
 import { useToast } from '../../context/toast/ToastContext'
 import './AdminDashboard.css'
@@ -69,9 +70,18 @@ export const AdminDashboard = () => {
     const [usuarioData, setUsuarioData] = useState<Partial<Usuario>>({});
     
     const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+    const [mostrarConfirmacionEdicion, setMostrarConfirmacionEdicion] = useState(false);
     const [cuentaRegresiva, setCuentaRegresiva] = useState(5);
     const [usuarioAEliminar, setUsuarioAEliminar] = useState<Usuario | null>(null);
+    const [ordenAscendente, setOrdenAscendente] = useState(true)
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    const getClaseSuscripcion = (tipo: string | undefined) => {
+        if (!tipo || tipo.toLowerCase() === 'ninguna') return 'ninguna';
+        if (tipo === 'Degustación') return 'degustacion';
+        if (tipo === 'Premium') return 'premium';
+        return 'ninguna';
+    };
 
     const getAuthHeaders = () => {
         // preparo las cabeceras con el token de seguridad que tengo guardado para demostrarle al backend que soy el administrador
@@ -225,25 +235,28 @@ export const AdminDashboard = () => {
         setMostrarModalUsuario(true);
     };
 
-    const handleSubmitUsuario = async (e: React.FormEvent) => {
+    const handleSubmitUsuario = (e: React.FormEvent) => {
         e.preventDefault();
-        if (window.confirm("¿Estás seguro de que quieres editar los datos de este usuario?")) {
-            try {
-                const response = await fetch(`http://localhost:9090/auth/usuarios/${usuarioData.id}`, {
-                    method: 'PUT',
-                    headers: getAuthHeaders(),
-                    body: JSON.stringify(usuarioData)
-                });
-                if (response.ok) {
-                    setMostrarModalUsuario(false);
-                    cargarUsuarios();
-                    addToast(`Los datos de ${usuarioData.nombre} han sido guardados`, 'success');
-                } else {
-                    addToast("Error al actualizar el usuario", 'error');
-                }
-            } catch (error) {
-                console.error("error al editar usuario", error);
+        setMostrarConfirmacionEdicion(true);
+    };
+
+    const confirmarEdicionUsuario = async () => {
+        try {
+            const response = await fetch(`http://localhost:9090/auth/usuarios/${usuarioData.id}`, {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(usuarioData)
+            });
+            if (response.ok) {
+                setMostrarConfirmacionEdicion(false);
+                setMostrarModalUsuario(false);
+                cargarUsuarios();
+                addToast(`Los datos de ${usuarioData.nombre} han sido guardados`, 'success');
+            } else {
+                addToast("Error al actualizar el usuario", 'error');
             }
+        } catch (error) {
+            console.error("error al editar usuario", error);
         }
     };
 
@@ -428,10 +441,10 @@ export const AdminDashboard = () => {
                                         <td>#{u.id}</td>
                                         <td><strong>{u.nombre} {u.apellidos}</strong></td>
                                         <td>{u.email}</td>
-                                        <td><strong>{u.tachis || 0}</strong></td>
+                                        <td><strong>{Number(u.tachis || 0).toLocaleString('de-DE')}</strong></td>
                                         <td>{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
                                         <td>{u.proximaEntrega ? new Date(u.proximaEntrega).toLocaleDateString() : '--'}</td>
-                                        <td>{u.tipoSuscripcion || 'Ninguna'}</td>
+                                        <td><span className={`badge-suscripcion ${getClaseSuscripcion(u.tipoSuscripcion)}`}>{u.tipoSuscripcion || 'Ninguna'}</span></td>
                                         <td><span className="categoria-badge">{u.rol}</span></td>
                                         <td className="actions-cell">
                                             <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
@@ -568,7 +581,7 @@ export const AdminDashboard = () => {
                             </button>
                         </div>
                         <form onSubmit={handleSubmitUsuario} className="admin-form">
-                            <div className="form-row">
+                            <div className="form-row" style={{ marginBottom: '-8px' }}>
                                 <div className="form-group flex-1">
                                     <label>Nombre</label>
                                     <input required type="text" value={usuarioData.nombre || ''} onChange={e => setUsuarioData({...usuarioData, nombre: e.target.value})} />
@@ -578,27 +591,32 @@ export const AdminDashboard = () => {
                                     <input required type="text" value={usuarioData.apellidos || ''} onChange={e => setUsuarioData({...usuarioData, apellidos: e.target.value})} />
                                 </div>
                             </div>
-                            <div className="form-group">
+                            <div className="form-group" style={{ marginBottom: '-8px' }}>
                                 <label>Email</label>
                                 <input required type="email" value={usuarioData.email || ''} onChange={e => setUsuarioData({...usuarioData, email: e.target.value})} />
                             </div>
-                            <div className="form-group">
+                            <div className="form-group" style={{ marginBottom: '-8px' }}>
                                 <label>Username</label>
                                 <input required type="text" value={usuarioData.username || ''} onChange={e => setUsuarioData({...usuarioData, username: e.target.value})} />
                             </div>
-                            <div className="form-row">
+                            <div className="form-row" style={{ alignItems: 'flex-end' }}>
                                 <div className="form-group flex-1">
-                                    <label>Tachis (Puntos)</label>
+                                    <label style={{ marginBottom: '2px' }}>Tachis (Puntos)</label>
                                     <input required type="number" min="0" value={usuarioData.tachis || 0} onChange={e => setUsuarioData({...usuarioData, tachis: parseInt(e.target.value) || 0})} />
                                 </div>
                                 <div className="form-group flex-1">
-                                    <label>Fecha de Nacimiento</label>
-                                    <input required type="date" value={usuarioData.fechaNacimiento || ''} onChange={e => setUsuarioData({...usuarioData, fechaNacimiento: e.target.value})} />
+                                    <CustomDatePicker 
+                                        value={usuarioData.fechaNacimiento || ''}
+                                        onChange={(val) => setUsuarioData({...usuarioData, fechaNacimiento: val})}
+                                        mode="birthdate"
+                                        label="Fecha de Nacimiento"
+                                        required={true}
+                                    />
                                 </div>
                             </div>
-                            <div className="form-row">
+                            <div className="form-row" style={{ alignItems: 'flex-end' }}>
                                 <div className="form-group flex-1">
-                                    <label>Suscripción Actual</label>
+                                    <label style={{ marginBottom: '2px' }}>Suscripción Actual</label>
                                     <select 
                                         value={usuarioData.tipoSuscripcion || 'Ninguna'} 
                                         onChange={e => setUsuarioData({...usuarioData, tipoSuscripcion: e.target.value})}
@@ -609,8 +627,12 @@ export const AdminDashboard = () => {
                                     </select>
                                 </div>
                                 <div className="form-group flex-1">
-                                    <label>Próxima Entrega</label>
-                                    <input type="date" value={usuarioData.proximaEntrega || ''} onChange={e => setUsuarioData({...usuarioData, proximaEntrega: e.target.value})} />
+                                    <CustomDatePicker 
+                                        value={usuarioData.proximaEntrega || ''}
+                                        onChange={(val) => setUsuarioData({...usuarioData, proximaEntrega: val})}
+                                        mode="future"
+                                        label="Próxima Entrega"
+                                    />
                                 </div>
                             </div>
                             <div className="form-group">
@@ -622,6 +644,26 @@ export const AdminDashboard = () => {
                                 <button type="submit" className="btn-save">Guardar Cambios</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {mostrarConfirmacionEdicion && (
+                <div className="modal-overlay" style={{ zIndex: 10001 }}>
+                    <div className="glass-modal" style={{ maxWidth: '400px', textAlign: 'center' }}>
+                        <WarningCircle size={80} weight="fill" color="#F39C12" style={{ margin: '0 auto 20px auto' }} />
+                        <h2 style={{ color: '#F39C12', marginBottom: '15px' }}>Confirmar Edición</h2>
+                        <p style={{ marginBottom: '20px', lineHeight: '1.5' }}>
+                            ¿Estás seguro de que quieres aplicar y guardar los cambios para el usuario <strong>{usuarioData.username}</strong>?
+                        </p>
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                            <button className="btn-cancel" onClick={() => setMostrarConfirmacionEdicion(false)}>
+                                Cancelar
+                            </button>
+                            <button className="btn-save" style={{ backgroundColor: '#F39C12' }} onClick={confirmarEdicionUsuario}>
+                                Sí, guardar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

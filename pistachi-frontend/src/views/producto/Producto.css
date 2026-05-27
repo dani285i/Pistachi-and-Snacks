@@ -52,6 +52,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 10px;
+    max-width: 650px;
 }
 
 .filtro-btn {
