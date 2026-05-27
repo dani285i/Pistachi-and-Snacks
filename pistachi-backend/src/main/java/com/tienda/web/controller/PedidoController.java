@@ -34,22 +34,16 @@ public class PedidoController {
             Pedido pedido = new Pedido();
             pedido.setUsuarioId(request.getUsuarioId());
             pedido.setFecha(LocalDateTime.now());
-            pedido.setTotal(request.getTotal());
-            pedido.setEstado("Pagado y En Proceso"); // Simulación de pago exitoso
+            pedido.setEstado("Pagado y En Proceso");
 
-            // Descuento de Tachis
-            if (request.getTachisUsados() != null && request.getTachisUsados() > 0) {
-                Usuario usuario = usuarioRepository.findById(request.getUsuarioId()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-                if (usuario.getTachis() < request.getTachisUsados()) {
-                    throw new RuntimeException("No tienes suficientes Tachis.");
-                }
-                usuario.setTachis(usuario.getTachis() - request.getTachisUsados());
-                usuarioRepository.save(usuario);
-            }
+            double subtotal = 0.0;
 
             for (LineaPedidoRequest lpReq : request.getLineas()) {
                 Producto producto = productoRepository.findById(lpReq.getProductoId()).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
                 
+                // Calcular subtotal real basado en el precio de la base de datos
+                subtotal += producto.getPrecio() * lpReq.getCantidad();
+
                 // Restar el stock
                 int nuevoStock = producto.getStock() - lpReq.getCantidad();
                 producto.setStock(Math.max(nuevoStock, 0));
@@ -58,12 +52,36 @@ public class PedidoController {
                 LineaPedido linea = new LineaPedido();
                 linea.setProducto(producto);
                 linea.setCantidad(lpReq.getCantidad());
-                linea.setPrecioUnitario(lpReq.getPrecioUnitario());
+                linea.setPrecioUnitario(producto.getPrecio()); // Usar precio seguro de BD
                 linea.setPedido(pedido);
                 
                 pedido.getLineas().add(linea);
             }
 
+            // Calcular Envío y Descuento
+            double costeEnvio = subtotal >= 30.0 ? 0.0 : 4.99;
+            double totalCalculado = subtotal + costeEnvio;
+            double descuento = 0.0;
+
+            if (request.getTachisUsados() != null && request.getTachisUsados() > 0) {
+                Usuario usuario = usuarioRepository.findById(request.getUsuarioId()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                if (usuario.getTachis() < request.getTachisUsados()) {
+                    throw new RuntimeException("No tienes suficientes Tachis.");
+                }
+                descuento = request.getTachisUsados() / 1000.0;
+                usuario.setTachis(usuario.getTachis() - request.getTachisUsados());
+                usuarioRepository.save(usuario);
+            }
+
+            double totalFinal = Math.max(0, totalCalculado - descuento);
+
+            // Verificación Anti-Trampas
+            if (Math.abs(totalFinal - request.getTotal()) > 0.01) {
+                throw new RuntimeException("El total calculado (" + totalFinal + "€) no coincide con el total proporcionado (" + request.getTotal() + "€). Intento de fraude detectado.");
+            }
+
+            pedido.setTotal(totalFinal);
+            
             Pedido pedidoGuardado = pedidoRepository.save(pedido);
             return ResponseEntity.ok(pedidoGuardado);
 

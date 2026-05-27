@@ -182,21 +182,43 @@ const Checkout = () => {
                     {tachisDisponibles > 0 && (
                         <section className="checkout-seccion" style={{ background: 'linear-gradient(135deg, #fdfbf7, #f4f7f2)', border: '2px solid var(--color-pistacho)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <div>
-                                    <h2 style={{ color: 'var(--color-pistacho-oscuro)', marginBottom: '5px' }}>💎 Tus Tachi Points</h2>
-                                    <p style={{ fontSize: '0.9rem', color: 'var(--color-texto-light)', margin: 0 }}>
-                                        Tienes <strong>{tachisDisponibles} Tachis</strong> (Equivalen a {(tachisDisponibles / 1000).toFixed(2)}€)
-                                    </p>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                    <img src="/favicon.ico" alt="Tachis" style={{ width: '28px', height: '28px' }} />
+                                    <div>
+                                        <h2 style={{ color: 'var(--color-pistacho-oscuro)', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>Tus Tachi Points</h2>
+                                        <p style={{ fontSize: '0.9rem', color: 'var(--color-texto-light)', margin: 0 }}>
+                                            Tienes <strong>{tachisDisponibles} Tachis</strong> ({(tachisDisponibles / 1000).toFixed(2)}€)
+                                        </p>
+                                    </div>
                                 </div>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem' }}>
-                                    <input 
-                                        type="checkbox" 
-                                        checked={usarTachis} 
-                                        onChange={(e) => setUsarTachis(e.target.checked)} 
-                                        style={{ width: '20px', height: '20px', accentColor: 'var(--color-pistacho)' }}
-                                    />
-                                    Aplicar Descuento
-                                </label>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: usarTachis ? 'var(--color-pistacho-oscuro)' : 'var(--color-texto-light)' }}>
+                                        Aplicar
+                                    </span>
+                                    <div 
+                                        onClick={() => setUsarTachis(!usarTachis)}
+                                        style={{ 
+                                            width: '56px', height: '30px', 
+                                            borderRadius: '30px', 
+                                            background: usarTachis ? 'var(--color-pistacho)' : '#ccc', 
+                                            position: 'relative', 
+                                            cursor: 'pointer', 
+                                            transition: '0.3s',
+                                            boxShadow: usarTachis ? '0 4px 10px rgba(139, 195, 74, 0.4)' : 'inset 0 2px 4px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        <div style={{ 
+                                            width: '24px', height: '24px', 
+                                            borderRadius: '50%', 
+                                            background: 'white', 
+                                            position: 'absolute', 
+                                            top: '3px', 
+                                            left: usarTachis ? '29px' : '3px', 
+                                            transition: '0.3s',
+                                            boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                                        }} />
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     )}

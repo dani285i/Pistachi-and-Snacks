@@ -20,9 +20,10 @@ export interface ProductoData {
 
 interface ProductCardProps {
     producto: ProductoData;
+    onIntentoRemover?: (producto: any) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover }) => {
     const navigate = useNavigate();
     const { addToCart } = useCart();
     const { addToast } = useToast();
@@ -67,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto }) => {
                     <span className="tarjeta-precio">{producto.precio.toFixed(2)} €</span>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <BotonFavorito producto={producto} />
+                        <BotonFavorito producto={producto} onIntentoRemover={onIntentoRemover} />
                         
                         {!isAgotado ? (
                             <button 

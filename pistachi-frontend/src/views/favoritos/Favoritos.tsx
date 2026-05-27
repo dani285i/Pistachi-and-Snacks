@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavoritos } from '../../context/favoritos/Favoritos';
 import type { ProductoFav } from '../../context/favoritos/Favoritos';
-import BotonFavorito from '../../components/favorito/BotonFavorito';
+import ProductCard from '../../components/productcard/ProductCard';
 import { SmileySad } from '@phosphor-icons/react';
 import './Favoritos.css';
 
@@ -40,26 +40,7 @@ const Favoritos = () => {
             ) : (
                 <div className="rejilla-catalogo">
                     {favoritos.map((p: ProductoFav) => (
-                        <article key={p.id} className="tarjeta-obrador" onClick={() => navigate(`/producto/${p.id}`)}>
-                            <div className="tarjeta-img-box">
-                                <img src={p.imagen} alt={p.nombre} className="tarjeta-img" />
-                            </div>
-                            <div className="tarjeta-body">
-                                <div className="tarjeta-header-info">
-                                    <span className="categoria-badge">{p.categoria}</span>
-                                    <h3>{p.nombre}</h3>
-                                </div>
-                                <p className="tarjeta-desc">{p.descripcion}</p>
-                                <div className="tarjeta-footer">
-                                    <span className="tarjeta-precio">{Number(p.precio).toFixed(2)} €</span>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        {/* Aquí pasamos el onIntentoRemover para activar el modal */}
-                                        <BotonFavorito producto={p} onIntentoRemover={intentarRemover} />
-                                        <button className="boton-detalles-premium">Ver detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
+                        <ProductCard key={p.id} producto={p as any} onIntentoRemover={intentarRemover} />
                     ))}
                 </div>
             )}
