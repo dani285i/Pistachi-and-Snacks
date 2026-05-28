@@ -1,5 +1,14 @@
 # Pistachi & Snacks - Tienda Online
 
+Plataforma e-commerce y obrador artesanal.
+
+## Documentación y Manuales del Proyecto
+
+Toda la documentación técnica y de usuario requerida para la evaluación se encuentra estructurada en los siguientes enlaces:
+
+* **[Manual del Administrador](./docs/MANUAL_ADMIN.md)**: Incluye instrucciones de instalación, despliegue, configuración de la base de datos y carga de datos de prueba.
+* **[Manual del Usuario](./docs/MANUAL_USUARIO.md)**: Incluye capturas de pantalla de la aplicación y explicaciones detalladas del funcionamiento de las vistas (Front-end y Panel de Control).
+
 ## Descripción del Proyecto
 Esta aplicación web es una plataforma de comercio electrónico orientada a la venta de productos de repostería y snacks basados en pistacho. El proyecto cumple con los requisitos de un sistema de ventas completo, dividiendo su arquitectura en un frontend interactivo y un backend robusto que gestiona la lógica de negocio y la persistencia de datos.
 
