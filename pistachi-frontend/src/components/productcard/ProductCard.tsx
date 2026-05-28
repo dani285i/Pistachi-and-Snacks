@@ -7,6 +7,8 @@ import { useAuth } from '../../context/auth/Auth';
 import { Plus, ShoppingCart, Bell } from '@phosphor-icons/react';
 import '../../views/producto/Producto.css'; // Mantenemos los estilos originales
 
+import type { ProductoFav } from '../../context/favoritos/Favoritos';
+
 export interface ProductoData {
     id: number;
     nombre: string;
@@ -21,7 +23,7 @@ export interface ProductoData {
 
 interface ProductCardProps {
     producto: ProductoData;
-    onIntentoRemover?: (producto: ProductoData) => void;
+    onIntentoRemover?: (producto: ProductoFav) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover }) => {
