@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowsClockwise } from '@phosphor-icons/react';
+import { ArrowsClockwise, Confetti } from '@phosphor-icons/react';
 import { useAuth } from '../../context/auth/Auth';
 import faviconTachi from '../../assets/favicon/pistachi-favicon.png';
 import { StatusPill } from '../../components/statuspill/StatusPill';
@@ -27,6 +27,7 @@ interface Pedido {
     tachisGenerados?: number;
 }
 
+// este componente es literalmente el ticket de compra en pantalla, recibe la id del pedido por la url, hace un fetch al backend para sacar que has comprado y te dibuja un ticket con sonido de impresora de bar y todo, como por ejemplo animando los tirones de papel
 const DetallePedido: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const { usuario } = useAuth();
@@ -215,7 +216,11 @@ const DetallePedido: React.FC = () => {
 
                     {pedido.tachisGenerados !== undefined && pedido.tachisGenerados > 0 && (
                         <div className="ticket-tachis-earned">
-                            <p>🎉 ¡Has ganado Tachis con esta compra! 🎉</p>
+                            <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                <Confetti size={20} color="#ffb300" weight="fill" />
+                                ¡Has ganado Tachis con esta compra!
+                                <Confetti size={20} color="#ffb300" weight="fill" />
+                            </p>
                             <p className="tachis-text">
                                 +{pedido.tachisGenerados} <img src={faviconTachi} alt="Tachis" className="tachis-icon-inline" />
                             </p>

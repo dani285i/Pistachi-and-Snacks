@@ -1,3 +1,4 @@
+/* este es el esqueleto principal del panel de control, hace que ocupe toda la pantalla y le pone un fondo clarito para que no te quedes ciego leyendo pedidos, como por ejemplo separando el menu lateral del contenido con un flexbox */
 :root {
     --admin-dark: #121619;
     --admin-accent: #8BC34A;
@@ -503,3 +504,4 @@
     background-color: #F4F7F2;
     font-style: italic;
 }
+

@@ -5,7 +5,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
@@ -14,6 +13,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    // esta es la funcion que te manda un correo al registrarte en la app, básicamente pilla el mail que usa spring boot por debajo y te construye un mensaje en html saludandote, como por ejemplo poniendo hola paco bienvenido a la tienda
     public void enviarEmailBienvenida(String emailDestino, String nombreUsuario) {
         try {
             MimeMessage mensaje = mailSender.createMimeMessage();
@@ -38,6 +38,7 @@ public class EmailService {
         }
     }
 
+    // y esta funcion es la que usamos para avisarte si algo vuelve a estar en stock, le pasas el nombre del producto y el nombre de la persona y pam, te llega el mail diciendo que corras que se agota otra vez, como por ejemplo cuando vuelven a traer los croissants
     public void enviarEmailStockDisponible(String emailDestino, String nombreUsuario, String nombreProducto) {
         try {
             MimeMessage mensaje = mailSender.createMimeMessage();

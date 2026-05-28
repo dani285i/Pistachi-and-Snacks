@@ -34,6 +34,7 @@ public class PedidoController {
     private IUsuarioRepository usuarioRepository;
 
     @PostMapping
+    // este endpoint es la puerta de entrada cuando le das a pagar en el carrito, coge todo lo que has mandado y se lo pasa al servicio de pedidos para que haga la magia, como por ejemplo revisar si te da los puntos del cashback
     public ResponseEntity<?> crearPedido(@RequestBody PedidoRequest request) {
         try {
             Pedido pedidoGuardado = pedidoService.crearPedido(

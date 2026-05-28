@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import CustomSelect from '../../components/customselect/CustomSelect'
 import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker'
-import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle } from '@phosphor-icons/react'
+import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle, Lightbulb } from '@phosphor-icons/react'
 import { useToast } from '../../context/toast/ToastContext'
 import { getStatusClass } from '../../components/statuspill/StatusPill'
 import { StatusSelect } from '../../components/statusselect/StatusSelect'
@@ -59,6 +59,7 @@ const getStockStyle = (stock: number) => {
     return { background: 'rgba(33, 150, 243, 0.15)', color: '#1565C0' }; // Azul
 };
 
+// esta pedazo de vista es la pantalla secreta de los administradores, aqui es donde puedes ver todo el cotarro, desde añadir nuevos croissants hasta ver quien ha pagado los pedidos y cancelar cuentas de usuarios, como por ejemplo si te quedas sin stock puedes venir aqui y cambiarlo a cero para que nadie compre
 export const AdminDashboard = () => {
     // defino los estados para controlar la navegacion y la carga de datos del panel, separando la logica para que no se mezcle todo
     const [seccionActiva, setSeccionActiva] = useState('productos')
@@ -581,7 +582,9 @@ export const AdminDashboard = () => {
                                 <label>Imagen del Producto</label>
                                 <input type="text" value={formData.imagen} onChange={e => setFormData({...formData, imagen: e.target.value})} placeholder="Ruta local (/img/foto.jpg) o URL externa" />
                                 <div className="help-box">
-                                    <span className="help-icon">💡</span>
+                                    <span className="help-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffb300' }}>
+                                        <Lightbulb size={24} weight="fill" />
+                                    </span>
                                     <p>Guarda tus fotos generadas por IA en la carpeta <strong>public/img</strong> de tu proyecto React y escribe la ruta aquí.</p>
                                 </div>
                             </div>

@@ -21,6 +21,7 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// este componente es el que se encarga de recordar quien eres en toda la pagina, guarda tu sesion en el navegador para que no tengas que loguearte cada dos por tres y ademas va preguntando al backend cada 10 segundos cuantos tachis tienes, como por ejemplo si te gastas puntos en un pedido se te actualizan al momento en la cabecera
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [usuario, setUsuario] = useState<Usuario | null>(() => {
         const saved = sessionStorage.getItem('user_session');

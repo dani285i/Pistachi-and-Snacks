@@ -19,6 +19,7 @@ public class UsuarioController {
     private IUsuarioRepository usuarioRepository;
 
     @PutMapping("/{id}/suscripcion")
+    // esta ruta sirve para cuando alguien se apunta o se borra de la caja sorpresa mensual, coge el id del usuario y le actualiza la fecha del proximo envio sumandole un mes, como por ejemplo si te apuntas hoy te marca que la proxima caja te llega justo el mes que viene
     public ResponseEntity<?> actualizarSuscripcion(@PathVariable Long id, @RequestBody Map<String, String> payload) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
 

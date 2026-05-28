@@ -49,6 +49,7 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
+    // esta es la funcion principal para meter pedidos nuevos en la base de datos, lo que hace es mirar que los totales del frontend no esten trucados y que haya stock real, como por ejemplo evitando que alguien intente pagar 0 euros por una tarta de 20 euros, ademas de ir sumando el cashback al momento
     @Transactional
     public Pedido crearPedido(Long usuarioId, Double totalReclamado, Integer tachisUsados, List<LineaPedidoRequest> lineasDatos) {
         Pedido pedido = new Pedido();
@@ -114,6 +115,7 @@ public class PedidoService implements IPedidoService {
     }
 
     @Override
+    // aqui cambiamos como esta el envio del pedido, si lo marcas como cancelado le quita al usuario los tachis que habia ganado en ese pedido para evitar tramposos, como por ejemplo alguien que compra para ganar puntos y luego cancela la compra
     @Transactional
     public Pedido actualizarEstadoPedido(Long id, EstadoPedido nuevoEstado) {
         java.util.Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);

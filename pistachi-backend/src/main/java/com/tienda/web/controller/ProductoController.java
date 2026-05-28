@@ -20,6 +20,7 @@ public class ProductoController {
     private IProductoService productoService;
 
     @GetMapping
+    // esta ruta te devuelve la lista completa de productos que hay en la tienda, es lo que usa la pagina principal para pintar todos los dulces y snacks de golpe en la pantalla
     public ResponseEntity<List<Producto>> obtenerTodos() {
         List<Producto> productos = productoService.obtenerTodos();
         return ResponseEntity.ok(productos);
@@ -55,6 +56,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
+    // aqui es donde mandas los datos nuevos cuando editas un producto desde el panel de admin, como por ejemplo si quieres cambiarle el precio a unas galletas o subirle el stock cuando te llega mercancia nueva
     public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
         Producto productoActualizado = productoService.actualizar(id, producto);
         if (productoActualizado != null) {

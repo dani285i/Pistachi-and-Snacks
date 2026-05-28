@@ -30,6 +30,7 @@ public class AuthController {
     private IProductoRepository productoRepository;
 
     @PostMapping("/registro")
+    // esta ruta sirve para crear usuarios nuevos en la aplicacion, coge los datos del front y guarda la contra encriptada para que no te hackeen, y despues llama a la movida de los emails para mandarte la bienvenida, como por ejemplo cuando abres una cuenta y te llega al instante el correo
     public ResponseEntity<?> registrarUsuario(@RequestBody Usuario usuario) {
         try {
             // Rol por defecto para los usuarios de la web
@@ -54,6 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    // y este es el tipico login de toda la vida, te pide el correo y la pass y si coincide con lo que hay en la base de datos te devuelve tus datos, como por ejemplo tus tachis y tu rol para que el frontend sepa si eres admin o no
     public ResponseEntity<?> loginUsuario(@RequestBody Map<String, String> credenciales) {
         String email = credenciales.get("email");
         String password = credenciales.get("password");

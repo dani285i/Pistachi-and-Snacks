@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/auth/Auth';
@@ -22,6 +22,7 @@ const slides: Slide[] = [
 
 type Direction = 'left' | 'up' | 'right' | 'down';
 
+// esta vista es para que te crees una cuenta nueva si eres nuevo, metes tus datos y te manda al login para que entres por primera vez, como por ejemplo la tipica pantalla de crear usuario de toda la vida
 const Registro = () => {
     const navigate = useNavigate();
     const { login, usuario } = useAuth();
@@ -101,7 +102,7 @@ const Registro = () => {
             if (respuesta.ok) {
                 const dataUsuario = await respuesta.json(); 
                 login(dataUsuario);
-                addToast("Registro exitoso. ¡Bienvenido al obrador!", 'success');
+                addToast("Registro exitoso. Â¡Bienvenido al obrador!", 'success');
                 navigate('/');
             } else {
                 setErrores(["Error al registrar el usuario. Es posible que el correo o usuario ya existan."]);
@@ -150,7 +151,7 @@ const Registro = () => {
                 <div className="login-form-container">
                     <div className="login-header">
                         <h1>Crea tu Cuenta</h1>
-                        <p>Únete para disfrutar de nuestras delicias de pistacho.</p>
+                        <p>Ãšnete para disfrutar de nuestras delicias de pistacho.</p>
                     </div>
 
                     {errores.length > 0 && (
@@ -223,7 +224,7 @@ const Registro = () => {
                                 placeholder=" "
                                 required
                             />
-                            <label htmlFor="email" className="floating-label">Correo Electrónico</label>
+                            <label htmlFor="email" className="floating-label">Correo ElectrÃ³nico</label>
                         </div>
 
                         <div className="floating-input-group">
@@ -239,13 +240,13 @@ const Registro = () => {
                                 placeholder=" "
                                 required
                             />
-                            <label htmlFor="password" className="floating-label">Contraseña</label>
+                            <label htmlFor="password" className="floating-label">ContraseÃ±a</label>
                             
                             <button 
                                 type="button" 
                                 className="toggle-pwd-btn"
                                 onClick={() => setMostrarPassword(!mostrarPassword)}
-                                aria-label="Mostrar contraseña"
+                                aria-label="Mostrar contraseÃ±a"
                             >
                                 {mostrarPassword ? <EyeSlash size={22} weight="bold" /> : <Eye size={22} weight="bold" />}
                             </button>
@@ -269,7 +270,7 @@ const Registro = () => {
                     </form>
 
                     <div className="login-footer">
-                        <p>¿Ya tienes las llaves del obrador? <Link to="/login" className="subtle-link bold-link">Entra aquí</Link></p>
+                        <p>Â¿Ya tienes las llaves del obrador? <Link to="/login" className="subtle-link bold-link">Entra aquÃ­</Link></p>
                     </div>
                 </div>
             </div>

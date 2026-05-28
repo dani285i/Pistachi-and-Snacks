@@ -57,6 +57,7 @@ public class ProductoService implements IProductoService {
 
     @Override
     @Transactional
+    // esta movida coge los datos nuevos que pones en el admin y los machaca sobre el producto viejo, ademas si pasas de tener 0 stock a tener algo te dispara los emails automaticos para avisar a los hambrientos, como por ejemplo cuando horneamos cookies nuevas
     public Producto actualizar(Long id, Producto productoDetalles) {
         Optional<Producto> productoExistente = productoRepository.findById(id);
         

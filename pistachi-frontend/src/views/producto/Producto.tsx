@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../../components/productcard/ProductCard';
 import { CaretLeft, CaretRight } from '@phosphor-icons/react';
@@ -15,20 +15,22 @@ interface Producto {
     stock: number;
 }
 
+// aqui te pintamos la lista entera de lo que vendemos, puedes filtrar por categorias y volverte loco añadiendo cosas al carrito, como por ejemplo buscando solo los helados en verano
 const Productos = () => {
     const [totalProductos, setTotalProductos] = useState<Producto[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
     
-    // Parámetros de URL
+    // ParÃ¡metros de URL
     const [searchParams, setSearchParams] = useSearchParams();
     
-    // Si no hay parámetro, por defecto la página es 1 y la categoría 'Todas'
+    // Si no hay parÃ¡metro, por defecto la pÃ¡gina es 1 y la categorÃ­a 'Todas'
     const paginaActualURL = parseInt(searchParams.get('page') || '1', 10);
     const categoriaSeleccionada = searchParams.get('categoria') || 'Todas';
     
-    const productosPorPagina = 6;
+    // aqui te pintamos la lista entera de lo que vendemos, puedes filtrar por categorias y volverte loco añadiendo cosas al carrito, como por ejemplo buscando solo los helados en verano
+const productosPorPagina = 6;
     
-    // Generar categorías dinámicamente basadas en los productos disponibles
+    // Generar categorÃ­as dinÃ¡micamente basadas en los productos disponibles
     const categoriasBase = Array.from(new Set(totalProductos.map(p => p.categoria))).sort();
     const CATEGORIAS = ['Todas', ...categoriasBase];
 
@@ -40,7 +42,7 @@ const Productos = () => {
                 const datos = await respuesta.json();
                 setTotalProductos(datos);
             } catch (error) {
-                console.error("Error al cargar el catálogo", error);
+                console.error("Error al cargar el catÃ¡logo", error);
             } finally {
                 setCargando(false);
             }
@@ -48,20 +50,22 @@ const Productos = () => {
         obtenerProductos();
     }, []);
 
-    // 1. Filtrar por categoría
-    const productosFiltrados = categoriaSeleccionada === 'Todas' 
+    // 1. Filtrar por categorÃ­a
+    // aqui te pintamos la lista entera de lo que vendemos, puedes filtrar por categorias y volverte loco añadiendo cosas al carrito, como por ejemplo buscando solo los helados en verano
+const productosFiltrados = categoriaSeleccionada === 'Todas' 
         ? totalProductos 
         : totalProductos.filter(p => p.categoria === categoriaSeleccionada);
 
-    // 2. Calcular paginación sobre los productos ya filtrados
+    // 2. Calcular paginaciÃ³n sobre los productos ya filtrados
     const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina) || 1;
     
-    // Asegurarse de que si se pone un page=100 manual y no hay, baje a la última posible
+    // Asegurarse de que si se pone un page=100 manual y no hay, baje a la Ãºltima posible
     const paginaActual = Math.min(Math.max(1, paginaActualURL), totalPaginas);
 
     const indiceUltimoItem = paginaActual * productosPorPagina;
     const indicePrimerItem = indiceUltimoItem - productosPorPagina;
-    const productosAMostrar = productosFiltrados.slice(indicePrimerItem, indiceUltimoItem);
+    // aqui te pintamos la lista entera de lo que vendemos, puedes filtrar por categorias y volverte loco añadiendo cosas al carrito, como por ejemplo buscando solo los helados en verano
+const productosAMostrar = productosFiltrados.slice(indicePrimerItem, indiceUltimoItem);
 
     // Manejadores de URL
     const setPaginaURL = (num: number) => {
@@ -78,7 +82,7 @@ const Productos = () => {
             } else {
                 prev.set('categoria', cat);
             }
-            prev.set('page', '1'); // Al cambiar de categoría, volvemos a la página 1
+            prev.set('page', '1'); // Al cambiar de categorÃ­a, volvemos a la pÃ¡gina 1
             return prev;
         });
     };
@@ -86,9 +90,9 @@ const Productos = () => {
     return (
         <div className="catalogo-wrapper">
             <header className="catalogo-cabecera">
-                <span className="subtitulo-obrador">Nuestro Catálogo</span>
+                <span className="subtitulo-obrador">Nuestro CatÃ¡logo</span>
                 <h1>El Obrador de Pistacho</h1>
-                <p>Repostería artesanal y snacks premium, horneados a diario.</p>
+                <p>ReposterÃ­a artesanal y snacks premium, horneados a diario.</p>
                 
                 <nav className="filtros-categoria">
                     {CATEGORIAS.map(cat => (
@@ -107,9 +111,9 @@ const Productos = () => {
                 <div className="status-container">Preparando las delicias...</div>
             ) : productosAMostrar.length === 0 ? (
                 <div className="status-container empty-state">
-                    <h3>Vaya, parece que la vitrina de "{categoriaSeleccionada}" está vacía hoy.</h3>
-                    <p>Nuestros pasteleros están trabajando en nuevas delicias.</p>
-                    <button className="btn-volver-catalogo" onClick={() => setCategoriaURL('Todas')}>Descubrir todo el catálogo</button>
+                    <h3>Vaya, parece que la vitrina de "{categoriaSeleccionada}" estÃ¡ vacÃ­a hoy.</h3>
+                    <p>Nuestros pasteleros estÃ¡n trabajando en nuevas delicias.</p>
+                    <button className="btn-volver-catalogo" onClick={() => setCategoriaURL('Todas')}>Descubrir todo el catÃ¡logo</button>
                 </div>
             ) : (
                 <>
@@ -144,7 +148,7 @@ const Productos = () => {
                                     className="pag-btn-nav" 
                                     onClick={() => setPaginaURL(paginaActual + 1)}
                                     disabled={paginaActual === totalPaginas}
-                                    aria-label="Siguiente página"
+                                    aria-label="Siguiente pÃ¡gina"
                                 >
                                     <CaretRight size={24} weight="bold" />
                                 </button>

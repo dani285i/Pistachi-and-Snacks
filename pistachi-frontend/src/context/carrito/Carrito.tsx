@@ -26,6 +26,7 @@ export const useCart = () => {
     return context;
 };
 
+// y este componente de aqui es el que maneja tu carrito de la compra mientras vas navegando, guarda todo lo que le vas metiendo para que no se pierda al cambiar de pagina, como por ejemplo cuando añades un donut y luego te vas a ver los snacks
 export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
 

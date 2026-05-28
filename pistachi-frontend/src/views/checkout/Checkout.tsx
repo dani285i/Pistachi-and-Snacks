@@ -4,11 +4,12 @@ import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
 import { useToast } from '../../context/toast/ToastContext';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { MapPin } from '@phosphor-icons/react';
+import { MapPin, CheckCircle, XCircle } from '@phosphor-icons/react';
 import CustomSelect from '../../components/customselect/CustomSelect';
 import faviconTachi from '../../assets/favicon/pistachi-favicon.png';
 import './Checkout.css';
 
+// la joya de la corona, esta es la pantalla donde la gente se deja los cuartos, aqui validamos el codigo postal del concello y usamos paypal para cobrar la pasta, como por ejemplo avisando con mensajitos rojos si intentas mandarlo a un codigo postal inventado
 const Checkout = () => {
     const { cartItems, clearCart } = useCart();
     const { usuario } = useAuth();
@@ -62,12 +63,12 @@ const Checkout = () => {
 
     const handlePagoSeguro = async () => {
         if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
-            addToast("⚠️ Por favor, rellena todos los detalles del envío antes de pagar.");
+            addToast("Por favor, rellena todos los detalles del envío antes de pagar.", "error");
             return;
         }
 
         if (!isCodigoValido) {
-            addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
+            addToast("El código postal introducido no es válido para el concello seleccionado.", "error");
             return;
         }
 
@@ -96,15 +97,15 @@ const Checkout = () => {
             });
 
             if (respuesta.ok) {
-                addToast("🎉 ¡Pago exitoso! Tu pedido está en el horno.");
+                addToast("¡Pago exitoso! Tu pedido está en el horno.", "success");
                 clearCart();
                 navigate('/productos');
             } else {
-                addToast("❌ Hubo un error al procesar el pedido.");
+                addToast("Hubo un error al procesar el pedido.", "error");
             }
         } catch (error) {
             console.error(error);
-            addToast("❌ Error de conexión al procesar el pago.");
+            addToast("Error de conexión al procesar el pago.", "error");
         }
     };
 
@@ -146,8 +147,8 @@ const Checkout = () => {
                                 {form.codigoPostal.length === 5 && form.ciudad && (
                                     <div style={{ marginTop: '8px', fontSize: '0.8rem', fontWeight: 600, color: isCodigoValido ? '#28a745' : '#dc3545' }}>
                                         {isCodigoValido 
-                                            ? "✅ Este Código Postal es correcto para el Concello seleccionado" 
-                                            : "❌ Este Código Postal no es correcto para el Concello Seleccionado"}
+                                            ? <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><CheckCircle size={16} weight="fill" /> Este Código Postal es correcto para el Concello seleccionado</span>
+                                            : <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><XCircle size={16} weight="fill" /> Este Código Postal no es correcto para el Concello Seleccionado</span>}
                                     </div>
                                 )}
                             </div>
@@ -252,11 +253,11 @@ const Checkout = () => {
                                         style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 
                                         createOrder={(_data, actions) => {
                                             if (!form.nombre || !form.direccion || !form.codigoPostal || !form.ciudad) {
-                                                addToast("⚠️ Rellena los datos de envío primero.");
+                                                addToast("Rellena los datos de envío primero.", "error");
                                                 return Promise.reject();
                                             }
                                             if (!isCodigoValido) {
-                                                addToast("❌ El código postal introducido no es válido para el concello seleccionado.");
+                                                addToast("El código postal introducido no es válido para el concello seleccionado.", "error");
                                                 return Promise.reject();
                                             }
                                             return actions.order.create({
