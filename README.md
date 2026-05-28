@@ -34,23 +34,22 @@ El proyecto sigue una arquitectura cliente-servidor (Frontend/Backend) separada,
 
 1. **Catálogo de Productos Dinámico:** Visualización de artículos con sistema de **paginación integrada en la URL** (`?page=2`) y filtrado funcional por categorías (`?categoria=Snacks`).
 2. **Panel de Gestión de Administrador:** Un *Dashboard* protegido que permite realizar operaciones CRUD (Crear, Leer, Actualizar, Borrar) sobre el catálogo de productos directamente desde la web, actualizando el stock, categorías y precios en tiempo real.
-3. **Gestión de Inventario y Notificaciones:** Los productos reflejan el stock real de la base de datos. Si un producto llega a stock 0, se deshabilita la compra y se ofrece añadirlo a una **lista de avisos/deseos** (botón "Agotado - Avisadme").
+3. **Gestión de Inventario y Avisos de Stock:** Los productos reflejan el stock real de la base de datos. Si un producto llega a stock 0, se ofrece la opción "Agotado - Avisadme", la cual conecta con el backend para disparar un email automático al cliente en el momento exacto en el que el administrador reabastece el stock.
 4. **Sistema de Favoritos:** Funcionalidad para que los usuarios puedan guardar y consultar rápidamente sus productos preferidos para compras futuras.
 5. **Autenticación y Notificaciones Automáticas por Email:** 
    * Registro y Login de usuarios protegiendo el ecosistema.
    * **Envío automático de correo electrónico** de bienvenida a los nuevos usuarios al registrarse con éxito, validado en el servidor con Spring Mail.
-6. **Carrito y Pasarela de Pago:** Sistema completo de carrito de la compra con integración del entorno de pagos de **PayPal** (`@paypal/react-paypal-js`).
-7. **UX/UI Optimizada y Semántica Web:** Diseño moderno con etiquetas HTML5 semánticas que incluye animaciones fluidas, notificaciones tipo *Toast*, feedback visual inmediato y correcta implementación de Meta-etiquetas y Favicon multiplataforma.
+6. **Carrito y Pasarela de Pago Seguro:** Sistema completo de carrito de la compra con integración del entorno de pagos de **PayPal** (`@paypal/react-paypal-js`), validación de códigos postales en el checkout, y un ticket interactivo ("Detalle de Pedido") que emula la impresión en papel.
+7. **Programa de Fidelización (Tachis Cashback):** Sistema de puntos dinámico donde cada compra genera "Tachis" calculados en base a porcentajes algorítmicos según la categoría del producto. Estos puntos pueden canjearse como descuentos directos en pedidos futuros.
+8. **Club de Suscripción mensual ("Pistachi Box"):** Modelo de suscripción gestionable desde el perfil para recibir cajas sorpresa mensuales.
+9. **UX/UI Optimizada y Semántica Web:** Diseño moderno con etiquetas HTML5 semánticas, uso extensivo de Phosphor Icons (reemplazando emojis nativos para mayor calidad visual), animaciones fluidas, notificaciones tipo *Toast* y correcta implementación de Meta-etiquetas y Favicon multiplataforma.
 
 ## Trabajo Futuro y Funcionalidades en Desarrollo
 
 Para continuar expandiendo la plataforma de cara a la evaluación y futuras versiones, se contemplan las siguientes integraciones que completan el ciclo de la aplicación:
 
-* **Panel Admin - Pedidos y Usuarios:** Finalizar las vistas en el Dashboard de administración para gestionar el estado de los envíos de los clientes e inhabilitar perfiles de usuario.
-* **Lista de Deseos Backend:** Conectar el botón actual de "Avisadme cuando haya stock" del frontend a una tabla relacional en base de datos para disparar automáticamente un email al cliente cuando el administrador suba el stock.
 * **Recuperación de Contraseña:** Flujo completo de "He olvidado mi contraseña" usando el motor de envíos de correo implementado.
-* **Club de Suscripción ("Pistachi Box"):** Implementación de modelo de ingresos recurrentes para suscripción de cajas mensuales sorpresa.
-* **Programa de Fidelización (Pistachi Puntos) y Reseñas:** Acumulación de puntos por pedidos y valoración (1 a 5 estrellas) para usuarios con compra verificada.
+* **Reseñas de Productos:** Implementación de valoraciones (1 a 5 estrellas) y comentarios para usuarios con compra verificada.
 
 ---
 
