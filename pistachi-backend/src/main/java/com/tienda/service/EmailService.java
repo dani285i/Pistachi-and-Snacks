@@ -61,4 +61,28 @@ public class EmailService {
             System.err.println("Error al enviar el correo de stock a " + emailDestino + ": " + e.getMessage());
         }
     }
+
+    public void enviarEmailConfirmacionPedido(String emailDestino, String nombreUsuario, Long pedidoId, Double total) {
+        try {
+            MimeMessage mensaje = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+
+            helper.setTo(emailDestino);
+            helper.setSubject("¡Pedido Confirmado #" + pedidoId + "! 📦");
+
+            String contenidoHtml = "<h1>¡Hola " + nombreUsuario + "!</h1>"
+                    + "<p>Tu pedido número <b>#" + pedidoId + "</b> ha sido registrado correctamente.</p>"
+                    + "<p>El importe total de tu compra es de <b>" + total + "€</b>.</p>"
+                    + "<p>Nuestros pasteleros ya están manos a la obra para prepararlo.</p>"
+                    + "<br><p>Un saludo,<br>El equipo de Pistachitos y Snacks.</p>";
+
+            helper.setText(contenidoHtml, true);
+
+            mailSender.send(mensaje);
+            System.out.println("Email de confirmación de pedido enviado con éxito a: " + emailDestino);
+
+        } catch (Exception e) {
+            System.err.println("Error al enviar el correo de confirmación de pedido a " + emailDestino + ": " + e.getMessage());
+        }
+    }
 }

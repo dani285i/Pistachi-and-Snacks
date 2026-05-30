@@ -1,20 +1,24 @@
 package com.tienda.web.controller;
 
-import com.tienda.model.LineaPedido;
-import com.tienda.model.Pedido;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.tienda.model.EstadoPedido;
-import com.tienda.model.Producto;
-import com.tienda.model.Usuario;
+import com.tienda.model.Pedido;
 import com.tienda.repository.IPedidoRepository;
 import com.tienda.repository.IProductoRepository;
 import com.tienda.repository.IUsuarioRepository;
 import com.tienda.service.interfaces.IPedidoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")

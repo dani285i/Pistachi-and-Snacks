@@ -97,9 +97,11 @@ const Checkout = () => {
             });
 
             if (respuesta.ok) {
-                addToast("¡Pago exitoso! Tu pedido está en el horno.", "success");
                 clearCart();
-                navigate('/productos');
+                navigate('/exito');
+            } else if (respuesta.status === 400) {
+                const errorData = await respuesta.text();
+                addToast(`❌ Transacción Rechazada: ${errorData}`, "error");
             } else {
                 addToast("Hubo un error al procesar el pedido.", "error");
             }

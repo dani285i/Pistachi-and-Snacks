@@ -32,6 +32,9 @@ public class PedidoService implements IPedidoService {
     @Autowired
     private TachisCalculatorService tachisCalculatorService;
 
+    @Autowired
+    private com.tienda.service.EmailService emailService;
+
     @Override
     public Pedido guardarPedido(Pedido pedido) {
         // Aquí podríamos añadir lógica extra antes de guardar
@@ -111,7 +114,14 @@ public class PedidoService implements IPedidoService {
         usuario.setTachis(usuario.getTachis() + totalTachisGenerados);
         usuarioRepository.save(usuario);
 
-        return pedidoRepository.save(pedido);
+        Pedido pedidoGuardado = pedidoRepository.save(pedido);
+
+        // Enviar email de confirmación
+        if (usuario.getEmail() != null) {
+            emailService.enviarEmailConfirmacionPedido(usuario.getEmail(), usuario.getNombre(), pedidoGuardado.getId(), totalFinal);
+        }
+
+        return pedidoGuardado;
     }
 
     @Override

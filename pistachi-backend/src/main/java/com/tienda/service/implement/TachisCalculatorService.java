@@ -1,13 +1,17 @@
 package com.tienda.service.implement;
 
+import org.springframework.stereotype.Service;
+
 import com.tienda.model.CategoriaProducto;
 import com.tienda.model.LineaPedido;
-import org.springframework.stereotype.Service;
 
 @Service
 public class TachisCalculatorService {
 
-    // esta es la funcion que calcula cuantos puntos te llevas por cada cosa que metes al carrito, mira la categoria del producto para ver si le toca el 4% el 5% o el 6%, como por ejemplo si es una galleta te da el 5% y ademas si es cara te da un poquito mas, despues te da mil puntos por cada euro para que sume rapido
+    // esta es la funcion que calcula cuantos puntos te llevas por cada cosa que metes al carrito,
+    // mira la categoria del producto para ver si le toca el 4% el 5% o el 6%, como por ejemplo si 
+    // es una galleta te da el 5% y ademas si es cara te da un poquito mas, despues te da mil puntos 
+    // por cada euro para que sume rapido
     public int calcularTachisPorLinea(LineaPedido linea) {
         if (linea.getProducto() == null || linea.getProducto().getCategoria() == null) {
             return 0;
