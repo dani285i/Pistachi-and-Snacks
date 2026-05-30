@@ -116,12 +116,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
                                 className="btn-carrito-animado"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    addToCart({
+                                    const result = addToCart({
                                         ...producto,
                                         precio: Number(producto.precio),
                                         cantidad: 1 
                                     });
-                                    addToast('Producto añadido a la cesta', 'success');
+                                    if (result.success) {
+                                        addToast('Producto añadido a la cesta', 'success');
+                                    } else if (result.reason === 'STOCK') {
+                                        addToast('No hay suficiente stock para añadir más', 'error');
+                                    } else if (result.reason === 'LIMIT') {
+                                        addToast('Solo puedes añadir 10 productos del mismo tipo, ¡Deja algo para lo demás!', 'error');
+                                    }
                                 }}
                             >
                                 <div className="icon-wrapper">

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/carrito/Carrito';
 import { useAuth } from '../../context/auth/Auth';
@@ -163,12 +163,18 @@ const DetalleProducto = () => {
                             <button 
                                 className="boton-añadir-carrito" 
                                 onClick={() => {
-                                    addToCart({
+                                    const result = addToCart({
                                         ...producto,
                                         precio: Number(producto.precio),
                                         cantidad: 1
                                     });
-                                    addToast('Producto añadido a la cesta', 'success');
+                                    if (result.success) {
+                                        addToast('Producto añadido a la cesta', 'success');
+                                    } else if (result.reason === 'STOCK') {
+                                        addToast('No hay suficiente stock para añadir más', 'error');
+                                    } else if (result.reason === 'LIMIT') {
+                                        addToast('Solo puedes añadir 10 productos del mismo tipo, ¡Deja algo para lo demás!', 'error');
+                                    }
                                 }}
                                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                             >

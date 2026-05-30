@@ -1,4 +1,5 @@
-﻿import { useCart } from '../../context/carrito/Carrito';
+import { useCart } from '../../context/carrito/Carrito';
+import { useToast } from '../../context/toast/ToastContext';
 import { useNavigate } from 'react-router-dom';
 import { Basket, Trash, ArrowRight, Lock } from '@phosphor-icons/react';
 import './Carrito.css';
@@ -10,6 +11,7 @@ interface CartItemExtra {
 
 const Carrito = () => {
     const { cartItems, removeFromCart, updateQuantity } = useCart();
+    const { addToast } = useToast();
     const navigate = useNavigate();
 
     // Cálculos a prueba de fallos para evitar el NaN
@@ -71,9 +73,27 @@ const Carrito = () => {
                                     <span className="item-categoria">{(item as CartItemExtra).categoria || 'Artesanal'}</span>
                                     <div className="item-controles">
                                         <div className="selector-cantidad">
-                                            <button onClick={() => updateQuantity(item.id, cantidadItem - 1)}>-</button>
+                                            <button onClick={() => {
+                                                const result = updateQuantity(item.id, cantidadItem - 1);
+                                                if (!result.success) {
+                                                    if (result.reason === 'STOCK') {
+                                                        addToast('No hay suficiente stock', 'error');
+                                                    } else if (result.reason === 'LIMIT') {
+                                                        addToast('Solo puedes añadir 10 productos del mismo tipo, ¡Deja algo para lo demás!', 'error');
+                                                    }
+                                                }
+                                            }}>-</button>
                                             <span className="cantidad-numero">{cantidadItem}</span>
-                                            <button onClick={() => updateQuantity(item.id, cantidadItem + 1)}>+</button>
+                                            <button onClick={() => {
+                                                const result = updateQuantity(item.id, cantidadItem + 1);
+                                                if (!result.success) {
+                                                    if (result.reason === 'STOCK') {
+                                                        addToast('No hay suficiente stock para añadir más', 'error');
+                                                    } else if (result.reason === 'LIMIT') {
+                                                        addToast('Solo puedes añadir 10 productos del mismo tipo, ¡Deja algo para lo demás!', 'error');
+                                                    }
+                                                }
+                                            }}>+</button>
                                         </div>
                                         <button className="btn-eliminar-item" onClick={() => removeFromCart(item.id)}>
                                             <Trash size={18} weight="bold" />

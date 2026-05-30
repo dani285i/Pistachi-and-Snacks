@@ -20,12 +20,7 @@ interface Producto {
     stock: number
 }
 
-interface Pedido {
-    id: number;
-    fecha: string;
-    total: number;
-    estado: string;
-}
+
 
 interface Usuario {
     id: number;
@@ -64,10 +59,10 @@ export const AdminDashboard = () => {
     // defino los estados para controlar la navegacion y la carga de datos del panel, separando la logica para que no se mezcle todo
     const [seccionActiva, setSeccionActiva] = useState('productos')
     const [productos, setProductos] = useState<Producto[]>([])
-    const [pedidos, setPedidos] = useState<Pedido[]>([])
+    const [pedidos, setPedidos] = useState<any[]>([])
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
     const [mostrarModal, setMostrarModal] = useState(false)
-    const [formData, setFormData] = useState<Producto>(estadoInicial)
+    const [formData, setFormData] = useState<Partial<Producto>>(estadoInicial)
 
     const { addToast } = useToast();
     const [mostrarModalUsuario, setMostrarModalUsuario] = useState(false);
@@ -122,7 +117,7 @@ export const AdminDashboard = () => {
             })
             if (response.ok) {
                 const data = await response.json()
-                setPedidos(data)
+                setPedidos(data.sort((a: any, b: any) => b.id - a.id))
             }
         } catch (error) {
             console.error("error al cargar pedidos", error)
@@ -352,8 +347,10 @@ export const AdminDashboard = () => {
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Stock</th>
+                                    <th>Packs</th>
                                     <th>Uds/Pack</th>
                                     <th>Precio</th>
+                                    <th>Destacado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -374,8 +371,32 @@ export const AdminDashboard = () => {
                                                 {p.stock}
                                             </span>
                                         </td>
-                                        <td>{p.unidades || 1} uds.</td>
+                                        <td>
+                                            <span style={{ 
+                                                padding: '4px 8px', 
+                                                borderRadius: '6px', 
+                                                background: getStockStyle(Math.floor((p.stock || 0) / (p.unidades || 1))).background,
+                                                color: getStockStyle(Math.floor((p.stock || 0) / (p.unidades || 1))).color,
+                                                fontWeight: 'bold',
+                                                fontSize: '0.85rem'
+                                            }}>
+                                                {Math.floor((p.stock || 0) / (p.unidades || 1))}
+                                            </span>
+                                        </td>
+                                        <td><span className="unidades-badge"><Package size={16} /> {p.unidades || 1} uds</span></td>
                                         <td>{p.precio.toFixed(2)}€</td>
+                                        <td>
+                                            <span style={{ 
+                                                padding: '4px 8px', 
+                                                borderRadius: '6px', 
+                                                background: p.destacado ? 'rgba(241, 196, 15, 0.15)' : 'rgba(149, 165, 166, 0.15)',
+                                                color: p.destacado ? '#F39C12' : '#7F8C8D',
+                                                fontWeight: 'bold',
+                                                fontSize: '0.85rem'
+                                            }}>
+                                                {p.destacado ? 'Sí' : 'No'}
+                                            </span>
+                                        </td>
                                         <td className="actions-cell">
                                             <button onClick={() => { 
                                                 // Aseguramos que unidades y stock no sean undefined si la DB los devuelve nulos
@@ -403,6 +424,7 @@ export const AdminDashboard = () => {
                                 <tr>
                                     <th>ID</th>
                                     <th>Fecha</th>
+                                    <th>Usuario</th>
                                     <th>Total</th>
                                     <th>Estado Actual</th>
                                     <th>Acciones</th>
@@ -413,6 +435,7 @@ export const AdminDashboard = () => {
                                     <tr key={p.id}>
                                         <td>#{p.id}</td>
                                         <td><strong>{new Date(p.fecha).toLocaleDateString()}</strong></td>
+                                        <td>{p.nombreUsuario || 'Anónimo'}</td>
                                         <td><strong>{p.total?.toFixed(2)}€</strong></td>
                                         <td>
                                             <StatusSelect 
@@ -428,7 +451,7 @@ export const AdminDashboard = () => {
                                     </tr>
                                 ))}
                                 {pedidos.length === 0 && (
-                                    <tr><td colSpan={5} style={{textAlign: 'center', padding: '2rem', color: '#888'}}>Aún no hay pedidos registrados.</td></tr>
+                                    <tr><td colSpan={6} style={{textAlign: 'center', padding: '2rem', color: '#888'}}>Aún no hay pedidos registrados.</td></tr>
                                 )}
                             </tbody>
                         </table>
@@ -492,7 +515,7 @@ export const AdminDashboard = () => {
                             
                             {/* Validation check */}
                             {(() => {
-                                const isStockInvalid = formData.stock > 0 && formData.stock < formData.unidades;
+                                const isStockInvalid = (formData.stock || 0) > 0 && (formData.stock || 0) < (formData.unidades || 1);
                                 return (
                                     <>
                             <div className="form-group">
@@ -507,10 +530,10 @@ export const AdminDashboard = () => {
                                     <div className="number-input-wrapper" style={isStockInvalid ? { border: '1px solid #E74C3C', borderRadius: '12px', overflow: 'hidden' } : {}}>
                                         <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" style={isStockInvalid ? { color: '#E74C3C' } : {}} />
                                         <div className="spinner-controls">
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: formData.stock + 1})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: (formData.stock || 0) + 1})}>
                                                 <CaretUp size={16} weight="bold" />
                                             </button>
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: Math.max(0, formData.stock - 1)})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: Math.max(0, (formData.stock || 0) - 1)})}>
                                                 <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>
@@ -536,7 +559,7 @@ export const AdminDashboard = () => {
                                             { value: 'Postres', label: 'Postres' },
                                             { value: 'Desayunos', label: 'Desayunos' }
                                         ]}
-                                        value={formData.categoria}
+                                        value={formData.categoria || 'Bollería'}
                                         onChange={(val) => setFormData({...formData, categoria: val})}
                                     />
                                 </div>
@@ -548,24 +571,40 @@ export const AdminDashboard = () => {
                                     <div className="number-input-wrapper">
                                         <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value) || 0})} placeholder="0.00" />
                                         <div className="spinner-controls">
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat((formData.precio + 0.10).toFixed(2))})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat(((formData.precio || 0) + 0.10).toFixed(2))})}>
                                                 <CaretUp size={16} weight="bold" />
                                             </button>
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: Math.max(0, parseFloat((formData.precio - 0.10).toFixed(2)))})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: Math.max(0, parseFloat(((formData.precio || 0) - 0.10).toFixed(2)))})}>
                                                 <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form-group flex-1">
+                                    <label>Destacado</label>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+                                        <label style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', cursor: 'pointer', background: formData.destacado ? 'rgba(241, 196, 15, 0.15)' : '#f0f0f0', color: formData.destacado ? '#F39C12' : '#666', padding: '10px 16px', borderRadius: '12px', fontWeight: 'bold', transition: 'all 0.2s', border: formData.destacado ? '2px solid #F39C12' : '2px solid transparent' }}>
+                                            <input type="radio" name="destacado" checked={formData.destacado === true} onChange={() => setFormData({...formData, destacado: true})} style={{ display: 'none' }} />
+                                            Sí
+                                        </label>
+                                        <label style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', cursor: 'pointer', background: formData.destacado === false ? 'rgba(149, 165, 166, 0.15)' : '#f0f0f0', color: formData.destacado === false ? '#7F8C8D' : '#666', padding: '10px 16px', borderRadius: '12px', fontWeight: 'bold', transition: 'all 0.2s', border: formData.destacado === false ? '2px solid #7F8C8D' : '2px solid transparent' }}>
+                                            <input type="radio" name="destacado" checked={formData.destacado === false} onChange={() => setFormData({...formData, destacado: false})} style={{ display: 'none' }} />
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="form-row">
+                                <div className="form-group flex-1">
                                     <label>Unidades por Pack</label>
                                     <div className="number-input-wrapper">
                                         <input required type="number" min="1" step="1" value={formData.unidades} onChange={e => setFormData({...formData, unidades: parseInt(e.target.value) || 1})} placeholder="Ej: 5" />
                                         <div className="spinner-controls">
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: formData.unidades + 1})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: (formData.unidades || 1) + 1})}>
                                                 <CaretUp size={16} weight="bold" />
                                             </button>
-                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: Math.max(1, formData.unidades - 1)})}>
+                                            <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: Math.max(1, (formData.unidades || 1) - 1)})}>
                                                 <CaretDown size={16} weight="bold" />
                                             </button>
                                         </div>

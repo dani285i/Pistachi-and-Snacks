@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowsClockwise, Confetti } from '@phosphor-icons/react';
-import { useAuth } from '../../context/auth/Auth';
 import faviconTachi from '../../assets/favicon/pistachi-favicon.png';
 import { StatusPill } from '../../components/statuspill/StatusPill';
 import './DetallePedido.css';
@@ -30,7 +29,6 @@ interface Pedido {
 // este componente es literalmente el ticket de compra en pantalla, recibe la id del pedido por la url, hace un fetch al backend para sacar que has comprado y te dibuja un ticket con sonido de impresora de bar y todo, como por ejemplo animando los tirones de papel
 const DetallePedido: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const { usuario } = useAuth();
     const navigate = useNavigate();
     const [pedido, setPedido] = useState<Pedido | null>(null);
     const [cliente, setCliente] = useState<{nombre: string, apellidos: string, email: string} | null>(null);

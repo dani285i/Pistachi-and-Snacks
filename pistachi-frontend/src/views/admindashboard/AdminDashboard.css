@@ -33,7 +33,7 @@
 .sidebar-header {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     padding: 0 10px;
 }
 
@@ -71,7 +71,7 @@
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     background: transparent;
     border: none;
     color: rgba(255,255,255,0.6);
@@ -123,7 +123,7 @@
 .add-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     border: none;
     padding: 12px 24px;
     border-radius: 14px;
@@ -268,18 +268,18 @@
 .admin-form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 8px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .form-row {
     display: flex;
-    gap: 24px;
+    gap: 10px;
     width: 100%;
 }
 
@@ -299,7 +299,7 @@
 .admin-form select, 
 .admin-form textarea {
     width: 100%;
-    padding: 14px 16px;
+    padding: 10px 14px;
     border-radius: 12px;
     border: 1px solid var(--admin-border);
     background-color: #FAFAFA;
@@ -402,7 +402,7 @@
 .help-box {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 8px;
     background-color: #F4F7F2;
     padding: 12px 16px;
     border-radius: 12px;
@@ -464,7 +464,7 @@
     background-color: var(--admin-accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(139, 195, 74, 0.25);
-}/* Badges de Nivel de Suscripción copiados de Perfil para la tabla */
+}/* Badges de Nivel de Suscripciï¿½n copiados de Perfil para la tabla */
 .badge-suscripcion {
     font-family: 'Montserrat', sans-serif;
     font-weight: 800;
