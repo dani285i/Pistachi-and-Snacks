@@ -176,7 +176,7 @@
 .pocas-unidades-badge {
     position: absolute;
     top: 15px;
-    right: 15px;
+    left: 15px;
     background: #FF9800;
     color: white;
     padding: 6px 12px;

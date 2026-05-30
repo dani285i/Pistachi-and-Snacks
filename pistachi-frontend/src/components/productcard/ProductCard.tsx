@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BotonFavorito from '../favorito/BotonFavorito';
 import { useCart } from '../../context/carrito/Carrito';
@@ -87,7 +87,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
                 />
                 {isAgotado && <span className="agotado-badge">AGOTADO</span>}
                 {producto.destacado && !isAgotado && <span className="craft-badge">Top Ventas</span>}
-                {isPocasUnidades && <span className="pocas-unidades-badge">¡¡Quedan pocas unidades!</span>}
+                {isPocasUnidades && <span className="pocas-unidades-badge">¡Quedan pocas unidades!</span>}
             </div>
             
             <div className="tarjeta-body">
