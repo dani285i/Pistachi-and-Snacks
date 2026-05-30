@@ -1,6 +1,9 @@
 package com.tienda.web.controller;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDateTime;
+import com.tienda.model.LineaPedido;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,13 +59,49 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pedido>> obtenerTodosPedidos() {
-        return ResponseEntity.ok(pedidoRepository.findAll());
+    public ResponseEntity<List<PedidoResponseDTO>> obtenerTodosPedidos() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        List<PedidoResponseDTO> dtos = new ArrayList<>();
+        for (Pedido p : pedidos) {
+            PedidoResponseDTO dto = new PedidoResponseDTO();
+            dto.setId(p.getId());
+            dto.setUsuarioId(p.getUsuarioId());
+            dto.setFecha(p.getFecha());
+            dto.setTotal(p.getTotal());
+            dto.setEstado(p.getEstado());
+            dto.setTachisGenerados(p.getTachisGenerados());
+            dto.setLineas(p.getLineas());
+            
+            usuarioRepository.findById(p.getUsuarioId()).ifPresentOrElse(
+                u -> dto.setNombreUsuario(u.getNombre()),
+                () -> dto.setNombreUsuario("Desconocido")
+            );
+            dtos.add(dto);
+        }
+        return ResponseEntity.ok(dtos);
     }
 
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<Pedido>> obtenerPedidosPorUsuario(@PathVariable Long usuarioId) {
-        return ResponseEntity.ok(pedidoRepository.findByUsuarioId(usuarioId));
+        @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<PedidoResponseDTO>> obtenerPedidosPorUsuario(@PathVariable Long usuarioId) {
+        List<Pedido> pedidos = pedidoRepository.findByUsuarioId(usuarioId);
+        List<PedidoResponseDTO> dtos = new ArrayList<>();
+        for (Pedido p : pedidos) {
+            PedidoResponseDTO dto = new PedidoResponseDTO();
+            dto.setId(p.getId());
+            dto.setUsuarioId(p.getUsuarioId());
+            dto.setFecha(p.getFecha());
+            dto.setTotal(p.getTotal());
+            dto.setEstado(p.getEstado());
+            dto.setTachisGenerados(p.getTachisGenerados());
+            dto.setLineas(p.getLineas());
+            
+            usuarioRepository.findById(p.getUsuarioId()).ifPresentOrElse(
+                u -> dto.setNombreUsuario(u.getNombre()),
+                () -> dto.setNombreUsuario("Desconocido")
+            );
+            dtos.add(dto);
+        }
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
@@ -84,7 +123,7 @@ public class PedidoController {
             }
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Estado inválido");
+            return ResponseEntity.badRequest().body("Estado invÃƒÂ¡lido");
         }
     }
 
@@ -116,5 +155,33 @@ public class PedidoController {
         public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
         public Double getPrecioUnitario() { return precioUnitario; }
         public void setPrecioUnitario(Double precioUnitario) { this.precioUnitario = precioUnitario; }
+    }
+
+    public static class PedidoResponseDTO {
+        private Long id;
+        private Long usuarioId;
+        private String nombreUsuario;
+        private LocalDateTime fecha;
+        private Double total;
+        private EstadoPedido estado;
+        private Integer tachisGenerados;
+        private List<LineaPedido> lineas;
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+        public Long getUsuarioId() { return usuarioId; }
+        public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
+        public String getNombreUsuario() { return nombreUsuario; }
+        public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
+        public LocalDateTime getFecha() { return fecha; }
+        public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
+        public Double getTotal() { return total; }
+        public void setTotal(Double total) { this.total = total; }
+        public EstadoPedido getEstado() { return estado; }
+        public void setEstado(EstadoPedido estado) { this.estado = estado; }
+        public Integer getTachisGenerados() { return tachisGenerados; }
+        public void setTachisGenerados(Integer tachisGenerados) { this.tachisGenerados = tachisGenerados; }
+        public List<LineaPedido> getLineas() { return lineas; }
+        public void setLineas(List<LineaPedido> lineas) { this.lineas = lineas; }
     }
 }

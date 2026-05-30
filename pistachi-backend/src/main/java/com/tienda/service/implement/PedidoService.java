@@ -69,8 +69,15 @@ public class PedidoService implements IPedidoService {
             
             subtotal += producto.getPrecio() * lpReq.getCantidad();
 
-            int nuevoStock = producto.getStock() - lpReq.getCantidad();
-            producto.setStock(Math.max(nuevoStock, 0));
+            int unidadesPorPack = producto.getUnidades() != null && producto.getUnidades() > 0 ? producto.getUnidades() : 1;
+            int unidadesConsumidas = lpReq.getCantidad() * unidadesPorPack;
+            int nuevoStock = producto.getStock() - unidadesConsumidas;
+            
+            if (nuevoStock < 0) {
+                throw new RuntimeException("Stock insuficiente para el producto: " + producto.getNombre());
+            }
+            
+            producto.setStock(nuevoStock);
             productoRepository.save(producto);
 
             LineaPedido linea = new LineaPedido();
@@ -108,6 +115,15 @@ public class PedidoService implements IPedidoService {
         }
 
         pedido.setTotal(totalFinal);
+        
+        // Ajustar Tachis generados basándose únicamente en el dinero real pagado
+        if (totalCalculado > 0) {
+            double ratioPagoReal = totalFinal / totalCalculado;
+            totalTachisGenerados = (int) Math.round(totalTachisGenerados * ratioPagoReal);
+        } else {
+            totalTachisGenerados = 0;
+        }
+        
         pedido.setTachisGenerados(totalTachisGenerados);
         
         // Sumar Tachis al usuario inmediatamente al realizar el pedido

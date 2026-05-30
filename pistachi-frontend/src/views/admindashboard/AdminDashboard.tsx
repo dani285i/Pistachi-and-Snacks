@@ -3,7 +3,7 @@ import CustomSelect from '../../components/customselect/CustomSelect'
 import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker'
 import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle, Lightbulb } from '@phosphor-icons/react'
 import { useToast } from '../../context/toast/ToastContext'
-import { getStatusClass } from '../../components/statuspill/StatusPill'
+
 import { StatusSelect } from '../../components/statusselect/StatusSelect'
 import '../../components/statuspill/StatusPill.css'
 import './AdminDashboard.css'

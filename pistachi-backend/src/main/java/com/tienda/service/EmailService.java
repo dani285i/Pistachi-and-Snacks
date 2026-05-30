@@ -72,7 +72,7 @@ public class EmailService {
 
             String contenidoHtml = "<h1>¡Hola " + nombreUsuario + "!</h1>"
                     + "<p>Tu pedido número <b>#" + pedidoId + "</b> ha sido registrado correctamente.</p>"
-                    + "<p>El importe total de tu compra es de <b>" + total + "€</b>.</p>"
+                    + "<p>El importe total de tu compra es de <b>" + String.format(java.util.Locale.forLanguageTag("es-ES"), "%.2f", total) + "€</b>.</p>"
                     + "<p>Nuestros pasteleros ya están manos a la obra para prepararlo.</p>"
                     + "<br><p>Un saludo,<br>El equipo de Pistachitos y Snacks.</p>";
 

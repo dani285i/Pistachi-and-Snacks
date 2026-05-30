@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../../context/carrito/Carrito';
+import { useToast } from '../../context/toast/ToastContext';
 import { useAuth } from '../../context/auth/Auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
@@ -9,13 +10,30 @@ import Perfil from '../perfil/Perfil';
 import './Navbar.css';
 
 const Navbar = () => {
-    const { cartItems } = useCart();
+    const { cartItems, validarInventario } = useCart();
+    const { addToast } = useToast();
     const { usuario } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     // ESTADO PARA ABRIR/CERRAR LA BANDEJA DEL PERFIL
     const [perfilAbierto, setPerfilAbierto] = useState(false);
+
+    // VALIDACION DE INVENTARIO PARA CARRITO
+    useEffect(() => {
+        const handleEviction = (e: any) => {
+            addToast(`El producto "${e.detail}" que tenías en el carrito, acaba de agotarse`, 'error');
+        };
+        window.addEventListener('cartItemEvicted', handleEviction);
+        
+        // Fetch products to validate on mount and on route change
+        fetch('http://localhost:9090/productos')
+            .then(res => res.json())
+            .then(data => validarInventario(data))
+            .catch(err => console.error("Error fetching products for cart validation", err));
+
+        return () => window.removeEventListener('cartItemEvicted', handleEviction);
+    }, [location.pathname]); // Validar cada vez que cambiamos de página
 
     // CONTROL DEL LOGO
     const handleLogoClick = (e: React.MouseEvent) => {

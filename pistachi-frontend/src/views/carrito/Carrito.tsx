@@ -1,4 +1,4 @@
-import { useCart } from '../../context/carrito/Carrito';
+﻿import { useCart } from '../../context/carrito/Carrito';
 import { useNavigate } from 'react-router-dom';
 import { Basket, Trash, ArrowRight, Lock } from '@phosphor-icons/react';
 import './Carrito.css';
