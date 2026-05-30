@@ -20,17 +20,17 @@ const Productos = () => {
     const [totalProductos, setTotalProductos] = useState<Producto[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
     
-    // ParÃ¡metros de URL
+    // Parámetros de URL
     const [searchParams, setSearchParams] = useSearchParams();
     
-    // Si no hay parÃ¡metro, por defecto la pÃ¡gina es 1 y la categorÃ­a 'Todas'
+    // Si no hay parámetro, por defecto la página es 1 y la categoría 'Todas'
     const paginaActualURL = parseInt(searchParams.get('page') || '1', 10);
     const categoriaSeleccionada = searchParams.get('categoria') || 'Todas';
     
     // aqui te pintamos la lista entera de lo que vendemos, puedes filtrar por categorias y volverte loco añadiendo cosas al carrito, como por ejemplo buscando solo los helados en verano
 const productosPorPagina = 6;
     
-    // Generar categorÃ­as dinÃ¡micamente basadas en los productos disponibles
+    // Generar categorías dinámicamente basadas en los productos disponibles
     const categoriasBase = Array.from(new Set(totalProductos.map(p => p.categoria))).sort();
     const CATEGORIAS = ['Todas', ...categoriasBase];
 
@@ -42,7 +42,7 @@ const productosPorPagina = 6;
                 const datos = await respuesta.json();
                 setTotalProductos(datos);
             } catch (error) {
-                console.error("Error al cargar el catÃ¡logo", error);
+                console.error("Error al cargar el catálogo", error);
             } finally {
                 setCargando(false);
             }
@@ -50,16 +50,16 @@ const productosPorPagina = 6;
         obtenerProductos();
     }, []);
 
-    // 1. Filtrar por categorÃ­a
+    // 1. Filtrar por categoría
     // aqui te pintamos la lista entera de lo que vendemos, puedes filtrar por categorias y volverte loco añadiendo cosas al carrito, como por ejemplo buscando solo los helados en verano
 const productosFiltrados = categoriaSeleccionada === 'Todas' 
         ? totalProductos 
         : totalProductos.filter(p => p.categoria === categoriaSeleccionada);
 
-    // 2. Calcular paginaciÃ³n sobre los productos ya filtrados
+    // 2. Calcular paginación sobre los productos ya filtrados
     const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina) || 1;
     
-    // Asegurarse de que si se pone un page=100 manual y no hay, baje a la Ãºltima posible
+    // Asegurarse de que si se pone un page=100 manual y no hay, baje a la última posible
     const paginaActual = Math.min(Math.max(1, paginaActualURL), totalPaginas);
 
     const indiceUltimoItem = paginaActual * productosPorPagina;
@@ -82,7 +82,7 @@ const productosAMostrar = productosFiltrados.slice(indicePrimerItem, indiceUltim
             } else {
                 prev.set('categoria', cat);
             }
-            prev.set('page', '1'); // Al cambiar de categorÃ­a, volvemos a la pÃ¡gina 1
+            prev.set('page', '1'); // Al cambiar de categoría, volvemos a la página 1
             return prev;
         });
     };
@@ -90,9 +90,9 @@ const productosAMostrar = productosFiltrados.slice(indicePrimerItem, indiceUltim
     return (
         <div className="catalogo-wrapper">
             <header className="catalogo-cabecera">
-                <span className="subtitulo-obrador">Nuestro CatÃ¡logo</span>
+                <span className="subtitulo-obrador">Nuestro Catálogo</span>
                 <h1>El Obrador de Pistacho</h1>
-                <p>ReposterÃ­a artesanal y snacks premium, horneados a diario.</p>
+                <p>Repostería artesanal y snacks premium, horneados a diario.</p>
                 
                 <nav className="filtros-categoria">
                     {CATEGORIAS.map(cat => (
@@ -111,9 +111,9 @@ const productosAMostrar = productosFiltrados.slice(indicePrimerItem, indiceUltim
                 <div className="status-container">Preparando las delicias...</div>
             ) : productosAMostrar.length === 0 ? (
                 <div className="status-container empty-state">
-                    <h3>Vaya, parece que la vitrina de "{categoriaSeleccionada}" estÃ¡ vacÃ­a hoy.</h3>
-                    <p>Nuestros pasteleros estÃ¡n trabajando en nuevas delicias.</p>
-                    <button className="btn-volver-catalogo" onClick={() => setCategoriaURL('Todas')}>Descubrir todo el catÃ¡logo</button>
+                    <h3>Vaya, parece que la vitrina de "{categoriaSeleccionada}" está vacía hoy.</h3>
+                    <p>Nuestros pasteleros están trabajando en nuevas delicias.</p>
+                    <button className="btn-volver-catalogo" onClick={() => setCategoriaURL('Todas')}>Descubrir todo el catálogo</button>
                 </div>
             ) : (
                 <>
@@ -148,7 +148,7 @@ const productosAMostrar = productosFiltrados.slice(indicePrimerItem, indiceUltim
                                     className="pag-btn-nav" 
                                     onClick={() => setPaginaURL(paginaActual + 1)}
                                     disabled={paginaActual === totalPaginas}
-                                    aria-label="Siguiente pÃ¡gina"
+                                    aria-label="Siguiente página"
                                 >
                                     <CaretRight size={24} weight="bold" />
                                 </button>

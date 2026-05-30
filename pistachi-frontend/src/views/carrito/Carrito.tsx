@@ -19,7 +19,7 @@ const Carrito = () => {
         return acc + (precioSeguro * cantidadSegura);
     }, 0);
 
-    const costeEnvio = subtotal >= 30 || subtotal === 0 ? 0 : 4.99;
+    const costeEnvio = subtotal >= 30 || subtotal === 0 ? 0 : 2.99;
     const totalSeguro = subtotal + costeEnvio;
 
     // Función de pedido movida a Checkout.tsx
@@ -102,7 +102,7 @@ const Carrito = () => {
                                 <span>{subtotal.toFixed(2)} €</span>
                             </div>
                             <div className="ticket-fila">
-                                <span>Envío en frío</span>
+                                <span>Envío recién Horneado</span>
                                 <span>{costeEnvio === 0 ? '¡Gratis!' : `${costeEnvio.toFixed(2)} €`}</span>
                             </div>
 

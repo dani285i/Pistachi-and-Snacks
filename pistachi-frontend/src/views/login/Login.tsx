@@ -83,7 +83,7 @@ const Login = () => {
                 addToast(`Â¡Bienvenido de nuevo, ${dataUsuario.nombre}!`, 'success');
                 navigate('/');
             } else {
-                setError("Email o contraseÃ±a incorrectos.");
+                setError("Email o contraseña incorrectos.");
             }
         } catch {
             setError("No se pudo conectar con el servidor.");
@@ -129,7 +129,7 @@ const Login = () => {
                 <div className="login-form-container">
                     <div className="login-header">
                         <h1>Bienvenido al Obrador</h1>
-                        <p>El aroma a pistacho reciÃ©n tostado te espera. Accede a tu cuenta.</p>
+                        <p>El aroma a pistacho recién tostado te espera. Accede a tu cuenta.</p>
                     </div>
 
                     {error && (
@@ -150,7 +150,7 @@ const Login = () => {
                                 placeholder=" "
                                 required
                             />
-                            <label htmlFor="email" className="floating-label">Correo ElectrÃ³nico</label>
+                            <label htmlFor="email" className="floating-label">Correo Electrónico</label>
                         </div>
 
                         <div className="floating-input-group">
@@ -164,20 +164,20 @@ const Login = () => {
                                 placeholder=" "
                                 required
                             />
-                            <label htmlFor="password" className="floating-label">ContraseÃ±a</label>
+                            <label htmlFor="password" className="floating-label">Contraseña</label>
                             
                             <button 
                                 type="button" 
                                 className="toggle-pwd-btn"
                                 onClick={() => setMostrarPassword(!mostrarPassword)}
-                                aria-label="Mostrar contraseÃ±a"
+                                aria-label="Mostrar contraseña"
                             >
                                 {mostrarPassword ? <EyeSlash size={22} weight="bold" /> : <Eye size={22} weight="bold" />}
                             </button>
                         </div>
 
                         <div className="form-actions-row">
-                            <Link to="/olvido-password" className="subtle-link">Â¿Olvidaste tu contraseÃ±a?</Link>
+                            <Link to="/olvido-password" className="subtle-link">¿Olvidaste tu contraseña?</Link>
                         </div>
 
                         <button 
@@ -190,7 +190,7 @@ const Login = () => {
                     </form>
 
                     <div className="login-footer">
-                        <p>Â¿AÃºn no tienes la llave del obrador? <Link to="/registro" className="subtle-link bold-link">RegÃ­strate aquÃ­</Link></p>
+                        <p>¿Aún no tienes la llave del obrador? <Link to="/registro" className="subtle-link bold-link">Regístrate aquí</Link></p>
                     </div>
                 </div>
             </div>

@@ -28,10 +28,10 @@ const Home = () => {
     
     const location = useLocation();
 
-    // Detecta si venimos de otra pestaÃ±a con la orden de bajar a novedades
+    // Detecta si venimos de otra pestaña con la orden de bajar a novedades
     useEffect(() => {
         if (location.state && (location.state as { hacerScrollANovedades?: boolean }).hacerScrollANovedades) {
-            // Esperamos un instante corto para que el usuario asimile que volviÃ³ al inicio
+            // Esperamos un instante corto para que el usuario asimile que volvió al inicio
             const timer = setTimeout(() => {
                 scroller.scrollTo('seccion-novedad', {
                     smooth: true,
@@ -39,7 +39,7 @@ const Home = () => {
                     offset: -70
                 });
                 
-                // Limpiamos el estado de la navegaciÃ³n para que si el usuario pulsa F5 no vuelva a hacer scroll solo
+                // Limpiamos el estado de la navegación para que si el usuario pulsa F5 no vuelva a hacer scroll solo
                 window.history.replaceState({}, document.title);
             }, 300);
 
@@ -53,7 +53,7 @@ const Home = () => {
             try {
                 setEstaCargando(true);
                 const respuesta = await fetch('http://localhost:9090/productos/destacados');
-                if (!respuesta.ok) throw new Error('El servidor respondiÃ³ con error');
+                if (!respuesta.ok) throw new Error('El servidor respondió con error');
                 const datosGuardados = await respuesta.json();
                 setProductos(datosGuardados);
             } catch (error) {
@@ -75,13 +75,13 @@ const Home = () => {
                     <Leaf size={36} weight="fill" className="decorative-leaf" color="var(--color-soft-pistachio)" />
                     <h2>El Arte del Pistacho</h2>
                     <p>
-                        Bienvenido a tu rincÃ³n de confianza. Amasamos, horneamos y preparamos cada detalle a mano, 
-                        fusionando la reposterÃ­a clÃ¡sica con el inconfundible carÃ¡cter de nuestra tierra.
+                        Bienvenido a tu rincón de confianza. Amasamos, horneamos y preparamos cada detalle a mano, 
+                        fusionando la repostería clásica con el inconfundible carácter de nuestra tierra.
                     </p>
                 </div>
             </section>
 
-            {/* El punto de destino del scroll automÃ¡tico perfectamente configurado */}
+            {/* El punto de destino del scroll automático perfectamente configurado */}
             <Element name="seccion-novedad">
                 <Novedad />
             </Element>
@@ -90,8 +90,8 @@ const Home = () => {
 
             <section className="craft-showcase">
                 <div className="showcase-header">
-                    <h2>ReciÃ©n salidos del horno</h2>
-                    <p>Nuestros clÃ¡sicos mÃ¡s queridos por los clientes</p>
+                    <h2>Recién salidos del horno</h2>
+                    <p>Nuestros clásicos más queridos por los clientes</p>
                 </div>
                 
                 {estaCargando ? (

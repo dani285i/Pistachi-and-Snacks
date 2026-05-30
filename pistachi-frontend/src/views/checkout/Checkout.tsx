@@ -50,7 +50,7 @@ const Checkout = () => {
     }
 
     const subtotal = cartItems.reduce((acc, item) => acc + (Number(item.precio) * Number(item.cantidad)), 0);
-    const costeEnvio = subtotal >= 30 ? 0 : 4.99;
+    const costeEnvio = subtotal >= 30 ? 0 : 2.99;
     const totalOriginal = subtotal + costeEnvio;
 
     // Lógica Tachis (1000 Tachis = 1€)
