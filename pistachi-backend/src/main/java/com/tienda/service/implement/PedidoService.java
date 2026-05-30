@@ -86,7 +86,7 @@ public class PedidoService implements IPedidoService {
             pedido.getLineas().add(linea);
         }
 
-        double costeEnvio = subtotal >= 30.0 ? 0.0 : 4.99;
+        double costeEnvio = subtotal >= 30.0 ? 0.0 : 2.99;
         double totalCalculado = subtotal + costeEnvio;
         double descuento = 0.0;
 

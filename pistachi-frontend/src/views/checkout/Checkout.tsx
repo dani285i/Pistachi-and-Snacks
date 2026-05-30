@@ -10,6 +10,16 @@ import faviconTachi from '../../assets/favicon/pistachi-favicon.png';
 import './Checkout.css';
 
 // la joya de la corona, esta es la pantalla donde la gente se deja los cuartos, aqui validamos el codigo postal del concello y usamos paypal para cobrar la pasta, como por ejemplo avisando con mensajitos rojos si intentas mandarlo a un codigo postal inventado
+
+const playDingSound = () => {
+    try {
+        const audio = new Audio('/sounds/sonido-pago-exitoso.mp3');
+        audio.play().catch(e => console.log("Audio de campanita bloqueado o no soportado", e));
+    } catch (e) {
+        console.log("Audio no soportado");
+    }
+};
+
 const Checkout = () => {
     const { cartItems, clearCart } = useCart();
     const { usuario } = useAuth();
@@ -97,8 +107,12 @@ const Checkout = () => {
             });
 
             if (respuesta.ok) {
+                playDingSound();
+                addToast("¡Pago realizado con éxito! 🔔", "success");
                 clearCart();
-                navigate('/exito');
+                setTimeout(() => {
+                    navigate('/exito');
+                }, 1500);
             } else if (respuesta.status === 400) {
                 const errorData = await respuesta.text();
                 addToast(`❌ Transacción Rechazada: ${errorData}`, "error");
@@ -249,7 +263,7 @@ const Checkout = () => {
                                     Confirmar Pedido Gratis
                                 </button>
                             ) : (
-                                <PayPalScriptProvider options={{ clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || "test", currency: "EUR" }}>
+                                <PayPalScriptProvider options={{ clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || "test", currency: "EUR", "disable-funding": "card" }}>
                                     <PayPalButtons 
                                         disabled={!isCodigoValido}
                                         style={{ layout: "horizontal", color: "gold", shape: "pill", height: 50 }} 

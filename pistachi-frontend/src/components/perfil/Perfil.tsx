@@ -178,7 +178,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                                         >
                                             <td><strong>{pedido.id}</strong></td>
                                             <td>{pedido.fecha}</td>
-                                            <td>{pedido.total}€</td>
+                                            <td>{Number(pedido.total).toFixed(2)}€</td>
                                             <td>
                                                 <span className={`estado-badge ${getEstadoClass(pedido.estado)}`}>
                                                     {pedido.estado}

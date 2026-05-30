@@ -5,6 +5,7 @@ import './Breadcrumbs.css';
 const routeNames: Record<string, string> = {
     '': 'Inicio',
     'productos': 'Catálogo de Delicias',
+    'producto': 'Producto',
     'carrito': 'Tu Bandeja',
     'checkout': 'Pago Seguro',
     'exito': 'Pedido Confirmado',
