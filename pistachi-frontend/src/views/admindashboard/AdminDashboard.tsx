@@ -528,7 +528,7 @@ export const AdminDashboard = () => {
                                 <div className="form-group flex-1">
                                     <label>Stock Disponible</label>
                                     <div className="number-input-wrapper" style={isStockInvalid ? { border: '1px solid #E74C3C', borderRadius: '12px', overflow: 'hidden' } : {}}>
-                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: parseInt(e.target.value) || 0})} placeholder="Ej: 10" style={isStockInvalid ? { color: '#E74C3C' } : {}} />
+                                        <input required type="number" min="0" step="1" value={formData.stock} onChange={e => setFormData({...formData, stock: e.target.value === '' ? '' as any : parseInt(e.target.value)})} onBlur={() => setFormData({...formData, stock: formData.stock === '' || isNaN(formData.stock as any) ? 0 : formData.stock})} placeholder="Ej: 10" style={isStockInvalid ? { color: '#E74C3C' } : {}} />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, stock: (formData.stock || 0) + 1})}>
                                                 <CaretUp size={16} weight="bold" />
@@ -569,7 +569,7 @@ export const AdminDashboard = () => {
                                 <div className="form-group flex-1">
                                     <label>Precio (€)</label>
                                     <div className="number-input-wrapper">
-                                        <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: parseFloat(e.target.value) || 0})} placeholder="0.00" />
+                                        <input required type="number" step="0.01" value={formData.precio} onChange={e => setFormData({...formData, precio: e.target.value === '' ? '' as any : parseFloat(e.target.value)})} onBlur={() => setFormData({...formData, precio: formData.precio === '' || isNaN(formData.precio as any) ? 0 : formData.precio})} placeholder="0.00" />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, precio: parseFloat(((formData.precio || 0) + 0.10).toFixed(2))})}>
                                                 <CaretUp size={16} weight="bold" />
@@ -599,7 +599,7 @@ export const AdminDashboard = () => {
                                 <div className="form-group flex-1">
                                     <label>Unidades por Pack</label>
                                     <div className="number-input-wrapper">
-                                        <input required type="number" min="1" step="1" value={formData.unidades} onChange={e => setFormData({...formData, unidades: parseInt(e.target.value) || 1})} placeholder="Ej: 5" />
+                                        <input required type="number" min="1" step="1" value={formData.unidades} onChange={e => setFormData({...formData, unidades: e.target.value === '' ? '' as any : parseInt(e.target.value)})} onBlur={() => setFormData({...formData, unidades: formData.unidades === '' || isNaN(formData.unidades as any) ? 1 : formData.unidades})} placeholder="Ej: 5" />
                                         <div className="spinner-controls">
                                             <button type="button" className="spinner-btn" onClick={() => setFormData({...formData, unidades: (formData.unidades || 1) + 1})}>
                                                 <CaretUp size={16} weight="bold" />
@@ -672,7 +672,7 @@ export const AdminDashboard = () => {
                             <div className="form-row" style={{ alignItems: 'flex-end' }}>
                                 <div className="form-group flex-1">
                                     <label style={{ marginBottom: '2px' }}>Tachis (Puntos)</label>
-                                    <input required type="number" min="0" value={usuarioData.tachis || 0} onChange={e => setUsuarioData({...usuarioData, tachis: parseInt(e.target.value) || 0})} />
+                                    <input required type="number" min="0" value={usuarioData.tachis} onChange={e => setUsuarioData({...usuarioData, tachis: e.target.value === '' ? '' as any : parseInt(e.target.value)})} onBlur={() => setUsuarioData({...usuarioData, tachis: usuarioData.tachis === '' || isNaN(usuarioData.tachis as any) ? 0 : usuarioData.tachis})} />
                                 </div>
                                 <div className="form-group flex-1">
                                     <CustomDatePicker 

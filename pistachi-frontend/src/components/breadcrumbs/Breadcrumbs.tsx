@@ -43,7 +43,7 @@ const Breadcrumbs = () => {
                     if (!displayName) {
                         if (pathnames[index - 1] === 'producto') displayName = 'Detalle de Producto';
                         else if (pathnames[index - 1] === 'pedido') displayName = 'Detalle de Pedido';
-                        else displayName = value; // Fallback
+                        else displayName = value.charAt(0).toUpperCase() + value.slice(1); // Fallback
                     }
 
                     return (

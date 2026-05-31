@@ -76,6 +76,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
         setModalConfirmarSalir(false);
         logout();
         cerrarPerfil();
+        navigate('/login');
     };
 
     return (

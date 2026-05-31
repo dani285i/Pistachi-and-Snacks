@@ -36,10 +36,10 @@ const Exito = () => {
                 </div>
 
                 <div className="exito-actions">
-                    <button className="btn-primary" onClick={() => navigate('/productos')}>
-                        Seguir Comprando
+                    <button className="btn-primary" onClick={() => navigate('/', { replace: true })}>
+                        Ir al Inicio
                     </button>
-                    <button className="btn-secondary" onClick={() => navigate('/perfil')}>
+                    <button className="btn-secondary" onClick={() => navigate('/perfil', { replace: true })}>
                         Ver mi Cartera de Tachis
                     </button>
                 </div>
