@@ -491,18 +491,18 @@
 .admin-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 16px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .form-row {
     display: flex;
-    gap: 10px;
+    gap: 16px;
     width: 100%;
 }
 
@@ -712,6 +712,28 @@
 .badge-suscripcion.premium {
     background: #F3E8FF;
     color: #8E44AD;
+}
+
+/* Badges para el Rol de Usuario */
+.rol-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    display: inline-block;
+    border-radius: 8px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.rol-badge.admin {
+    background: rgba(181, 255, 164, 0.4);
+    color: #348226;
+}
+
+.rol-badge.usuario {
+    background: rgba(149, 165, 166, 0.15);
+    color: #7F8C8D;
 }
 
 /* Estilos para las opciones de los Select del Admin */

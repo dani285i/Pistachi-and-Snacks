@@ -522,7 +522,7 @@ export const AdminDashboard = () => {
                                         <td className="hide-on-mobile">{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
                                         <td className="hide-on-mobile">{u.proximaEntrega ? new Date(u.proximaEntrega).toLocaleDateString() : '--'}</td>
                                         <td><span className={`badge-suscripcion ${getClaseSuscripcion(u.tipoSuscripcion)}`}>{u.tipoSuscripcion || 'Ninguna'}</span></td>
-                                        <td className="hide-on-mobile"><span className="categoria-badge">{u.rol}</span></td>
+                                        <td className="hide-on-mobile"><span className={`rol-badge ${u.rol?.toLowerCase()}`}>{u.rol}</span></td>
                                         <td className="actions-cell">
                                             <div className="desktop-actions">
                                                 <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
@@ -721,7 +721,7 @@ export const AdminDashboard = () => {
                             </button>
                         </div>
                         <form onSubmit={handleSubmitUsuario} className="admin-form">
-                            <div className="form-row" style={{ marginBottom: '-8px' }}>
+                            <div className="form-row">
                                 <div className="form-group flex-1">
                                     <label>Nombre</label>
                                     <input required type="text" value={usuarioData.nombre || ''} onChange={e => setUsuarioData({...usuarioData, nombre: e.target.value})} />
@@ -731,32 +731,33 @@ export const AdminDashboard = () => {
                                     <input required type="text" value={usuarioData.apellidos || ''} onChange={e => setUsuarioData({...usuarioData, apellidos: e.target.value})} />
                                 </div>
                             </div>
-                            <div className="form-group" style={{ marginBottom: '-8px' }}>
+                            <div className="form-group">
                                 <label>Email</label>
                                 <input required type="email" value={usuarioData.email || ''} onChange={e => setUsuarioData({...usuarioData, email: e.target.value})} />
                             </div>
-                            <div className="form-group" style={{ marginBottom: '-8px' }}>
+                            <div className="form-group">
                                 <label>Username</label>
                                 <input required type="text" value={usuarioData.username || ''} onChange={e => setUsuarioData({...usuarioData, username: e.target.value})} />
                             </div>
-                            <div className="form-row" style={{ alignItems: 'flex-end' }}>
+                            <div className="form-row">
                                 <div className="form-group flex-1">
-                                    <label style={{ marginBottom: '2px' }}>Tachis (Puntos)</label>
+                                    <label>Tachis (Puntos)</label>
                                     <input required type="number" min="0" value={usuarioData.tachis} onChange={e => setUsuarioData({...usuarioData, tachis: e.target.value === '' ? '' as any : parseInt(e.target.value)})} onBlur={() => setUsuarioData({...usuarioData, tachis: (usuarioData.tachis as any) === '' || isNaN(usuarioData.tachis as any) ? 0 : usuarioData.tachis})} />
                                 </div>
                                 <div className="form-group flex-1">
+                                    <label>Fecha de Nacimiento</label>
                                     <CustomDatePicker 
                                         value={usuarioData.fechaNacimiento || ''}
                                         onChange={(val) => setUsuarioData({...usuarioData, fechaNacimiento: val})}
                                         mode="birthdate"
-                                        label="Fecha de Nacimiento"
                                         required={true}
+                                        hideFloatingLabel={true}
                                     />
                                 </div>
                             </div>
-                            <div className="form-row" style={{ alignItems: 'flex-end' }}>
+                            <div className="form-row">
                                 <div className="form-group flex-1">
-                                    <label style={{ marginBottom: '2px' }}>Suscripción Actual</label>
+                                    <label>Suscripción Actual</label>
                                     <CustomSelect 
                                         options={[
                                             { value: 'Ninguna', label: 'Ninguna' },
@@ -768,11 +769,12 @@ export const AdminDashboard = () => {
                                     />
                                 </div>
                                 <div className="form-group flex-1">
+                                    <label>Próxima Entrega</label>
                                     <CustomDatePicker 
                                         value={usuarioData.proximaEntrega || ''}
                                         onChange={(val) => setUsuarioData({...usuarioData, proximaEntrega: val})}
                                         mode="future"
-                                        label="Próxima Entrega"
+                                        hideFloatingLabel={true}
                                     />
                                 </div>
                             </div>

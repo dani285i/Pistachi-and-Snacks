@@ -8,6 +8,7 @@ interface CustomDatePickerProps {
     mode: 'birthdate' | 'future';
     label?: string;
     required?: boolean;
+    hideFloatingLabel?: boolean;
 }
 
 const MESES = [
@@ -17,7 +18,7 @@ const MESES = [
 
 const DIAS_SEMANA = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-export const CustomDatePicker = ({ value, onChange, mode, label, required }: CustomDatePickerProps) => {
+export const CustomDatePicker = ({ value, onChange, mode, label, required, hideFloatingLabel }: CustomDatePickerProps) => {
     const [isOpen, setIsOpen] = useState(false);
     
     // Internal state for the calendar view
@@ -192,18 +193,18 @@ export const CustomDatePicker = ({ value, onChange, mode, label, required }: Cus
     return (
         <div className="custom-datepicker-container" ref={containerRef}>
             {/* The Input Trigger (Looks exactly like the floating-input) */}
-            <div className="floating-input-group" style={{ marginTop: '10px' }}>
+            <div className="floating-input-group" style={hideFloatingLabel ? {} : { marginTop: '10px' }}>
                 <CalendarBlank size={22} weight="bold" className="input-icon left-icon" />
                 <input 
                     type="text" 
                     readOnly
-                    className={`floating-input ${displayValue.length > 0 ? 'filled' : ''} datepicker-trigger`}
+                    className={`${hideFloatingLabel ? 'admin-datepicker-input' : 'floating-input'} ${displayValue.length > 0 ? 'filled' : ''} datepicker-trigger`}
                     value={displayValue}
                     onClick={() => setIsOpen(!isOpen)}
                     placeholder=" "
                     required={required}
                 />
-                <label className="floating-label">{label || "Fecha"}</label>
+                {!hideFloatingLabel && <label className="floating-label">{label || "Fecha"}</label>}
                 {!required && value && (
                     <button 
                         type="button"
