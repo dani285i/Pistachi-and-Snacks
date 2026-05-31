@@ -454,4 +454,17 @@
         margin-top: -24px;
         box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
     }
+
+    .input-row-split {
+        flex-direction: column;
+        gap: 26px;
+    }
+
+    .brand-watermark h2 {
+        font-size: 2rem;
+    }
+
+    .login-header h1 {
+        font-size: 1.8rem;
+    }
 }

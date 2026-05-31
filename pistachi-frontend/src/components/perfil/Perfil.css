@@ -310,6 +310,45 @@
 }
 
 /* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .perfil-bandeja {
+        max-width: 100%;
+    }
+    .perfil-header {
+        padding: 25px 20px 15px;
+    }
+    .perfil-header h2 {
+        font-size: 1.8rem;
+    }
+    .perfil-scroll-area {
+        padding: 0 20px 30px;
+    }
+    .perfil-footer {
+        padding: 15px 20px;
+    }
+    .suscripcion-header {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .suscripcion-acciones {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .tabla-pedidos-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tabla-pedidos {
+        min-width: 500px;
+    }
+    .tarjeta-premium {
+        padding: 20px 15px;
+    }
+    .tarjeta-premium.tachis-card h3 {
+        font-size: 2rem;
+    }
+}
+
 @media (max-width: 500px) {
     .perfil-bandeja {
         width: 100vw;
@@ -318,10 +357,10 @@
     .perfil-bandeja.abierta {
         right: 0;
     }
-    .perfil-body {
-        padding: 1.5rem;
+    .perfil-header h2 {
+        font-size: 1.5rem;
     }
     .tarjeta-premium {
-        padding: 1.5rem;
+        padding: 15px;
     }
 }

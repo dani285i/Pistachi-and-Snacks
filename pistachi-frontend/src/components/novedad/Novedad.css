@@ -1,16 +1,17 @@
 .novedad-premium {
     position: relative;
     display: flex;
+    flex-direction: column; /* MOBILE FIRST */
     width: 100%;
-    min-height: 550px;
+    min-height: auto;
     background-color: #ffffff;
     overflow: hidden;
     perspective: 1000px; 
 }
 
-/* Columna de la imagen (Z-INDEX 1: Siempre al fondo) */
+/* Columna de la imagen */
 .novedad-image-column {
-    width: 55%;
+    width: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -23,47 +24,31 @@
     height: 100%;
     object-fit: cover; 
     object-position: center;
-    /* le doy una transicion elastica para el efecto de ofrenda */
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ANIMACION 1: Al pasar el raton por la columna, solo crece la imagen, sin alterar las capas */
 .novedad-image-column:hover .novedad-img {
     transform: scale(1.04);
 }
 
-/* ANIMACION 2: Magia pura. Al hacer hover en la imagen, modificamos el bloque verde que tiene al lado */
-.novedad-image-column:hover + .novedad-text-column {
-    /* Desplazamos los dos puntos izquierdos un 8% hacia la derecha para abrir la imagen */
-    clip-path: polygon(23% 0, 100% 0, 100% 100%, 8% 100%);
-}
-
-/* Columna de texto (Z-INDEX 2: Siempre por encima marcando el corte) */
+/* Columna de texto */
 .novedad-text-column {
-    width: 55%;
+    width: 100%;
     background-color: #2A3B24;
-    margin-left: -10%; 
-    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
     z-index: 2; 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 4rem 4rem 4rem 15%; 
-    /* aplico la transicion al clip-path para que la diagonal se mueva fluidamente como una puerta corredera */
+    padding: 3rem 1.5rem; 
+    box-sizing: border-box; /* Previene desbordamiento */
     transition: transform 0.4s ease-out, clip-path 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; 
-    transform-origin: center right; 
-}
-
-/* ANIMACION 3: El hover del propio contenedor verde */
-.novedad-text-column:hover {
-    transform: scale(1.03) translateZ(10px);
-    box-shadow: -15px 0 50px rgba(0,0,0,0.3); 
-    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); 
 }
 
 /* Estilos internos del contenido */
 .novedad-content-inner {
-    max-width: 500px;
+    width: 100%;
+    max-width: 100%; /* Elimina anchos fijos */
+    box-sizing: border-box;
 }
 
 .novedad-badge {
@@ -79,7 +64,7 @@
 }
 
 .novedad-title {
-    font-size: 4rem;
+    font-size: 2.5rem; /* Ajustado para móvil */
     color: #FDFBF7;
     line-height: 1.1;
     margin: 0 0 1.5rem 0;
@@ -87,21 +72,23 @@
 }
 
 .novedad-description {
-    font-size: 1.15rem;
+    font-size: 1rem;
     color: #C2D1B8;
     line-height: 1.6;
     margin: 0 0 2.5rem 0;
-    max-width: 90%;
+    width: 100%;
+    max-width: 100%; /* Permite respirar al texto */
 }
 
 .novedad-price-row {
     display: flex;
     align-items: center;
-    gap: 2.5rem;
+    flex-wrap: wrap; /* Evita que el precio se monte con el botón */
+    gap: 1.5rem;
 }
 
 .novedad-price {
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: #D4E157;
     font-weight: 900;
 }
@@ -113,8 +100,8 @@
     background-color: #FDFBF7;
     color: #2A3B24;
     border: none;
-    padding: 1.2rem 2.5rem;
-    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
     font-weight: 700;
     border-radius: 8px;
     cursor: pointer;
@@ -138,31 +125,46 @@
     background-color: #2A3B24;
 }
 
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 960px) {
-    .novedad-section {
-        padding: 4rem 1.5rem;
-    }
-    
-    .novedad-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    .novedad-content {
-        padding-right: 0;
-        text-align: center;
-        align-items: center;
+/* --- DISEÑO DESKTOP (pantallas grandes) --- */
+@media (min-width: 769px) {
+    .novedad-premium {
+        flex-direction: row;
+        min-height: 400px;
     }
 
-    .novedad-price-action {
-        flex-direction: column;
-        align-items: center;
+    .novedad-image-column {
+        width: 55%;
     }
 
-    .novedad-add-btn {
-        width: 100%;
-        max-width: 300px;
-        justify-content: center;
+    .novedad-text-column {
+        width: 55%;
+        margin-left: -10%; 
+        clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+        padding: 3rem 3rem 3rem 15%; 
+        transform-origin: center right; 
+    }
+
+    .novedad-image-column:hover + .novedad-text-column {
+        clip-path: polygon(23% 0, 100% 0, 100% 100%, 8% 100%);
+    }
+
+    .novedad-text-column:hover {
+        transform: scale(1.03) translateZ(10px);
+        box-shadow: -15px 0 50px rgba(0,0,0,0.3); 
+        clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); 
+    }
+
+    .novedad-title {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .novedad-description {
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .novedad-price {
+        font-size: 2.5rem;
     }
 }

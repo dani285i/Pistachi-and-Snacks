@@ -85,10 +85,48 @@
     color: #FFFFFF;
 }
 
-/* Responsividad simple */
+/* Responsividad */
 @media (max-width: 768px) {
     .detalle-tarjeta {
         grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 25px;
+        border-radius: 20px;
+    }
+    .detalle-contenedor {
+        margin: 40px auto;
+        padding: 15px;
+    }
+    .detalle-galeria img {
+        height: 350px;
+        border-radius: 16px;
+    }
+    .detalle-titulo {
+        font-size: 2.2rem;
+    }
+    .detalle-precio {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .detalle-tarjeta {
+        padding: 15px;
+    }
+    .detalle-galeria img {
+        height: 280px;
+    }
+    .detalle-titulo {
+        font-size: 1.8rem;
+    }
+    .detalle-precio {
+        font-size: 1.6rem;
+    }
+    .boton-añadir-carrito,
+    .boton-agotado {
+        padding: 14px 24px;
+        font-size: 1rem;
     }
 }
 

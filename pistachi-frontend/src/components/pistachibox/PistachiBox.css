@@ -132,11 +132,50 @@
     .pistachibox-container {
         flex-direction: column;
         padding: 0 20px;
+        gap: 40px;
+        margin: 50px auto;
     }
     
-    .pistachibox-image-col {
+    .pistachibox-image-col,
+    .pistachibox-image-col.degustacion-view,
+    .pistachibox-image-col.premium-view {
         width: 100%;
+        flex: none;
         height: 350px;
+    }
+
+    .pistachibox-content-col {
+        flex: none;
+        width: 100%;
+    }
+
+    .pistachibox-title {
+        font-size: 2.2rem;
+    }
+
+    .pistachibox-plans {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .pistachibox-plan {
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pistachibox-container {
+        margin: 30px auto;
+        gap: 25px;
+        padding: 0 15px;
+    }
+    .pistachibox-title {
+        font-size: 1.8rem;
+    }
+    .pistachibox-image-col,
+    .pistachibox-image-col.degustacion-view,
+    .pistachibox-image-col.premium-view {
+        height: 280px;
     }
 }
 

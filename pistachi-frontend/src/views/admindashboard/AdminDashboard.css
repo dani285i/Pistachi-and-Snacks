@@ -509,11 +509,29 @@
 
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 1024px) {
-    .admin-dashboard {
-        padding: 6rem 1rem 2rem 1rem;
+    .admin-dashboard-layout {
+        flex-direction: column;
+        padding: 10px;
     }
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+    
+    .admin-sidebar {
+        width: 100%;
+        padding: 20px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        border-radius: 16px;
+    }
+    
+    .sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+    
+    .nav-item {
+        white-space: nowrap;
     }
 }
 
@@ -527,22 +545,29 @@
         gap: 1.5rem;
     }
     
-    .table-container {
+    .content-card {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        margin: 0 -1.5rem;
-        padding: 0 1.5rem;
-        width: calc(100% + 3rem);
+        padding: 15px;
     }
 
-    .data-table th, .data-table td {
+    .admin-table {
+        min-width: 800px; /* Fuerza el scroll en móviles */
+    }
+
+    .admin-table th, .admin-table td {
         padding: 1rem 0.5rem;
         font-size: 0.9rem;
     }
 
-    .admin-header {
+    .main-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
+    }
+    
+    .add-btn {
+        width: 100%;
+        justify-content: center;
     }
 }

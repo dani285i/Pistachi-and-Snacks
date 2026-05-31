@@ -51,4 +51,13 @@ body {
     background-color: var(--bg-cream);
     color: var(--text-main);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }

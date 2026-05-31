@@ -383,14 +383,50 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsivo */
+/* --- RESPONSIVE DESIGN --- */
 @media (max-width: 960px) {
     .checkout-grid {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
     .checkout-resumen {
         position: static;
         order: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .checkout-wrapper {
+        padding: 0 15px;
+        margin: 20px auto 30px auto;
+    }
+    .checkout-header h1 {
+        font-size: 2rem;
+    }
+    .checkout-seccion {
+        padding: 25px 20px;
+        border-radius: 18px;
+    }
+    .checkout-seccion h2 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+    .checkout-resumen {
+        padding: 25px 20px;
+        border-radius: 18px;
+    }
+    .checkout-resumen h2 {
+        font-size: 1.3rem;
+    }
+    .resumen-fila.total {
+        font-size: 1.4rem;
+    }
+    .payment-method-card {
+        padding: 18px 15px;
+    }
+    .btn-pagar-ahora {
+        padding: 16px;
+        font-size: 1rem;
     }
 }
 

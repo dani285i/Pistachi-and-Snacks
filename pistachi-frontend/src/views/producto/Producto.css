@@ -10,7 +10,7 @@
 .catalogo-wrapper {
     max-width: 1250px;
     margin: 60px auto;
-    padding: 0 50px 0px 50px;
+    padding: 0 50px;
 }
 
 /* Cabecera artesanal */
@@ -85,7 +85,7 @@
 /* Rejilla Principal */
 .rejilla-catalogo {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
     gap: 40px; 
     margin-bottom: 40px;
 }
@@ -449,4 +449,67 @@
 .pag-btn-nav:disabled {
     opacity: 0.3;
     cursor: not-allowed;
+}
+
+/* --- ESTILOS RESPONSIVE PARA EL CATÁLOGO --- */
+@media (max-width: 960px) {
+    .catalogo-wrapper {
+        padding: 0 25px;
+        margin: 40px auto;
+    }
+    
+    .rejilla-catalogo {
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .catalogo-cabecera h1 {
+        font-size: 2.5rem;
+    }
+    
+    .catalogo-cabecera p {
+        font-size: 1rem;
+        padding: 0 15px;
+    }
+    
+    .filtros-categoria {
+        gap: 8px;
+    }
+    
+    .filtro-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .tarjeta-img-box {
+        height: 240px;
+    }
+}
+
+@media (max-width: 480px) {
+    .catalogo-wrapper {
+        padding: 0 15px;
+        margin: 30px auto;
+    }
+    
+    .rejilla-catalogo {
+        grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        gap: 20px;
+    }
+
+    .catalogo-cabecera h1 {
+        font-size: 2.2rem;
+    }
+    
+    .paginacion-flotante {
+        padding: 10px 15px;
+        gap: 10px;
+    }
+    
+    .pag-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
 }

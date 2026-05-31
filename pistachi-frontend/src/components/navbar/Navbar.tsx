@@ -4,7 +4,7 @@ import { useToast } from '../../context/toast/ToastContext';
 import { useAuth } from '../../context/auth/Auth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
-import { ShoppingCart } from '@phosphor-icons/react';
+import { ShoppingCart, List, X } from '@phosphor-icons/react';
 import iconoAdmin from '../../assets/favicon/web-app-manifest-512x512.png';
 import Perfil from '../perfil/Perfil';
 import './Navbar.css';
@@ -18,6 +18,9 @@ const Navbar = () => {
 
     // ESTADO PARA ABRIR/CERRAR LA BANDEJA DEL PERFIL
     const [perfilAbierto, setPerfilAbierto] = useState(false);
+    
+    // ESTADO PARA EL MENÚ MÓVIL
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         if (location.hash === '#perfil') {
@@ -42,6 +45,24 @@ const Navbar = () => {
         return () => window.removeEventListener('cartItemEvicted', handleEviction);
     }, [location.pathname]); // Validar cada vez que cambiamos de página
 
+    // CERRAR MENU AL CAMBIAR DE RUTA
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location.pathname]);
+
+    // BLOQUEAR SCROLL CUANDO EL MENÚ MÓVIL ESTÁ ABIERTO
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMobileMenuOpen]);
+
     // CONTROL DEL LOGO
     const handleLogoClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -59,6 +80,7 @@ const Navbar = () => {
 
     // CONTROL DE NOVEDADES
     const handleNovedadesClick = () => {
+        setIsMobileMenuOpen(false);
         if (location.pathname === '/') {
             scroller.scrollTo('seccion-novedad', {
                 smooth: true,
@@ -89,51 +111,85 @@ const Navbar = () => {
                         </Link>
                     </div>
                     
-                    <div className="navbar-menu">
+                    <div className={`navbar-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+                        <div className="menu-close-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                            <X size={28} weight="bold" />
+                        </div>
                         <Link to="/" className="menu-link" onClick={handleInicioClick}>Inicio</Link>
                         <span onClick={handleNovedadesClick} className="menu-link" style={{ cursor: 'pointer' }}>Novedades</span>
                         <Link to="/productos" className="menu-link">Catálogo</Link>
                         <Link to="/favoritos" className="menu-link">Favoritos</Link>
+                        
+                        {/* ACCIONES DE USUARIO EN MÓVIL (dentro del menú) */}
+                        <div className="mobile-only-actions">
+                            {usuario ? (
+                                <div className="user-section-mobile">
+                                    <button 
+                                        className="etiqueta-bandeja" 
+                                        onClick={() => { setPerfilAbierto(true); setIsMobileMenuOpen(false); }}
+                                    >
+                                        <span className="etiqueta-texto">Mi Bandeja</span>
+                                        <strong className="etiqueta-nombre">{usuario.nombre}</strong>
+                                    </button>
+                                    {usuario?.username === 'admin' && (
+                                        <Link to="/admin" className="admin-badge">
+                                            <img src={iconoAdmin} alt="Panel Admin" className="admin-badge-icon" />
+                                            Admin
+                                        </Link>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="auth-section-mobile">
+                                    <Link to="/login" className="action-btn login-btn">Entrar</Link>
+                                    <Link to="/registro" className="action-btn register-btn">Registro</Link>
+                                </div>
+                            )}
+                        </div>
                     </div>
                     
                     <div className="navbar-actions">
-                        {usuario ? (
-                            <div className="user-section">
-                                {usuario?.username === 'admin' && (
-                                    <Link to="/admin" className="admin-badge">
-                                        <img src={iconoAdmin} alt="Panel Admin" className="admin-badge-icon" />
-                                        Admin
-                                    </Link>
-                                )}
-                                
-                                {/* LA NUEVA ETIQUETA INNOVADORA DE ACCESO AL PERFIL */}
-                                <button 
-                                    className="etiqueta-bandeja" 
-                                    onClick={() => setPerfilAbierto(true)}
-                                >
-                                    <span className="etiqueta-texto">Mi Bandeja</span>
-                                    <strong className="etiqueta-nombre">{usuario.nombre}</strong>
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="auth-section">
-                                <Link to="/login" className="action-btn login-btn">Entrar</Link>
-                                <Link to="/registro" className="action-btn register-btn">Registro</Link>
-                            </div>
-                        )}
+                        <div className="desktop-only-actions">
+                            {usuario ? (
+                                <div className="user-section">
+                                    {usuario?.username === 'admin' && (
+                                        <Link to="/admin" className="admin-badge">
+                                            <img src={iconoAdmin} alt="Panel Admin" className="admin-badge-icon" />
+                                            Admin
+                                        </Link>
+                                    )}
+                                    
+                                    <button 
+                                        className="etiqueta-bandeja" 
+                                        onClick={() => setPerfilAbierto(true)}
+                                    >
+                                        <span className="etiqueta-texto">Mi Bandeja</span>
+                                        <strong className="etiqueta-nombre">{usuario.nombre}</strong>
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="auth-section">
+                                    <Link to="/login" className="action-btn login-btn">Entrar</Link>
+                                    <Link to="/registro" className="action-btn register-btn">Registro</Link>
+                                </div>
+                            )}
+                        </div>
                         
                         <div className="tools-section">
                             {usuario && (
-                                <div className="points-badge">
+                                <div className="points-badge desktop-only-points">
                                     <img src={iconoAdmin} alt="Tachis" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
                                     <span>{Number(usuario.tachis || 0).toLocaleString('de-DE')} Tachis</span>
                                 </div>
                             )}
                             
-                            <Link to="/carrito" className="cart-badge-btn">
+                            <Link to="/carrito" className="cart-badge-btn" aria-label="Carrito de compras">
                                 <ShoppingCart size={20} weight="bold" />
-                                <span className="cart-count">{totalItems}</span>
+                                {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
                             </Link>
+
+                            <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(true)} aria-label="Abrir menú">
+                                <List size={28} weight="bold" />
+                            </button>
                         </div>
                     </div>
 

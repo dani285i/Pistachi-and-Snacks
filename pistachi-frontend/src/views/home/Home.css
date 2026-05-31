@@ -213,11 +213,26 @@
 
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
-    .seccion-destacados {
+    .craft-welcome {
+        padding: 4rem 1.5rem;
+    }
+    .welcome-content h2 {
+        font-size: 2rem;
+    }
+    .craft-showcase {
         padding: 3rem 1.5rem;
     }
-    .productos-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    .craft-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1.5rem;
+    }
+    .card-image-box {
+        height: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .craft-grid {
+        grid-template-columns: 1fr;
     }
 }

@@ -295,12 +295,55 @@
     background: #121619;
 }
 
-/* Responsividad básica */
+/* --- RESPONSIVE DESIGN --- */
 @media (max-width: 900px) {
     .carrito-grid {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
     .carrito-ticket-wrapper {
         position: static;
+    }
+    .carrito-header-global h1 {
+        font-size: 2rem;
+    }
+    .checkout-header h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .carrito-layout {
+        padding: 30px 15px;
+    }
+    .carrito-item-card {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px;
+    }
+    .item-imagen-box {
+        width: 80px;
+        height: 80px;
+    }
+    .item-info h3 {
+        font-size: 1rem;
+    }
+    .item-precio-total {
+        font-size: 1.2rem;
+        min-width: auto;
+        width: 100%;
+        text-align: left;
+        padding-top: 10px;
+        border-top: 1px solid #EAE7E0;
+    }
+    .item-controles {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .ticket-obrador {
+        padding: 25px 20px;
+    }
+    .ticket-fila.total {
+        font-size: 1.3rem;
     }
 }
