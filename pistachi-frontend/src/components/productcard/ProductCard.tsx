@@ -91,17 +91,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
                 {isPocasUnidades && <span className="pocas-unidades-badge">¡Quedan pocas unidades!</span>}
             </div>
             
-            <div className="tarjeta-body">
+                <div className="tarjeta-body">
                 <div className="tarjeta-header-info">
                     <span className="categoria-badge">{producto.categoria}</span>
-                    <h3>
-                        {producto.nombre}
-                        {producto.unidades > 1 && (
-                            <span style={{ fontSize: '0.85rem', color: 'var(--color-texto-light)', marginLeft: '8px', fontWeight: 'normal' }}>
-                                ({producto.unidades} Uds)
-                            </span>
-                        )}
-                    </h3>
+                    <h3>{producto.nombre}</h3>
+                    {producto.unidades > 1 && (
+                        <span className="unidad-count">({producto.unidades} Uds)</span>
+                    )}
                 </div>
                 
                 <p className="tarjeta-desc">{producto.descripcion}</p>

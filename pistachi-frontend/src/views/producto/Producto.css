@@ -187,11 +187,36 @@
     box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
 }
 
+/* Badge para productos destacados (Top Ventas) */
+.craft-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--color-pistacho-oscuro);
+    color: #FFFFFF;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 10;
+}
+
 .tarjeta-body h3 {
     margin: 5px 0 0 0;
     font-size: 1.4rem;
     color: var(--color-texto-main);
     font-weight: 700;
+}
+
+/* Texto de unidades mostrado en línea separada debajo del título */
+.unidad-count {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-texto-light);
+    margin-top: 6px;
+    font-weight: 400;
 }
 
 .tarjeta-desc {
