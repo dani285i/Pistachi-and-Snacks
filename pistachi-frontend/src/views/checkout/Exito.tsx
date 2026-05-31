@@ -39,7 +39,7 @@ const Exito = () => {
                     <button className="btn-primary" onClick={() => navigate('/', { replace: true })}>
                         Ir al Inicio
                     </button>
-                    <button className="btn-secondary" onClick={() => navigate('/perfil', { replace: true })}>
+                    <button className="btn-secondary" onClick={() => navigate('/#perfil', { replace: true })}>
                         Ver mi Cartera de Tachis
                     </button>
                 </div>

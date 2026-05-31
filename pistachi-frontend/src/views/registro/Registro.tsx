@@ -102,7 +102,7 @@ const Registro = () => {
             if (respuesta.ok) {
                 const dataUsuario = await respuesta.json(); 
                 login(dataUsuario);
-                addToast("Registro exitoso. Â¡Bienvenido al obrador!", 'success');
+                addToast("Registro exitoso. ¡Bienvenido al obrador!", 'success');
                 navigate('/');
             } else {
                 setErrores(["Error al registrar el usuario. Es posible que el correo o usuario ya existan."]);

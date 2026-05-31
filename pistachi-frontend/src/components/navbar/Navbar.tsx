@@ -19,6 +19,13 @@ const Navbar = () => {
     // ESTADO PARA ABRIR/CERRAR LA BANDEJA DEL PERFIL
     const [perfilAbierto, setPerfilAbierto] = useState(false);
 
+    useEffect(() => {
+        if (location.hash === '#perfil') {
+            setPerfilAbierto(true);
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.hash, navigate, location.pathname]);
+
     // VALIDACION DE INVENTARIO PARA CARRITO
     useEffect(() => {
         const handleEviction = (e: any) => {

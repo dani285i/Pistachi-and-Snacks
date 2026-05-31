@@ -5,7 +5,7 @@ import './Breadcrumbs.css';
 const routeNames: Record<string, string> = {
     '': 'Inicio',
     'productos': 'Catálogo de Delicias',
-    'producto': 'Producto',
+    'producto': 'Productos',
     'carrito': 'Tu Bandeja',
     'checkout': 'Pago Seguro',
     'exito': 'Pedido Confirmado',
@@ -36,13 +36,16 @@ const Breadcrumbs = () => {
                 
                 {pathnames.map((value, index) => {
                     const isLast = index === pathnames.length - 1;
-                    const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+                    let to = `/${pathnames.slice(0, index + 1).join('/')}`;
+                    if (value === 'producto') to = '/productos';
+                    if (value === 'pedido') to = '/#perfil';
                     
                     // Manejar rutas dinámicas como /producto/1 o /pedido/5
                     let displayName = routeNames[value];
                     if (!displayName) {
                         if (pathnames[index - 1] === 'producto') displayName = 'Detalle de Producto';
                         else if (pathnames[index - 1] === 'pedido') displayName = 'Detalle de Pedido';
+                        else if (value === 'pedido') displayName = 'Perfil';
                         else displayName = value.charAt(0).toUpperCase() + value.slice(1); // Fallback
                     }
 

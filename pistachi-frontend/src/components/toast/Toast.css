@@ -75,3 +75,20 @@
     background-color: #F3F4F6;
     color: #4B5563;
 }
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    animation: toastProgress 3.5s linear forwards;
+}
+
+.toast-progress-bar.bg-success { background: #10B981; }
+.toast-progress-bar.bg-error { background: #E74C3C; }
+.toast-progress-bar.bg-info { background: #3498DB; }
+
+@keyframes toastProgress {
+    0% { width: 100%; }
+    100% { width: 0%; }
+}

@@ -80,7 +80,7 @@ const Login = () => {
             if (respuesta.ok) {
                 const dataUsuario = await respuesta.json();
                 login(dataUsuario);
-                addToast(`Â¡Bienvenido de nuevo, ${dataUsuario.nombre}!`, 'success');
+                addToast(`¡Bienvenido de nuevo, ${dataUsuario.nombre}!`, 'success');
                 navigate('/');
             } else {
                 setError("Email o contraseña incorrectos.");
