@@ -505,3 +505,44 @@
     font-style: italic;
 }
 
+
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 1024px) {
+    .admin-dashboard {
+        padding: 6rem 1rem 2rem 1rem;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -1.5rem;
+        padding: 0 1.5rem;
+        width: calc(100% + 3rem);
+    }
+
+    .data-table th, .data-table td {
+        padding: 1rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}

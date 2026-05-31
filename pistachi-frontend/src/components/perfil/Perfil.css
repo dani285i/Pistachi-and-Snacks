@@ -165,7 +165,7 @@
 
 .badge-suscripcion.degustacion {
     background: #EAF2E4;
-    color: #4A6741;
+    color: #2D4026;
 }
 
 .badge-suscripcion.premium {
@@ -232,7 +232,7 @@
     font-weight: 600;
 }
 
-.estado-cancelado { background: #FADBD8; color: #E74C3C; }
+.estado-cancelado { background: #FADBD8; color: #C0392B; }
 .estado-proceso { background: #FAE5D3; color: #E67E22; }
 .estado-transito { background: #D6EAF8; color: #3498DB; }
 .estado-entregado { background: #D5F5E3; color: #2ECC71; }
@@ -253,7 +253,7 @@
     gap: 10px;
     background: rgba(231, 76, 60, 0.1);
     border: none;
-    color: #E74C3C;
+    color: #C0392B;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
@@ -307,4 +307,21 @@
 
 .btn-ir-catalogo:hover {
     background: #4A6741;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 500px) {
+    .perfil-bandeja {
+        width: 100vw;
+        right: -100vw;
+    }
+    .perfil-bandeja.abierta {
+        right: 0;
+    }
+    .perfil-body {
+        padding: 1.5rem;
+    }
+    .tarjeta-premium {
+        padding: 1.5rem;
+    }
 }

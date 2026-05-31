@@ -1,24 +1,25 @@
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import Navbar from './components/navbar/Navbar';
 import Breadcrumbs from './components/breadcrumbs/Breadcrumbs';
-import Home from './views/home/Home';
-import Login from './views/login/Login';
-import Productos from './views/producto/Producto'; 
-import DetalleProducto from './views/detalleproducto/DetalleProducto';
-import Carrito from './views/carrito/Carrito';
-import Checkout from './views/checkout/Checkout';
-import Exito from './views/checkout/Exito';
+const Home = React.lazy(() => import('./views/home/Home'));
+const Login = React.lazy(() => import('./views/login/Login'));
+const Productos = React.lazy(() => import('./views/producto/Producto'));
+const DetalleProducto = React.lazy(() => import('./views/detalleproducto/DetalleProducto'));
+const Carrito = React.lazy(() => import('./views/carrito/Carrito'));
+const Checkout = React.lazy(() => import('./views/checkout/Checkout'));
+const Exito = React.lazy(() => import('./views/checkout/Exito'));
 import { CartProvider } from './context/carrito/Carrito';
 import { AuthProvider } from './context/auth/Auth';
 import { FavoritosProvider } from './context/favoritos/Favoritos';
-import Favoritos from './views/favoritos/Favoritos';
-import Registro from './views/registro/Registro';
+const Favoritos = React.lazy(() => import('./views/favoritos/Favoritos'));
+const Registro = React.lazy(() => import('./views/registro/Registro'));
 import ProtectedRoute from './components/protectedroute/ProtectedRoute';
 import Footer from './components/footer/Footer';
-import { AdminDashboard } from './views/admindashboard/AdminDashboard';
+const AdminDashboard = React.lazy(() => import('./views/admindashboard/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
 import { ToastProvider } from './context/toast/ToastContext';
-import DetallePedido from './views/detallepedido/DetallePedido';
+const DetallePedido = React.lazy(() => import('./views/detallepedido/DetallePedido'));
 
 
 function App() {
@@ -32,7 +33,8 @@ function App() {
                   <Navbar />
                   <Breadcrumbs />
                   
-                  <div style={{ flex: 1 }}> 
+                  <main style={{ flex: 1 }}>
+                    <Suspense fallback={<div className="loading-spinner">Cargando...</div>}>
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/login" element={<Login />} />
@@ -46,7 +48,8 @@ function App() {
                       <Route path="/pedido/:id" element={<ProtectedRoute><DetallePedido /></ProtectedRoute>} /> 
                       <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                     </Routes>
-                  </div>
+                    </Suspense>
+                  </main>
 
                   <Footer />
                 </div>

@@ -14,10 +14,10 @@ interface Slide {
 }
 
 const slides: Slide[] = [
-    { id: 1, url: '/img/tarta-de-queso-de-pistacho.png', title: 'Tarta de Queso con Pistacho' },
-    { id: 2, url: '/img/tostada-de-pistacho.png', title: 'Tostadas con Crema' },
-    { id: 3, url: '/img/napolitana-de-pistacho.png', title: 'Napolitana de Pistacho' },
-    { id: 4, url: '/img/donut-de-pistacho.png', title: 'Donut de Pistacho' }
+    { id: 1, url: '/img/tarta-de-queso-de-pistacho.webp', title: 'Tarta de Queso con Pistacho' },
+    { id: 2, url: '/img/tostada-de-pistacho.webp', title: 'Tostadas con Crema' },
+    { id: 3, url: '/img/napolitana-de-pistacho.webp', title: 'Napolitana de Pistacho' },
+    { id: 4, url: '/img/donut-de-pistacho.webp', title: 'Donut de Pistacho' }
 ];
 
 type Direction = 'left' | 'up' | 'right' | 'down';

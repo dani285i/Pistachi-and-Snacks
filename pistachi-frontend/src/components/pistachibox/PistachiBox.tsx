@@ -38,7 +38,7 @@ const PistachiBox: React.FC = () => {
                 {/* Imagen del placeholder (se usará una foto estética real) */}
                 <img 
                     key={animKey}
-                    src={planSeleccionado === 'Degustación' ? '/img/menu-degustacion.png' : '/img/menu-premium.png'} 
+                    src={planSeleccionado === 'Degustación' ? '/img/menu-degustacion.webp' : '/img/menu-premium.webp'} 
                     alt={`Pistachi Box ${planSeleccionado}`} 
                     className={`pistachibox-img ${animClass}`}
                 />

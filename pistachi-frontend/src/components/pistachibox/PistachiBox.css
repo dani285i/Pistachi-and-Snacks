@@ -44,7 +44,7 @@
 }
 
 .pistachibox-subtitle {
-    color: var(--color-texto-light);
+    color: #5f6e6e;
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 2px;
@@ -60,7 +60,7 @@
 }
 
 .pistachibox-desc {
-    color: var(--color-texto-light);
+    color: #5f6e6e;
     font-size: 1.05rem;
     line-height: 1.6;
     margin-bottom: 35px;
@@ -93,7 +93,7 @@
 
 .pistachibox-plan span {
     font-size: 1rem;
-    color: var(--color-texto-light);
+    color: #5f6e6e;
 }
 
 .pistachibox-plan:hover {

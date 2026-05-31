@@ -1,11 +1,11 @@
-import { Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Stage, Center, OrbitControls, useGLTF } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom' // 1. IMPORTAMOS EL HOOK
 import { ShieldCheck } from '@phosphor-icons/react'
 import './Hero.css'
 
-useGLTF.preload('/3D/DonutPistacho.glb')
+// useGLTF.preload('/3D/DonutPistacho.glb') // Disabled to prevent blocking main thread
 
 const DonutModel = () => {
     const { scene } = useGLTF('/3D/DonutPistacho.glb')
@@ -14,6 +14,12 @@ const DonutModel = () => {
 
 const Hero = () => {
     const navigate = useNavigate() // 2. INICIALIZAMOS EL NAVEGADOR
+    const [show3D, setShow3D] = useState(false)
+
+    useEffect(() => {
+        const timer = setTimeout(() => setShow3D(true), 1500)
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
         <header className="hero-section">
@@ -31,11 +37,15 @@ const Hero = () => {
                     <button 
                         className="pistachio-button pistachio-filled" 
                         onClick={() => navigate('/productos')}
+                        aria-label="Ver el catálogo"
                     >
                         <span>Ver el Catálogo</span>
                     </button>
                     
-                    <button className="pistachio-button pistachio-outline">
+                    <button 
+                        className="pistachio-button pistachio-outline"
+                        aria-label="Nuestra Historia"
+                    >
                         <span>Nuestra Historia</span>
                     </button>
                 </div>
@@ -60,7 +70,7 @@ const Hero = () => {
                 <div className="organic-blob"></div>
                 
                 <div className="canvas-container" style={{ width: '100%', height: '550px', cursor: 'grab', position: 'relative', zIndex: 2 }}>
-                    <Canvas 
+                    {show3D && <Canvas 
                         shadows={false} 
                         dpr={[1, 1.5]} 
                         camera={{ position: [10, 6, 0], fov: 32 }} 
@@ -86,7 +96,7 @@ const Hero = () => {
                             autoRotateSpeed={1.2} 
                             makeDefault 
                         />
-                    </Canvas>
+                    </Canvas>}
                 </div>
             </div>
         </header>

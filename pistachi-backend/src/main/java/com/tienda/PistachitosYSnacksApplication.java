@@ -25,4 +25,16 @@ public class PistachitosYSnacksApplication {
         };
     }
 
+    @Bean
+    public CommandLineRunner migrateImagesToWebp(JdbcTemplate jdbcTemplate) {
+        return args -> {
+            try {
+                jdbcTemplate.execute("UPDATE producto SET imagen = REPLACE(imagen, '.png', '.webp') WHERE imagen LIKE '%.png'");
+                System.out.println("✅ IMÁGENES ACTUALIZADAS EN LA BASE DE DATOS A .WEBP");
+            } catch (Exception e) {
+                System.out.println("⚠️ No se pudo actualizar las imágenes: " + e.getMessage());
+            }
+        };
+    }
+
 }

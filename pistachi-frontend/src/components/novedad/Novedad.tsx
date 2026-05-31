@@ -52,7 +52,7 @@ const Novedad: React.FC = () => {
             <div className="novedad-image-column">
                 
                 <img 
-                    src="/img/novedades/crema-de-pistacho-novedad.png"
+                    src="/img/novedades/crema-de-pistacho-novedad.webp"
                     alt={`Foto de ${producto.nombre}`} 
                     className="novedad-img"
                 />

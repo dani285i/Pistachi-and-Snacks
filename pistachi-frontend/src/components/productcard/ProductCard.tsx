@@ -113,7 +113,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
                         
                         {!isAgotado ? (
                             <button 
-                                className="btn-carrito-animado"
+                                className="btn-carrito-animado" aria-label="Añadir al carrito"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const result = addToCart({

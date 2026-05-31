@@ -56,7 +56,7 @@ const ToastElement: React.FC<ToastElementProps> = ({ toast, removeToast }) => {
                 {toast.type === 'info' && <Info size={24} weight="fill" />}
             </div>
             <div className="toast-message">{toast.message}</div>
-            <button type="button" className="toast-close" onClick={handleClose}>
+            <button type="button" aria-label="Cerrar notificación" className="toast-close" onClick={handleClose}>
                 <X size={16} weight="bold" />
             </button>
             <div className={`toast-progress-bar bg-${toast.type}`}></div>

@@ -137,3 +137,32 @@
     font-weight: 600;
     background-color: #2A3B24;
 }
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 960px) {
+    .novedad-section {
+        padding: 4rem 1.5rem;
+    }
+    
+    .novedad-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .novedad-content {
+        padding-right: 0;
+        text-align: center;
+        align-items: center;
+    }
+
+    .novedad-price-action {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .novedad-add-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}

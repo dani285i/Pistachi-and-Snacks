@@ -91,7 +91,7 @@ const Perfil: React.FC<PerfilProps> = ({ abierto, cerrarPerfil }) => {
                         <h2>¡Bienvenido, {usuario?.nombre || 'Daniel'}!</h2>
                         <p>Gestiona tu cuenta y echa un vistazo a tus pedidos</p>
                     </div>
-                    <button className="btn-cerrar-bandeja" onClick={cerrarPerfil}>
+                    <button className="btn-cerrar-bandeja" aria-label="Cerrar perfil" onClick={cerrarPerfil}>
                         <X size={24} weight="bold" />
                     </button>
                 </div>
