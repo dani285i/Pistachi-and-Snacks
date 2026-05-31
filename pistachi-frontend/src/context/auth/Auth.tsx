@@ -38,6 +38,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 const data = await res.json();
                 setUsuario(data);
                 sessionStorage.setItem('user_session', JSON.stringify(data));
+            } else if (res.status === 404) {
+                setUsuario(null);
+                sessionStorage.removeItem('user_session');
+                window.location.href = '/login';
             }
         } catch (error) {
             console.error("Error al refrescar usuario", error);
