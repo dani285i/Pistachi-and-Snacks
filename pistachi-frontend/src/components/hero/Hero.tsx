@@ -1,16 +1,10 @@
-import { Suspense, useState, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Stage, Center, OrbitControls, useGLTF } from '@react-three/drei'
-import { useNavigate } from 'react-router-dom' // 1. IMPORTAMOS EL HOOK
+import { Suspense, useState, useEffect, lazy } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ShieldCheck } from '@phosphor-icons/react'
 import './Hero.css'
 
-// useGLTF.preload('/3D/DonutPistacho.glb') // Disabled to prevent blocking main thread
-
-const DonutModel = () => {
-    const { scene } = useGLTF('/3D/DonutPistacho.glb')
-    return <primitive object={scene} />
-}
+// Carga diferida del componente pesado de 3D para no bloquear el render inicial
+const LazyHeroCanvas = lazy(() => import('./HeroCanvas'))
 
 const Hero = () => {
     const navigate = useNavigate() // 2. INICIALIZAMOS EL NAVEGADOR
@@ -70,33 +64,11 @@ const Hero = () => {
                 <div className="organic-blob"></div>
                 
                 <div className="canvas-container" style={{ width: '100%', height: '550px', cursor: 'grab', position: 'relative', zIndex: 2 }}>
-                    {show3D && <Canvas 
-                        shadows={false} 
-                        dpr={[1, 1.5]} 
-                        camera={{ position: [10, 6, 0], fov: 32 }} 
-                        gl={{ antialias: true, powerPreference: "high-performance", alpha: true }} 
-                    >
-                        <Suspense fallback={null}>
-                            <Stage 
-                                environment="city" 
-                                intensity={0.6} 
-                                shadows={false}
-                                adjustCamera={false} 
-                            >
-                                <Center>
-                                    <DonutModel />
-                                </Center>
-                            </Stage>
+                    {show3D && (
+                        <Suspense fallback={<div className="canvas-loading"></div>}>
+                            <LazyHeroCanvas />
                         </Suspense>
-
-                        <OrbitControls 
-                            enablePan={false}
-                            enableZoom={false}
-                            autoRotate={true} 
-                            autoRotateSpeed={1.2} 
-                            makeDefault 
-                        />
-                    </Canvas>}
+                    )}
                 </div>
             </div>
         </header>

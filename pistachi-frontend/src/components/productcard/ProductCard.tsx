@@ -83,6 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onIntentoRemover })
                     src={producto.imagen} 
                     alt={producto.nombre} 
                     className="tarjeta-img" 
+                    loading="lazy"
                     style={isAgotado ? { filter: 'grayscale(100%) blur(2px)' } : {}}
                 />
                 {isAgotado && <span className="agotado-badge">AGOTADO</span>}

@@ -73,3 +73,14 @@
         transform: translate(-50%, 0);
     }
 }
+
+@media (max-width: 600px) {
+    .status-select-container {
+        min-width: 110px;
+    }
+
+    .status-select-options {
+        min-width: 130px;
+        padding: 8px;
+    }
+}

@@ -92,3 +92,21 @@
         transform: translateY(0) scale(1);
     }
 }
+
+@media (max-width: 600px) {
+    .custom-select-trigger {
+        padding: 10px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .custom-select-options {
+        border-radius: 12px;
+        padding: 6px;
+    }
+
+    .custom-select-option {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}

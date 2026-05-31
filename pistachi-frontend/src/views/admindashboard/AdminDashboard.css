@@ -16,6 +16,165 @@
     font-family: 'Montserrat', sans-serif;
     padding: 20px;
     gap: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 280px;
+    background-color: var(--admin-dark);
+    border-radius: 24px;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+}
+
+.brand-circle {
+    width: 45px;
+    height: 45px;
+    background-color: var(--admin-accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--admin-dark);
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.brand-text h3 {
+    color: white;
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+
+.brand-text span {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    padding: 14px 20px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    color: white;
+    background: rgba(255,255,255,0.05);
+}
+
+.nav-item.active {
+    background-color: var(--admin-accent);
+    color: var(--admin-dark);
+    box-shadow: 0 10px 20px rgba(139, 195, 74, 0.2);
+}
+
+/* Area Principal */
+.admin-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 20px 10px 0;
+}
+
+.header-info h1 {
+    font-size: 32px;
+    color: var(--admin-dark);
+    margin: 0 0 5px 0;
+}
+
+.header-info p {
+    color: var(--admin-text);
+    margin: 0;
+}
+
+.add-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pistachio-accent {
+    background-color: var(--admin-accent);
+    color: var(--admin-dark);
+}
+
+.pistachio-accent:hover {
+    background-color: var(--admin-accent-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(139, 195, 74, 0.2);
+}
+
+/* Tarjeta de Contenido */
+.content-card {
+    background-color: white;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    flex: 1;
+}
+
+/* este es el esqueleto principal del panel de control, hace que ocupe toda la pantalla y le pone un fondo clarito para que no te quedes ciego leyendo pedidos, como por ejemplo separando el menu lateral del contenido con un flexbox */
+:root {
+    --admin-dark: #121619;
+    --admin-accent: #8BC34A;
+    --admin-accent-hover: #7CB342;
+    --admin-bg: #F9FBF7;
+    --admin-border: #E5E7EB;
+    --admin-text: #4B5563;
+    --admin-text-light: #9CA3AF;
+}
+
+.admin-dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--admin-bg);
+    font-family: 'Montserrat', sans-serif;
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 /* Sidebar */
@@ -159,13 +318,15 @@
 }
 
 .admin-table th {
-    text-align: left;
-    padding: 15px 20px;
-    color: var(--admin-text-light);
-    font-size: 13px;
+    background-color: #f8f9fa;
+    color: var(--admin-text);
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 15px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 1px solid var(--admin-border);
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--admin-border);
+    text-align: left;
 }
 
 .admin-table td {
@@ -205,6 +366,68 @@
 .icon-btn.delete { background-color: #FFF1F0; color: #FF4D4F; }
 
 .icon-btn:hover { transform: scale(1.1); }
+
+/* Acciones en celdas (Desktop vs Mobile) */
+.desktop-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.mobile-actions {
+    display: none;
+    position: relative;
+}
+
+.action-menu-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1010;
+}
+
+.mobile-action-dropdown {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 1011;
+    min-width: 120px;
+    border: 1px solid var(--admin-border);
+}
+
+.mobile-action-dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--admin-text);
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+}
+
+.mobile-action-dropdown button:hover {
+    background: #f5f5f5;
+}
+
+.mobile-action-dropdown button.delete-action {
+    color: #E74C3C;
+}
+
+.mobile-action-dropdown button.delete-action:hover {
+    background: rgba(231, 76, 60, 0.1);
+}
 
 /* Modal Estructurado con Flexbox */
 .modal-overlay {
@@ -363,16 +586,17 @@
     right: 8px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    height: 42px;
+    gap: 2px;
+    height: calc(100% - 8px);
     justify-content: center;
 }
 
 .spinner-btn {
     background: #E5E7EB;
     border: none;
-    width: 34px;
-    height: 20px;
+    width: 32px;
+    height: auto;
+    flex: 1;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -464,7 +688,7 @@
     background-color: var(--admin-accent-hover);
     transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(139, 195, 74, 0.25);
-}/* Badges de Nivel de Suscripci�n copiados de Perfil para la tabla */
+}/* Badges de Nivel de Suscripcin copiados de Perfil para la tabla */
 .badge-suscripcion {
     font-family: 'Montserrat', sans-serif;
     font-weight: 800;
@@ -508,6 +732,8 @@
 
 
 /* --- RESPONSIVE DESIGN --- */
+
+/* === TABLET LANDSCAPE & SMALL DESKTOP (≤1024px) === */
 @media (max-width: 1024px) {
     .admin-dashboard-layout {
         flex-direction: column;
@@ -515,59 +741,347 @@
     }
     
     .admin-sidebar {
+        position: sticky;
+        top: 85px;
+        z-index: 990;
         width: 100%;
-        padding: 20px;
+        padding: 15px 20px;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         gap: 15px;
         border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        box-sizing: border-box;
     }
     
     .sidebar-nav {
         flex-direction: row;
         overflow-x: auto;
         padding-bottom: 5px;
+        gap: 6px;
     }
     
     .nav-item {
         white-space: nowrap;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-header {
+        flex-shrink: 0;
+    }
+
+    .hide-on-mobile {
+        display: none !important;
+    }
+
+    .desktop-actions {
+        display: none;
+    }
+
+    .mobile-actions {
+        display: block;
+    }
+
+    .glass-modal {
+        max-width: 90vw;
+        padding: 30px;
     }
 }
 
+/* === TABLET PORTRAIT (≤768px) === */
 @media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-row {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .content-card {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 15px;
+    .admin-dashboard-layout {
+        padding: 8px;
+        gap: 12px;
     }
 
-    .admin-table {
-        min-width: 800px; /* Fuerza el scroll en móviles */
-    }
-
-    .admin-table th, .admin-table td {
-        padding: 1rem 0.5rem;
-        font-size: 0.9rem;
+    .admin-main {
+        gap: 15px;
     }
 
     .main-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 12px;
+        padding: 10px 5px 0;
     }
-    
+
+    .header-info h1 {
+        font-size: 24px;
+    }
+
+    .header-info p {
+        font-size: 0.85rem;
+    }
+
     .add-btn {
         width: 100%;
         justify-content: center;
+        padding: 12px 20px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .content-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 12px;
+        border-radius: 16px;
+    }
+
+    .admin-table {
+        min-width: 650px;
+    }
+
+    .admin-table th {
+        padding: 10px 8px;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        margin-right: 6px;
+    }
+
+    /* Modal responsive */
+    .glass-modal {
+        max-width: 95vw;
+        padding: 24px;
+        gap: 20px;
+        border-radius: 20px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-header h2 {
+        font-size: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .btn-save, .btn-cancel {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+/* === MOBILE (≤600px) === */
+@media (max-width: 600px) {
+    .admin-dashboard-layout {
+        padding: 6px;
+        gap: 10px;
+    }
+
+    /* Sidebar: hide brand text, keep only initial and nav buttons compact */
+    .admin-sidebar {
+        padding: 10px 12px;
+        gap: 10px;
+        border-radius: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sidebar-header {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .brand-text {
+        display: none;
+    }
+
+    .brand-circle {
+        width: 38px;
+        height: 38px;
+        font-size: 17px;
+        border-radius: 10px;
+    }
+
+    .sidebar-nav {
+        width: 100%;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .nav-item {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        gap: 6px;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .main-header {
+        padding: 8px 2px 0;
+    }
+
+    .header-info h1 {
+        font-size: 22px;
+    }
+
+    /* Tablas: reduce min-width para scroll más manejable */
+    .admin-table {
+        min-width: 550px;
+    }
+
+    .admin-table th {
+        padding: 8px 6px;
+        font-size: 10px;
+    }
+
+    .admin-table td {
+        padding: 10px 6px;
+        font-size: 0.8rem;
+    }
+
+    .p-name {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        margin-right: 4px;
+    }
+
+    .actions-cell {
+        white-space: nowrap;
+    }
+
+    /* Modals: casi pantalla completa */
+    .modal-overlay {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+
+    .glass-modal {
+        max-width: 100%;
+        width: 100%;
+        padding: 20px 16px;
+        border-radius: 18px;
+        max-height: 85vh;
+        gap: 16px;
+    }
+
+    .modal-header h2 {
+        font-size: 18px;
+    }
+
+    .close-x {
+        padding: 6px;
+    }
+
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .form-group label {
+        font-size: 11px;
+    }
+
+    .help-box {
+        padding: 10px 12px;
+    }
+
+    .help-box p {
+        font-size: 12px;
+    }
+
+    .btn-save, .btn-cancel {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    /* Badge suscripcion más compacto */
+    .badge-suscripcion {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+    }
+
+    .unidades-badge {
+        font-size: 0.8rem;
+    }
+
+    .content-card {
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    /* Status select más compacto en móvil */
+    .status-pill {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+    }
+}
+
+/* === PHONE SMALL (≤420px) === */
+@media (max-width: 420px) {
+    .admin-dashboard-layout {
+        padding: 4px;
+    }
+
+    .admin-sidebar {
+        padding: 8px 10px;
+        border-radius: 12px;
+    }
+
+    .nav-item {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+
+    .header-info h1 {
+        font-size: 20px;
+    }
+
+    .header-info p {
+        font-size: 0.8rem;
+    }
+
+    .add-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+
+    .glass-modal {
+        padding: 16px 12px;
+        gap: 14px;
+        border-radius: 16px;
+        border-top-width: 4px;
+    }
+
+    .modal-header h2 {
+        font-size: 16px;
+    }
+
+    .form-actions {
+        margin-top: 10px;
+        padding-top: 16px;
     }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import CustomSelect from '../../components/customselect/CustomSelect'
 import { CustomDatePicker } from '../../components/datepicker/CustomDatePicker'
-import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle, Lightbulb } from '@phosphor-icons/react'
+import { Package, Receipt, Users, Plus, Pencil, Trash, X, CaretUp, CaretDown, WarningCircle, Lightbulb, DotsThreeVertical } from '@phosphor-icons/react'
 import { useToast } from '../../context/toast/ToastContext'
 
 import { StatusSelect } from '../../components/statusselect/StatusSelect'
@@ -63,6 +63,7 @@ export const AdminDashboard = () => {
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
     const [mostrarModal, setMostrarModal] = useState(false)
     const [formData, setFormData] = useState<Partial<Producto>>(estadoInicial)
+    const [menuAccionesAbierto, setMenuAccionesAbierto] = useState<string | null>(null);
 
     const { addToast } = useToast();
     const [mostrarModalUsuario, setMostrarModalUsuario] = useState(false);
@@ -339,6 +340,13 @@ export const AdminDashboard = () => {
                     )}
                 </header>
 
+                {menuAccionesAbierto && (
+                    <div 
+                        className="action-menu-overlay" 
+                        onClick={() => setMenuAccionesAbierto(null)}
+                    ></div>
+                )}
+
                 <div className="content-card">
                     {seccionActiva === 'productos' && (
                         <table className="admin-table">
@@ -348,7 +356,7 @@ export const AdminDashboard = () => {
                                     <th>Nombre</th>
                                     <th>Stock</th>
                                     <th>Packs</th>
-                                    <th>Uds/Pack</th>
+                                    <th className="hide-on-mobile">Uds/Pack</th>
                                     <th>Precio</th>
                                     <th>Destacado</th>
                                     <th>Acciones</th>
@@ -383,7 +391,7 @@ export const AdminDashboard = () => {
                                                 {Math.floor((p.stock || 0) / (p.unidades || 1))}
                                             </span>
                                         </td>
-                                        <td><span className="unidades-badge"><Package size={16} /> {p.unidades || 1} uds</span></td>
+                                        <td className="hide-on-mobile"><span className="unidades-badge"><Package size={16} /> {p.unidades || 1} uds</span></td>
                                         <td>{p.precio.toFixed(2)}€</td>
                                         <td>
                                             <span style={{ 
@@ -398,20 +406,53 @@ export const AdminDashboard = () => {
                                             </span>
                                         </td>
                                         <td className="actions-cell">
-                                            <button onClick={() => { 
-                                                // Aseguramos que unidades y stock no sean undefined si la DB los devuelve nulos
-                                                setFormData({
-                                                    ...p,
-                                                    unidades: p.unidades ?? 1,
-                                                    stock: p.stock ?? 0
-                                                }); 
-                                                setMostrarModal(true); 
-                                            }} className="icon-btn edit">
-                                                <Pencil size={18} weight="bold" />
-                                            </button>
-                                            <button onClick={() => handleEliminarProducto(p)} className="icon-btn delete">
-                                                <Trash size={18} weight="bold" />
-                                            </button>
+                                            <div className="desktop-actions">
+                                                <button onClick={() => { 
+                                                    setFormData({
+                                                        ...p,
+                                                        unidades: p.unidades ?? 1,
+                                                        stock: p.stock ?? 0
+                                                    }); 
+                                                    setMostrarModal(true); 
+                                                }} className="icon-btn edit">
+                                                    <Pencil size={18} weight="bold" />
+                                                </button>
+                                                <button onClick={() => handleEliminarProducto(p)} className="icon-btn delete">
+                                                    <Trash size={18} weight="bold" />
+                                                </button>
+                                            </div>
+                                            <div className="mobile-actions">
+                                                <button 
+                                                    className="icon-btn dots-btn" 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setMenuAccionesAbierto(menuAccionesAbierto === `prod-${p.id}` ? null : `prod-${p.id}`);
+                                                    }}
+                                                >
+                                                    <DotsThreeVertical size={20} weight="bold" />
+                                                </button>
+                                                {menuAccionesAbierto === `prod-${p.id}` && (
+                                                    <div className="mobile-action-dropdown">
+                                                        <button onClick={() => { 
+                                                            setFormData({
+                                                                ...p,
+                                                                unidades: p.unidades ?? 1,
+                                                                stock: p.stock ?? 0
+                                                            }); 
+                                                            setMostrarModal(true); 
+                                                            setMenuAccionesAbierto(null);
+                                                        }}>
+                                                            <Pencil size={16} weight="bold" /> Editar
+                                                        </button>
+                                                        <button className="delete-action" onClick={() => { 
+                                                            handleEliminarProducto(p); 
+                                                            setMenuAccionesAbierto(null);
+                                                        }}>
+                                                            <Trash size={16} weight="bold" /> Eliminar
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -462,12 +503,12 @@ export const AdminDashboard = () => {
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre Completo</th>
-                                    <th>Email</th>
+                                    <th className="hide-on-mobile">Email</th>
                                     <th>Tachis</th>
-                                    <th>F. Nacimiento</th>
-                                    <th>Próx. Entrega</th>
+                                    <th className="hide-on-mobile">F. Nacimiento</th>
+                                    <th className="hide-on-mobile">Próx. Entrega</th>
                                     <th>Suscripción</th>
-                                    <th>Rol</th>
+                                    <th className="hide-on-mobile">Rol</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -476,19 +517,48 @@ export const AdminDashboard = () => {
                                     <tr key={u.id}>
                                         <td>#{u.id}</td>
                                         <td><strong>{u.nombre} {u.apellidos}</strong></td>
-                                        <td>{u.email}</td>
+                                        <td className="hide-on-mobile">{u.email}</td>
                                         <td><strong>{Number(u.tachis || 0).toLocaleString('de-DE')}</strong></td>
-                                        <td>{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
-                                        <td>{u.proximaEntrega ? new Date(u.proximaEntrega).toLocaleDateString() : '--'}</td>
+                                        <td className="hide-on-mobile">{u.fechaNacimiento ? new Date(u.fechaNacimiento).toLocaleDateString() : 'N/A'}</td>
+                                        <td className="hide-on-mobile">{u.proximaEntrega ? new Date(u.proximaEntrega).toLocaleDateString() : '--'}</td>
                                         <td><span className={`badge-suscripcion ${getClaseSuscripcion(u.tipoSuscripcion)}`}>{u.tipoSuscripcion || 'Ninguna'}</span></td>
-                                        <td><span className="categoria-badge">{u.rol}</span></td>
+                                        <td className="hide-on-mobile"><span className="categoria-badge">{u.rol}</span></td>
                                         <td className="actions-cell">
-                                            <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
-                                                <Pencil size={18} weight="bold" />
-                                            </button>
-                                            <button onClick={() => handleEliminarUsuarioInicio(u)} className="icon-btn delete" title="Eliminar Usuario">
-                                                <Trash size={18} weight="bold" />
-                                            </button>
+                                            <div className="desktop-actions">
+                                                <button onClick={() => handleEditarUsuarioClick(u)} className="icon-btn edit" title="Editar Usuario">
+                                                    <Pencil size={18} weight="bold" />
+                                                </button>
+                                                <button onClick={() => handleEliminarUsuarioInicio(u)} className="icon-btn delete" title="Eliminar Usuario">
+                                                    <Trash size={18} weight="bold" />
+                                                </button>
+                                            </div>
+                                            <div className="mobile-actions">
+                                                <button 
+                                                    className="icon-btn dots-btn" 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setMenuAccionesAbierto(menuAccionesAbierto === `usr-${u.id}` ? null : `usr-${u.id}`);
+                                                    }}
+                                                >
+                                                    <DotsThreeVertical size={20} weight="bold" />
+                                                </button>
+                                                {menuAccionesAbierto === `usr-${u.id}` && (
+                                                    <div className="mobile-action-dropdown">
+                                                        <button onClick={() => { 
+                                                            handleEditarUsuarioClick(u); 
+                                                            setMenuAccionesAbierto(null);
+                                                        }}>
+                                                            <Pencil size={16} weight="bold" /> Editar
+                                                        </button>
+                                                        <button className="delete-action" onClick={() => { 
+                                                            handleEliminarUsuarioInicio(u); 
+                                                            setMenuAccionesAbierto(null);
+                                                        }}>
+                                                            <Trash size={16} weight="bold" /> Eliminar
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
